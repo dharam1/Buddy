@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "366001471730",
+    "firebase_url": "https://budddy-f974a.firebaseio.com",
+    "project_id": "budddy-f974a",
+    "storage_bucket": "budddy-f974a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366001471730:android:7575cc6f39784237",
+        "android_client_info": {
+          "package_name": "com.example.dharmendra.buddy1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "366001471730-8qoukf4b89rv7nubdqmm8i15safooueq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAotnpJafLt3HCZAaB0RG_i9DKHk-uz2FI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

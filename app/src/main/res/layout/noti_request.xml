@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+<ImageButton
+    android:background="@drawable/request"
+    android:id="@+id/imgbutton"
+    android:layout_width="30dp"
+    android:layout_height="30dp"/>
+    <TextView
+        android:id="@+id/counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/imgbutton"
+        android:layout_alignRight="@id/imgbutton"
+        android:layout_alignEnd="@id/imgbutton"
+        android:padding="5dp"
+        android:gravity="center"
+        android:textColor="#FFF"
+        android:textSize="10sp"
+        android:background="@drawable/badge_circle"/>
+
+</RelativeLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/noti"
+        app:showAsAction="always"
+        app:actionLayout="@layout/noti"
+        android:title="Notification" />
+
+    <item
+        android:id="@+id/navigation_request"
+        app:showAsAction="always"
+        app:actionLayout="@layout/noti_request"
+        android:title="@string/title_request" />
+
+
+    <item
+        android:id="@+id/menu_share"
+        app:showAsAction="never"
+        android:title="Share" />
+    <item
+        android:id="@+id/menu_sign_out"
+        app:showAsAction="never"
+        android:title="Sign out" />
+
+
+</menu>
