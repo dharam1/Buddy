@@ -104,7 +104,7 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(Chat.this, manageuser1.class);
+                Intent i = new Intent(Chat.this, manageuser.class);
                 i.putExtra("int_key", cidd);
                 startActivity(i);
                 overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );

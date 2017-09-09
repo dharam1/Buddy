@@ -55,8 +55,11 @@ public class manageuser extends AppCompatActivity {
     LinkedHashMap<String,String> map=new LinkedHashMap<>();
     Manage_user_adapter adapter;
     ArrayList<String> list=new ArrayList<>();
+    ArrayList<String> receive=new ArrayList<>();
+    ArrayList<String> send=new ArrayList<>();
+    ArrayList<String> connection=new ArrayList<>();
     TextView tt,count,ttt;
-    String admin;
+    String admin,activityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,9 @@ public class manageuser extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+        LayoutInflater inflater = LayoutInflater.from(this);
+        final View vv = inflater.inflate(R.layout.footer_layout, null);
+        final TextView footer = (TextView) vv.findViewById(R.id.footer);
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         manageuser= (ListView)findViewById(R.id.simpleListView);
         count=(TextView)findViewById(R.id.c);
@@ -84,8 +90,9 @@ public class manageuser extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Activity1 post1 = dataSnapshot.getValue(Activity1.class);
                 long t =post1.getActdate();
-                String activityName=post1.getName();
+                activityName=post1.getName();
                 admin=post1.getUser();
+                Log.d("yuio",admin);
                 tt.setText(activityName);
                 String date= DateFormat.format("dd-MM-yyyy", t).toString();
                 long c_date=new Date().getTime();
@@ -112,6 +119,44 @@ public class manageuser extends AppCompatActivity {
                     ttt.setText("Created on "+DateFormat.format("dd-MM-yyyy", t));
                     Log.d("hjk", "outside");
                 }
+                if(user.equals(admin)) {
+                    Log.d("yuio",user+" "+admin);
+                    manageuser.addFooterView(vv);
+                    footer.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (haveNetworkConnection()) {
+                                mDatabase = FirebaseDatabase.getInstance().getReference("activity");
+                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                            Activity1 post1 = postSnapshot.getValue(Activity1.class);
+                                            int ccid = post1.getCcid();
+                                            if (ccid == cidd) {
+                                                postSnapshot.getRef().child("status").setValue(0);
+                                                Toast.makeText(getApplicationContext(), "Succesfully Deleted", Toast.LENGTH_SHORT).show();
+                                                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                                startActivity(i);
+                                                break;
+                                            }
+
+                                        }
+                                    }
+
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Toast.makeText(getApplicationContext(), "\"The read failed: \"" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+                }
             }
 
             @Override
@@ -126,7 +171,7 @@ public class manageuser extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String data=postSnapshot.getKey();
-                   if(!data.equals(admin))
+                   //if(!data.equals(admin))
                     list.add(data);
                 }
 
@@ -137,45 +182,59 @@ public class manageuser extends AppCompatActivity {
 
             }
         });
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View vv = inflater.inflate(R.layout.footer_layout, null);
-        TextView footer = (TextView) vv.findViewById(R.id.footer);
-        manageuser.addFooterView(vv);
-        footer.setOnClickListener(new View.OnClickListener() {
+
+
+        /***------------------------------------------------------------------**/
+        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("receiveFrom");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                if(haveNetworkConnection()){
-                    mDatabase = FirebaseDatabase.getInstance().getReference("activity");
-                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                                Activity1 post1 = postSnapshot.getValue(Activity1.class);
-                                int ccid=post1.getCcid();
-                                if(ccid==cidd){
-                                    postSnapshot.getRef().child("status").setValue(0);
-                                    Toast.makeText(getApplicationContext(), "Succesfully Deleted", Toast.LENGTH_SHORT).show();
-                                    Intent i=new Intent(getApplicationContext(),MainActivity.class);
-                                    startActivity(i);
-                                    break;
-                                }
-
-                            }
-                        }
-
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Toast.makeText(getApplicationContext(), "\"The read failed: \"" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Model m = postSnapshot.getValue(Model.class);
+                    receive.add(m.getUser());
                 }
-                else{
-                    Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_SHORT).show();
-                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("sendTo");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Model m = postSnapshot.getValue(Model.class);
+                    send.add(m.getUser());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    //Model m = postSnapshot.getValue(Model.class);
+                    connection.add(postSnapshot.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+        /**-----------------------------------------------------------------------**/
 
         mDatabase = FirebaseDatabase.getInstance().getReference("chats").child("nickname").child(String .valueOf(cidd));
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -184,12 +243,12 @@ public class manageuser extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String users=postSnapshot.getKey().toString();
                     String nickname=postSnapshot.getValue().toString();
-                    if(!users.equals(admin))
+                    //if(!users.equals(admin))
                     map.put(users,nickname);
 
                 }
                 count.setText(String.valueOf(map.size()));
-                adapter = new Manage_user_adapter(map,cidd,list,admin);
+                adapter = new Manage_user_adapter(map,cidd,list,admin,send,receive,connection,activityName,getApplicationContext());
                 manageuser.setAdapter(adapter);
             }
 
