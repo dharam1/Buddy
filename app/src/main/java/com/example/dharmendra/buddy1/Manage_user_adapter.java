@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,7 +45,8 @@ public class Manage_user_adapter extends BaseAdapter {
     ImageButton manageuser;
     CardView cardview;
     Context context;
-    TextView kick,request;
+    ImageButton kick;
+    TextView request;
     int aid;
     DatabaseReference mDatabase;
     ArrayList<String> list=new ArrayList<>();
@@ -96,7 +98,7 @@ public class Manage_user_adapter extends BaseAdapter {
         } else {
             result = convertView;
         }
-        kick = (TextView) result.findViewById(R.id.button);
+        kick = (ImageButton) result.findViewById(R.id.button);
         request = (TextView) result.findViewById(R.id.button1);
         cardView = (CardView) result.findViewById(R.id.card_view);
         final LinkedHashMap.Entry<String, String> item = getItem(position);
@@ -111,12 +113,13 @@ public class Manage_user_adapter extends BaseAdapter {
             kick.setVisibility(View.VISIBLE);
             request.setVisibility(View.VISIBLE);
             if (list.contains(item.getKey())/**&&!item.getKey().equals(user)**/) {
-                kick.setText("Un Ban");
+                kick.setImageResource(R.drawable.ic_ban);
                 kick.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        TextView b = (TextView) v.findViewById(R.id.button);
-                        b.setText("Ban");
+                        ImageButton b = (ImageButton) v.findViewById(R.id.button);
+                        b.setImageResource(R.drawable.ic_unban);
+                        Toast.makeText(context, "User " + item.getValue() + " has been unbanned", Toast.LENGTH_SHORT).show();
                         Log.d("qwerty", "11");
                         final String key = item.getKey().toString();
                         mDatabase = FirebaseDatabase.getInstance().getReference("chats").child("kick").child(String.valueOf(aid)).child(key);
@@ -141,12 +144,13 @@ public class Manage_user_adapter extends BaseAdapter {
                 });
 
             } else /**if(!item.getKey().equals(user))**/ {
-                kick.setText("Ban");
+                kick.setImageResource(R.drawable.ic_unban);
                 kick.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        TextView b = (TextView) v.findViewById(R.id.button);
-                        b.setText("Un Ban");
+                        ImageButton b = (ImageButton) v.findViewById(R.id.button);
+                        kick.setImageResource(R.drawable.ic_ban);
+                        Toast.makeText(context, "User " + item.getValue() + " has been banned", Toast.LENGTH_SHORT).show();
                         Log.d("qwerty", "22");
                         final String user = item.getKey().toString();
                         final String nickname = item.getValue().toString();
