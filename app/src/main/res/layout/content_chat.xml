@@ -27,23 +27,17 @@
         android:layout_toLeftOf="@id/fab"
         android:layout_marginRight="10dp"
         android:background="@drawable/rounded_edittext">
-        <ImageView
-            android:id="@+id/emoji_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:padding="4dp"
-            android:background="#000"
-            />
 
-
-        <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+        <EditText
             android:id="@+id/input"
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
+            android:padding="5dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:imeOptions="actionSend"
-            android:inputType="text" />
+            android:inputType="textMultiLine"
+            android:maxLines="5"
+            android:minLines="1"
+            android:background="@android:color/transparent"
+            android:scrollbars="vertical" />
 
 
     </android.support.design.widget.TextInputLayout>

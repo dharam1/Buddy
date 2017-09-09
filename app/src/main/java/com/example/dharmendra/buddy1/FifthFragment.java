@@ -269,7 +269,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             //pwindodd.setBackgroundDrawable(new ColorDrawable(
               //      android.graphics.Color.TRANSPARENT));
             editText=(EditText)layout.findViewById(R.id.edittext);
-            TextView add_activity = (TextView) layout.findViewById(R.id.add_activity);
+            Button add_activity = (Button) layout.findViewById(R.id.add_activity);
             final TextView countv=(TextView)layout.findViewById(R.id.count);
             final TextWatcher mTextEditorWatcher = new TextWatcher() {
              public void beforeTextChanged(CharSequence s, int start, int count, int after) {

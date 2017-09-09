@@ -29,17 +29,17 @@
             android:layout_gravity="center|left"/>
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:layout_gravity="center_vertical"
             android:orientation="vertical"
             android:paddingLeft="5dp"
             android:layout_weight="4"
-            android:weightSum="5">
+            android:weightSum="3">
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1.5"
+                android:layout_weight="1"
                 android:background="#ffff"
                 android:textColor="#000"
                 android:ellipsize="end"
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginRight="5dp"
-                android:layout_weight="2.5"
+                android:layout_weight="1"
                 android:weightSum="2"
                 android:orientation="horizontal">
                 <Button
@@ -68,14 +68,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Accept"
-                    android:background="#EF5350"
+                    android:background="@drawable/round_button"
                     android:layout_marginRight="5dp" />
                 <Button
                     android:id="@+id/reject"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="#80EF5350"
+                    android:background="@drawable/round_button"
                     android:text="Reject"
                     android:layout_marginLeft="5dp"/>
             </LinearLayout>

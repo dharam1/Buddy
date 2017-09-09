@@ -67,10 +67,6 @@
             android:name=".manageuser"
             android:label="@string/title_activity_manageuser"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".manageuser1"
-            android:label="@string/title_activity_manageuser1"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

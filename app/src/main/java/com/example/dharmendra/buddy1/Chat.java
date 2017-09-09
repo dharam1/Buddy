@@ -79,10 +79,11 @@ public class Chat extends AppCompatActivity {
             ,"Little Finger","Daenerys","Arya ","Joffery","Dwight","Jim","Angela","Kevin","Michael","Walter White","Jesse Pinkman","Skyler White"
             ,"Harvey Specter","Michael Ross","Rachel Zane","Jessica Pearson"));
     EmojIconActions emojIcon;
-    EmojiconEditText input, emojiconEditText2;
+    //EmojiconEditText input, emojiconEditText2;
     EmojiconTextView textView;
     ImageView emojiButton;
     View rootView;
+    EditText input;
 
 
     @Override
@@ -92,8 +93,8 @@ public class Chat extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         rootView = findViewById(R.id.root_view);
-        emojiButton = (ImageView) findViewById(R.id.emoji_btn);
-        input=(EmojiconEditText)findViewById(R.id.input);
+        //emojiButton = (ImageView) findViewById(R.id.emoji_btn);
+        input=(EditText)findViewById(R.id.input);
         getWindow().setBackgroundDrawableResource(R.drawable.background) ;
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null){
@@ -110,8 +111,8 @@ public class Chat extends AppCompatActivity {
                 overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
-        /************************emoji----------------------------------**/
-        emojIcon = new EmojIconActions(this, rootView,input, emojiButton);
+        /**-----------------------------emoji----------------------------------**/
+        /**emojIcon = new EmojIconActions(this, rootView,input, emojiButton);
         emojIcon.ShowEmojIcon();
         emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
             @Override
@@ -123,7 +124,10 @@ public class Chat extends AppCompatActivity {
             public void onKeyboardClose() {
                 Log.e("Keyboard", "close");
             }
-        });
+        });**/
+
+
+
 
 
 
