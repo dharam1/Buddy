@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -42,6 +43,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
 
 public class Chat extends AppCompatActivity {
     private static final int SIGN_IN_REQUEST_CODE = 111;
@@ -72,12 +78,22 @@ public class Chat extends AppCompatActivity {
     ArrayList<String> x=new ArrayList<>(Arrays.asList("Barney","Ted","Marchel","Lily","Tyrion","Sersi","Rachel","Phoebe","Heisenberg","Joey","chandler","Jon Snow","Sansa"
             ,"Little Finger","Daenerys","Arya ","Joffery","Dwight","Jim","Angela","Kevin","Michael","Walter White","Jesse Pinkman","Skyler White"
             ,"Harvey Specter","Michael Ross","Rachel Zane","Jessica Pearson"));
+    EmojIconActions emojIcon;
+    EmojiconEditText input, emojiconEditText2;
+    EmojiconTextView textView;
+    ImageView emojiButton;
+    View rootView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        rootView = findViewById(R.id.root_view);
+        emojiButton = (ImageView) findViewById(R.id.emoji_btn);
+        input=(EmojiconEditText)findViewById(R.id.input);
         getWindow().setBackgroundDrawableResource(R.drawable.background) ;
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null){
@@ -94,8 +110,29 @@ public class Chat extends AppCompatActivity {
                 overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
+        /************************emoji----------------------------------**/
+        emojIcon = new EmojIconActions(this, rootView,input, emojiButton);
+        emojIcon.ShowEmojIcon();
+        emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
+            @Override
+            public void onKeyboardOpen() {
+                Log.e("Keyboard", "open");
+            }
+
+            @Override
+            public void onKeyboardClose() {
+                Log.e("Keyboard", "close");
+            }
+        });
+
+
+
+
+
+
+        /**--------------------------------------------------------------**/
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        final EditText input = (EditText) findViewById(R.id.input);
+        //final EditText input = (EditText) findViewById(R.id.input);
         listView = (ListView) findViewById(R.id.list);
        t=(TextView) findViewById(R.id.activity_name);
         b= getIntent().getExtras();

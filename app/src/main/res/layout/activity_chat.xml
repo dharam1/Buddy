@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/root_view"
     tools:context="com.example.dharmendra.buddy1.Chat">
 
     <android.support.design.widget.AppBarLayout
@@ -29,7 +30,9 @@
 
         </android.support.v7.widget.Toolbar>
 
+
     </android.support.design.widget.AppBarLayout>
+
     <include layout="@layout/content_chat" />
 
 
