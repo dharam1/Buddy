@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -138,7 +139,7 @@ public class HashMapAdapter2 extends BaseAdapter {
                 SimpleDateFormat f1 = new SimpleDateFormat("HH:mm:ss");
                 try{
                      Date d = f1.parse(nontime);
-                    SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
+                    SimpleDateFormat f2 = new SimpleDateFormat("hh:mm");
                     timev.setText(f2.format(d).toUpperCase());
                 }
                 catch (Exception e){
@@ -157,9 +158,15 @@ public class HashMapAdapter2 extends BaseAdapter {
         }
         if(count.equals("0")){
             counter.setVisibility(View.GONE);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) lmv.getLayoutParams();
+            params.weight = 8.0f;
+            lmv.setLayoutParams(params);
             Log.d("hjk","inside");
         }
         else {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) lmv.getLayoutParams();
+            params.weight = 7.0f;
+            lmv.setLayoutParams(params);
             counter.setText(count);
             Log.d("hjk","outside");
         }
