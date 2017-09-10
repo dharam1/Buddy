@@ -27,13 +27,13 @@
             android:paddingLeft="10dp"
             android:text="Hello"
             android:textColor="#000"/>
-        <TextView
+        <ImageButton
             android:id="@+id/button1"
             android:gravity="center"
-            android:background="#80ffff"
             android:layout_width="0dp"
+            android:background="#fff"
             android:layout_height="match_parent"
-            android:text="Friend"
+            android:src="@drawable/ic_send"
             android:layout_weight="1"/>
        <ImageButton
            android:layout_width="0dp"

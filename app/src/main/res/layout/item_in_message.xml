@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:textColor="#37474f"
         android:layout_below="@+id/message_user"
-        emojicon:emojiconSize="25sp"/>
+        emojicon:emojiconSize="20sp"/>
     <TextView
         android:id="@+id/message_time"
         android:layout_width="wrap_content"
