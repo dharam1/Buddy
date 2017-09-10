@@ -12,6 +12,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_gravity="center_vertical"
+            android:backgroundTint="#E11D1D"
             android:layout_marginLeft="15dp"
             android:background="@drawable/delete"/>
     <TextView
@@ -19,6 +20,7 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:textColor="#E11D1D"
         android:textStyle="bold"
         android:text="Delete Topic" />
     </android.support.v7.widget.CardView>

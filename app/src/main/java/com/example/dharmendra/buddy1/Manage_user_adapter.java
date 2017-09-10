@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -177,13 +178,13 @@ public class Manage_user_adapter extends BaseAdapter {
 
 
             if (receive.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_receive);
+                request.setImageResource(R.drawable.ic_received);
                 request.setClickable(false);
             } else if (send.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_alreadysend);
+                request.setImageResource(R.drawable.ic_alreadysent);
                 request.setClickable(false);
             } else if(connection.contains(item.getKey())){
-                request.setImageResource(R.drawable.connection);
+                request.setImageResource(R.drawable.ic_connection);
                 request.setClickable(false);
             }
             else {
@@ -213,7 +214,7 @@ public class Manage_user_adapter extends BaseAdapter {
                         Model2 m2 = new Model2(to, from, actname);
                         mDatabase.child(user__Id).setValue(m2);
 
-                        request.setImageResource(R.drawable.ic_alreadysend);
+                        request.setImageResource(R.drawable.ic_alreadysent);
                         send.add(item.getKey());
                         receive.add(user);
                         request.setClickable(false);
@@ -227,14 +228,27 @@ public class Manage_user_adapter extends BaseAdapter {
        else if(!user.equals(admin)&&!user.equals(item.getKey())){
             request.setVisibility(View.VISIBLE);
             kick.setVisibility(View.INVISIBLE);
+
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) kick.getLayoutParams();
+            params.weight = 0.0f;
+            kick.setLayoutParams(params);
+
+            params = (LinearLayout.LayoutParams) request.getLayoutParams();
+            params.weight = 0.75f;
+            request.setLayoutParams(params);
+
+            params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
+            params.weight = 4.25f;
+            ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
+
             if (receive.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_receive);
+                request.setImageResource(R.drawable.ic_received);
                 request.setClickable(false);
             } else if (send.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_alreadysend);
+                request.setImageResource(R.drawable.ic_alreadysent);
                 request.setClickable(false);
             } else if(connection.contains(item.getKey())){
-                request.setImageResource(R.drawable.connection);
+                request.setImageResource(R.drawable.ic_connection);
                 request.setClickable(false);
             }
             else {
@@ -264,7 +278,7 @@ public class Manage_user_adapter extends BaseAdapter {
                         Model2 m2 = new Model2(to, from, actname);
                         mDatabase.child(user__Id).setValue(m2);
 
-                        request.setImageResource(R.drawable.ic_alreadysend);
+                        request.setImageResource(R.drawable.ic_alreadysent);
                         send.add(item.getKey());
                         receive.add(user);
                         request.setClickable(false);
