@@ -46,7 +46,7 @@ public class Manage_user_adapter extends BaseAdapter {
     CardView cardview;
     Context context;
     ImageButton kick;
-    TextView request;
+    ImageButton request;
     int aid;
     DatabaseReference mDatabase;
     ArrayList<String> list=new ArrayList<>();
@@ -99,7 +99,7 @@ public class Manage_user_adapter extends BaseAdapter {
             result = convertView;
         }
         kick = (ImageButton) result.findViewById(R.id.button);
-        request = (TextView) result.findViewById(R.id.button1);
+        request = (ImageButton) result.findViewById(R.id.button1);
         cardView = (CardView) result.findViewById(R.id.card_view);
         final LinkedHashMap.Entry<String, String> item = getItem(position);
         //if(!item.getKey().equals(user))
@@ -177,14 +177,18 @@ public class Manage_user_adapter extends BaseAdapter {
 
 
             if (receive.contains(item.getKey())) {
-                request.setText("Already Receive");
-                request.setEnabled(false);
+                request.setImageResource(R.drawable.ic_receive);
+                request.setClickable(false);
             } else if (send.contains(item.getKey())) {
-                request.setText("Already Send");
-                request.setEnabled(false);
-            } else {
-                request.setEnabled(true);
-                request.setText("Send");
+                request.setImageResource(R.drawable.ic_alreadysend);
+                request.setClickable(false);
+            } else if(connection.contains(item.getKey())){
+                request.setImageResource(R.drawable.connection);
+                request.setClickable(false);
+            }
+            else {
+                request.setClickable(true);
+                request.setImageResource(R.drawable.ic_send);
                 request.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -209,9 +213,10 @@ public class Manage_user_adapter extends BaseAdapter {
                         Model2 m2 = new Model2(to, from, actname);
                         mDatabase.child(user__Id).setValue(m2);
 
-                        request.setText("Already Send");
+                        request.setImageResource(R.drawable.ic_alreadysend);
                         send.add(item.getKey());
-                        request.setEnabled(false);
+                        receive.add(user);
+                        request.setClickable(false);
                         notifyDataSetChanged();
                     }
 
@@ -223,14 +228,18 @@ public class Manage_user_adapter extends BaseAdapter {
             request.setVisibility(View.VISIBLE);
             kick.setVisibility(View.INVISIBLE);
             if (receive.contains(item.getKey())) {
-                request.setText("Already Receive");
-                request.setEnabled(false);
+                request.setImageResource(R.drawable.ic_receive);
+                request.setClickable(false);
             } else if (send.contains(item.getKey())) {
-                request.setText("Already Send");
-                request.setEnabled(false);
-            } else {
-                request.setEnabled(true);
-                request.setText("Send");
+                request.setImageResource(R.drawable.ic_alreadysend);
+                request.setClickable(false);
+            } else if(connection.contains(item.getKey())){
+                request.setImageResource(R.drawable.connection);
+                request.setClickable(false);
+            }
+            else {
+                request.setClickable(true);
+                request.setImageResource(R.drawable.ic_send);
                 request.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -255,9 +264,10 @@ public class Manage_user_adapter extends BaseAdapter {
                         Model2 m2 = new Model2(to, from, actname);
                         mDatabase.child(user__Id).setValue(m2);
 
-                        request.setText("Already Send");
+                        request.setImageResource(R.drawable.ic_alreadysend);
                         send.add(item.getKey());
-                        request.setEnabled(false);
+                        receive.add(user);
+                        request.setClickable(false);
                         notifyDataSetChanged();
                     }
 
