@@ -45,7 +45,8 @@ public class Manage_user_adapter extends BaseAdapter {
     ImageButton manageuser;
     CardView cardview;
     Context context;
-    ImageButton kick,request;
+    ImageButton kick;
+    TextView request;
     int aid;
     DatabaseReference mDatabase;
     ArrayList<String> list=new ArrayList<>();
@@ -98,7 +99,7 @@ public class Manage_user_adapter extends BaseAdapter {
             result = convertView;
         }
         kick = (ImageButton) result.findViewById(R.id.button);
-        request = (ImageButton) result.findViewById(R.id.button1);
+        request = (TextView) result.findViewById(R.id.button1);
         cardView = (CardView) result.findViewById(R.id.card_view);
         final LinkedHashMap.Entry<String, String> item = getItem(position);
         //if(!item.getKey().equals(user))
@@ -176,18 +177,14 @@ public class Manage_user_adapter extends BaseAdapter {
 
 
             if (receive.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_received);
-                request.setClickable(false);
+                request.setText("Already Receive");
+                request.setEnabled(false);
             } else if (send.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_sent);
-                request.setClickable(false);
-            }
-            else if(connection.contains(item.getKey())){
-                request.setImageResource(R.drawable.ic_friends);
-                request.setClickable(false);
-            }
-            else {
-                request.setClickable(true);
+                request.setText("Already Send");
+                request.setEnabled(false);
+            } else {
+                request.setEnabled(true);
+                request.setText("Send");
                 request.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -212,9 +209,9 @@ public class Manage_user_adapter extends BaseAdapter {
                         Model2 m2 = new Model2(to, from, actname);
                         mDatabase.child(user__Id).setValue(m2);
 
+                        request.setText("Already Send");
                         send.add(item.getKey());
-                        request.setImageResource(R.drawable.ic_sent);
-                        request.setClickable(false);
+                        request.setEnabled(false);
                         notifyDataSetChanged();
                     }
 
@@ -226,18 +223,14 @@ public class Manage_user_adapter extends BaseAdapter {
             request.setVisibility(View.VISIBLE);
             kick.setVisibility(View.INVISIBLE);
             if (receive.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_received);
-                request.setClickable(false);
+                request.setText("Already Receive");
+                request.setEnabled(false);
             } else if (send.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_sent);
-                request.setClickable(false);
-            }
-            else if(connection.contains(item.getKey())){
-                request.setImageResource(R.drawable.ic_friends);
-                request.setClickable(false);
-            }
-            else {
-                request.setClickable(true);
+                request.setText("Already Send");
+                request.setEnabled(false);
+            } else {
+                request.setEnabled(true);
+                request.setText("Send");
                 request.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -262,9 +255,9 @@ public class Manage_user_adapter extends BaseAdapter {
                         Model2 m2 = new Model2(to, from, actname);
                         mDatabase.child(user__Id).setValue(m2);
 
+                        request.setText("Already Send");
                         send.add(item.getKey());
-                        request.setImageResource(R.drawable.ic_sent);
-                        request.setClickable(false);
+                        request.setEnabled(false);
                         notifyDataSetChanged();
                     }
 
