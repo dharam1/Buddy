@@ -107,12 +107,46 @@ public class Manage_user_adapter extends BaseAdapter {
         ((TextView) result.findViewById(R.id.textView)).setText(item.getValue());
         Log.d("grp info", user + " " + admin + " " + item.getKey());
         if(user.equals(item.getKey())){
+            if(user.equals(admin)){
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) kick.getLayoutParams();
+                params.weight = 0.0f;
+                kick.setLayoutParams(params);
+
+                params = (LinearLayout.LayoutParams) request.getLayoutParams();
+                params.weight = 0.0f;
+                request.setLayoutParams(params);
+
+                params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.tv_admin)).getLayoutParams();
+                params.weight = 1.0f;
+                ((TextView) result.findViewById(R.id.tv_admin)).setLayoutParams(params);
+                ((TextView) result.findViewById(R.id.tv_admin)).setVisibility(View.VISIBLE);
+
+                params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
+                params.weight = 4.0f;
+                ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
+            }
             kick.setVisibility(View.INVISIBLE);
             request.setVisibility(View.INVISIBLE);
         }
         else if(user.equals(admin) && !user.equals(item.getKey())){
-            kick.setVisibility(View.VISIBLE);
-            request.setVisibility(View.VISIBLE);
+
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) kick.getLayoutParams();
+            params.weight = 0.75f;
+            kick.setLayoutParams(params);
+
+            params = (LinearLayout.LayoutParams) request.getLayoutParams();
+            params.weight = 0.75f;
+            request.setLayoutParams(params);
+
+            params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.tv_admin)).getLayoutParams();
+            params.weight = 0.0f;
+            ((TextView) result.findViewById(R.id.tv_admin)).setLayoutParams(params);
+            ((TextView) result.findViewById(R.id.tv_admin)).setVisibility(View.GONE);
+
+            params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
+            params.weight = 3.5f;
+            ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
+
             if (list.contains(item.getKey())/**&&!item.getKey().equals(user)**/) {
                 kick.setImageResource(R.drawable.ic_ban);
                 kick.setOnClickListener(new View.OnClickListener() {
@@ -226,20 +260,44 @@ public class Manage_user_adapter extends BaseAdapter {
             }
         }
        else if(!user.equals(admin)&&!user.equals(item.getKey())){
-            request.setVisibility(View.VISIBLE);
-            kick.setVisibility(View.INVISIBLE);
 
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) kick.getLayoutParams();
-            params.weight = 0.0f;
-            kick.setLayoutParams(params);
 
-            params = (LinearLayout.LayoutParams) request.getLayoutParams();
-            params.weight = 0.75f;
-            request.setLayoutParams(params);
+            if(!admin.equals(item.getKey())){
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) kick.getLayoutParams();
+                params.weight = 0.0f;
+                kick.setLayoutParams(params);
+                kick.setVisibility(View.INVISIBLE);
 
-            params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
-            params.weight = 4.25f;
-            ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
+                params = (LinearLayout.LayoutParams) request.getLayoutParams();
+                params.weight = 0.75f;
+                request.setLayoutParams(params);
+                request.setVisibility(View.VISIBLE);
+
+                params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
+                params.weight = 4.25f;
+                ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
+
+                ((TextView) result.findViewById(R.id.tv_admin)).setVisibility(View.GONE);
+
+            }
+            else{
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) kick.getLayoutParams();
+                params.weight = 0.0f;
+                kick.setLayoutParams(params);
+
+                params = (LinearLayout.LayoutParams) request.getLayoutParams();
+                params.weight = 0.75f;
+                request.setLayoutParams(params);
+
+                params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.tv_admin)).getLayoutParams();
+                params.weight = 1.0f;
+                ((TextView) result.findViewById(R.id.tv_admin)).setLayoutParams(params);
+                ((TextView) result.findViewById(R.id.tv_admin)).setVisibility(View.VISIBLE);
+
+                params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
+                params.weight = 3.25f;
+                ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
+            }
 
             if (receive.contains(item.getKey())) {
                 request.setImageResource(R.drawable.ic_received);
