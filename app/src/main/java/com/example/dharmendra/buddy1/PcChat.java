@@ -96,7 +96,7 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        ImageView fab = (ImageView) findViewById(R.id.fab);
         input = (EditText) findViewById(R.id.input);
         listView = (ListView) findViewById(R.id.list);
         t=(TextView) findViewById(R.id.activity_name);
