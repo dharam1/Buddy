@@ -7,31 +7,37 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.dharmendra.buddy1.manageuser"
     tools:showIn="@layout/activity_manageuser">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="5dp"
-        android:weightSum="1">
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
         <TextView
             android:id="@+id/c"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".5"/>
-        <TextView
-            android:id="@+id/paticipants"
+            android:layout_height="wrap_content"
+            android:text="0 participants"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"/>
+
+        <view
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/view"
+            android:layout_below="@+id/c"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"/>
+
+
+        <ListView
+            android:id="@+id/simpleListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_weight=".5"
-            android:text="Participants" />
-    </LinearLayout>
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/view"
+            android:divider="@drawable/divider1"
+            android:footerDividersEnabled="false"/>
 
-    <ListView
-        android:id="@+id/simpleListView"
-        android:layout_width="match_parent"
-        android:paddingTop="40dp"
-        android:layout_height="match_parent"
-        android:divider="@drawable/divider1"
-        android:footerDividersEnabled="false"/>
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

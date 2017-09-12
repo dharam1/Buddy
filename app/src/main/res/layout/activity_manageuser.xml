@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,6 +9,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/appbarlayout"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -46,8 +47,44 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_manageuser" />
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appbarlayout"
+        android:background="@color/white">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/c"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0 participants"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/c"
+            android:id="@+id/view"
+            android:layout_marginTop="5dp"
+            android:background="#c1c1c1"
+            android:alpha="0.6"/>
 
 
+        <ListView
+            android:id="@+id/simpleListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/view"
+            android:divider="@color/white" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
-</android.support.design.widget.CoordinatorLayout>
+
+</RelativeLayout>

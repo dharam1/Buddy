@@ -247,7 +247,7 @@ public class manageuser extends AppCompatActivity {
                     map.put(users,nickname);
 
                 }
-                count.setText(String.valueOf(map.size()));
+                count.setText(String.valueOf(map.size()) + " participants");
                 adapter = new Manage_user_adapter(map,cidd,list,admin,send,receive,connection,activityName,getApplicationContext());
                 manageuser.setAdapter(adapter);
             }

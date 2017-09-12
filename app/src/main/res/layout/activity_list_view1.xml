@@ -52,6 +52,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="hello"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:textColor="#607D8B"
                 android:textSize="12sp" />
@@ -59,13 +60,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginRight="5dp"
+                android:layout_marginTop="2dp"
                 android:layout_weight="1"
                 android:weightSum="2"
                 android:orientation="horizontal">
                 <Button
                     android:id="@+id/accept"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
                     android:text="Accept"
                     android:background="@drawable/round_button"
@@ -73,7 +75,7 @@
                 <Button
                     android:id="@+id/reject"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
                     android:background="@drawable/round_button"
                     android:text="Reject"
