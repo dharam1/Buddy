@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -60,6 +61,7 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
     DatabaseReference mDatabase,mDatabase1;
     CustomRenderer customRenderer;
     private ClusterManager<myitem> mClusterManager;
+    private static final long DRAWER_DELAY = 250;
     GPSTracker gps;
     Double latitude=0.0,longitude=0.0;
     LatLng pos;
@@ -196,7 +198,16 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
             goLoginScreen();
         }
         if (item.getItemId() == R.id.menu_share) {
-            Toast.makeText(getContext(), "Implement Share", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey there, I am using Buddy App! Download the app now :D");
+                    sendIntent.setType("text/plain");
+                    startActivity(Intent.createChooser(sendIntent, "Buddy"));
+                }
+            }, DRAWER_DELAY);
         }
         if (item.getItemId() == R.id.refresh) {
             Fragment fragment = FirstFragment.newInstance();

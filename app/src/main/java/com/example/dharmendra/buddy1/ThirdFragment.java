@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -49,6 +50,7 @@ public class ThirdFragment extends Fragment {
     String user,user_login;
     int count;
     DatabaseReference mDatabase,mDatabase1;
+    private static final long DRAWER_DELAY = 250;
     String name;
     LinkedHashMap<String,String> request_list=new LinkedHashMap<>();
     LinkedHashMap<String,String> url_list=new LinkedHashMap<>();
@@ -175,7 +177,16 @@ public class ThirdFragment extends Fragment {
             goLoginScreen();
         }
         if (item.getItemId() == R.id.menu_share) {
-            Toast.makeText(getContext(), "Implement Share", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey there, I am using Buddy App! Download the app now :D");
+                    sendIntent.setType("text/plain");
+                    startActivity(Intent.createChooser(sendIntent, "Buddy"));
+                }
+            }, DRAWER_DELAY);
         }
 
         return false;
