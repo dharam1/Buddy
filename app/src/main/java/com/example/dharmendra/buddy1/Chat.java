@@ -113,6 +113,7 @@ public class Chat extends AppCompatActivity {
         });
         /**-----------------------------emoji----------------------------------**/
         emojIcon = new EmojIconActions(this, rootView,input, emojiButton);
+        emojIcon.setIconsIds(R.drawable.ic_keyboard, R.drawable.ic_emoji);
         emojIcon.ShowEmojIcon();
         emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
             @Override
