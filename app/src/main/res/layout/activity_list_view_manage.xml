@@ -1,4 +1,4 @@
-
+<!--  Everytime you change height of this card, go to Manageuser and change the value in setListViewHeightBasedOnChildren method-->
 <android.support.v7.widget.CardView
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"

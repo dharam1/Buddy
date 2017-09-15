@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.dharmendra.buddy1.manageuser">
+    tools:context="com.example.dharmendra.buddy1.manageuser"
+    android:background="#f7f7f7">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -47,10 +48,17 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.CardView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/appbarlayout"
+        android:layout_below="@id/appbarlayout">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:id="@+id/card1"
+        android:layout_height="wrap_content"
         android:background="@color/white">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -72,7 +80,7 @@
             android:layout_below="@+id/c"
             android:id="@+id/view"
             android:layout_marginTop="5dp"
-            android:background="#c1c1c1"
+            android:background="@color/view"
             android:alpha="0.6"/>
 
 
@@ -83,8 +91,36 @@
             android:layout_marginLeft="5dp"
             android:layout_below="@+id/view"
             android:divider="@color/white" />
+
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_below="@id/card1"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:layout_marginTop="20dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/ic_delete"/>
+                <TextView
+                    android:id="@+id/footer"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#E11D1D"
+                    android:textStyle="bold"
+                    android:text="Delete Topic" />
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+    </ScrollView>
 
 
 </RelativeLayout>
