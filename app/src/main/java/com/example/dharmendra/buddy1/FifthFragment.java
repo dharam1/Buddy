@@ -299,8 +299,91 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             Toast.makeText(getContext(), "Max allow 30 characters", Toast.LENGTH_SHORT).show();
             }
             else {
-                title = content;
-                secondPopUp();
+                //gps=new GPSTracker(getContext());
+                // if (gps.canGetLocation()) {
+                if(!latitude.equals(0.0)&&!longitude.equals(0.0)){
+                    //latitude = gps.getLatitude();
+                    //longitude = gps.getLongitude();
+                    user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    mDatabase = FirebaseDatabase.getInstance().getReference("activity");
+                    //flag=true;
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            /**for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                             Activity1 post1 = postSnapshot.getValue(Activity1.class);
+                             int status=post1.getStatus();
+                             Double lat=post1.getLatitude();
+                             if (lat.equals(latitude)&&status==1){
+                             //flag = false;
+                             Log.d("flag", "fs");
+                             break;
+                             }
+                             }**/
+                            /**if (flag == false) {
+                             Log.d("flag", "f");
+                             Toast.makeText(getContext(), "Please go to another location", Toast.LENGTH_SHORT).show();
+                             editText.setText("");
+                             }**/
+                            // else{
+                            mDatabase = FirebaseDatabase.getInstance().getReference("activity");
+                            Query lastQuery = mDatabase.orderByKey().limitToLast(1);
+                            lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+                                        Activity1 post1 = postSnapshot.getValue(Activity1.class);
+                                        ccid = post1.getCcid();
+                                        Log.d("flag",String.valueOf(ccid));
+                                    }
+                                    ccid=ccid+1;
+                                    if(ccid!=0){
+                                        Log.d("flag", "t");
+                                        mDatabase = FirebaseDatabase.getInstance().getReference("activity");
+                                        status=1;
+                                        act1 = new Activity1(user, content, latitude, longitude,ccid,status,address);
+
+
+                                        rand=new Random();
+                                        String nickname=x.get(rand.nextInt(x.size()));
+                                        final String userId = mDatabase.push().getKey();
+                                        mDatabase.child(String.valueOf(ccid)).setValue(act1);
+                                        FirebaseDatabase.getInstance()
+                                                .getReference("chats").child(String.valueOf(ccid))
+                                                .push()
+                                                .setValue(new ChatMessage1("Welcome to "+content+" admin here",user,nickname)
+                                                );
+                                        DatabaseReference mDatabase2 = FirebaseDatabase.getInstance().getReference("chats").child("nickname").child(String.valueOf(ccid));
+                                        mDatabase2.child(user).setValue(nickname);
+
+
+
+
+                                        Toast.makeText(getContext(), "Succesfully Added", Toast.LENGTH_SHORT).show();
+                                        pwindodd.dismiss();
+                                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                            // }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+                else{
+                    Toast.makeText(getContext(), "Please Select Location", Toast.LENGTH_SHORT).show();
+                }
             }
             }else{
             Toast.makeText(getContext(), "Network Error", Toast.LENGTH_SHORT).show();
@@ -323,61 +406,6 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
         }
     };
 
-    private void secondPopUp(){
-        try {
-            LayoutInflater inflater = (LayoutInflater) getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            layout = inflater.inflate(R.layout.popup,(ViewGroup) getView().findViewById(R.id.popup_element));
-            pwindodd = new PopupWindow(layout, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
-            pwindodd.showAtLocation(layout, Gravity.CENTER, 0, 0);
-            //pwindodd.setBackgroundDrawable(new ColorDrawable(
-            //      android.graphics.Color.TRANSPARENT));
-            editText=(EditText)layout.findViewById(R.id.edittext);
-            Button add_activity = (Button) layout.findViewById(R.id.add_activity);
-            final TextView countv=(TextView)layout.findViewById(R.id.count);
-            final TextWatcher mTextEditorWatcher = new TextWatcher() {
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    countv.setText(String.valueOf(30 - s.length()));
-
-
-                }
-
-                public void afterTextChanged(Editable s) {
-                }
-            };
-            editText.addTextChangedListener(mTextEditorWatcher);
-            imageButton = (ImageButton) layout.findViewById(R.id.close);
-            imageButton.setOnClickListener(cancel_button);
-            add_activity.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(haveNetworkConnection()){
-                        content = editText.getText().toString().trim();
-                        if (content.equals("")) {
-                            Toast.makeText(getContext(), "Please Enter some Text", Toast.LENGTH_SHORT).show();
-                        }
-                        else if(content.length()>30) {
-                            Toast.makeText(getContext(), "Max allow 30 characters", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            title = content;
-                            secondPopUp();
-                        }
-                    }else{
-                        Toast.makeText(getContext(), "Network Error", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View rootview= inflater.inflate(R.layout.fragment_fifth, container, false);
