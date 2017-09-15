@@ -27,8 +27,8 @@
                 android:layout_weight="2.25"
                 android:gravity="center_vertical"
                 android:text="Hello"
-                android:background="#ffff"
-                android:textColor="#000"
+                android:background="@color/white"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
         </LinearLayout>
 

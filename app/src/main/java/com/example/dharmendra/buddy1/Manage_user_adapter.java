@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
@@ -116,35 +118,65 @@ public class Manage_user_adapter extends BaseAdapter {
                 params.weight = 0.0f;
                 request.setLayoutParams(params);
 
+                GradientDrawable drawable = (GradientDrawable) ((TextView) result.findViewById(R.id.tv_admin)).getBackground();
+                drawable.setStroke(2, Color.parseColor("#63E722"));
+                ((TextView) result.findViewById(R.id.tv_admin)).setBackgroundResource(R.drawable.card_edge);
                 params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.tv_admin)).getLayoutParams();
                 params.weight = 1.0f;
                 ((TextView) result.findViewById(R.id.tv_admin)).setLayoutParams(params);
                 ((TextView) result.findViewById(R.id.tv_admin)).setVisibility(View.VISIBLE);
 
+                drawable = (GradientDrawable) ((TextView) result.findViewById(R.id.tv_you)).getBackground();
+                drawable.setStroke(2, Color.parseColor("#ff7d0c"));
+                ((TextView) result.findViewById(R.id.tv_you)).setBackgroundResource(R.drawable.card_edge);
+                params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.tv_you)).getLayoutParams();
+                params.weight = 1.0f;
+                ((TextView) result.findViewById(R.id.tv_you)).setLayoutParams(params);
+                ((TextView) result.findViewById(R.id.tv_you)).setVisibility(View.VISIBLE);
+
+                params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
+                params.weight = 3.0f;
+                ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
+            }
+            else{
+                GradientDrawable drawable = (GradientDrawable) ((TextView) result.findViewById(R.id.tv_you)).getBackground();
+                drawable.setStroke(2, Color.parseColor("#ff7d0c"));
+                ((TextView) result.findViewById(R.id.tv_you)).setBackgroundResource(R.drawable.card_edge);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.tv_you)).getLayoutParams();
+                params.weight = 1.0f;
+                ((TextView) result.findViewById(R.id.tv_you)).setLayoutParams(params);
+                ((TextView) result.findViewById(R.id.tv_you)).setVisibility(View.VISIBLE);
+
                 params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
                 params.weight = 4.0f;
                 ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
+
+                ((TextView) result.findViewById(R.id.tv_admin)).setVisibility(View.GONE);
             }
-            kick.setVisibility(View.INVISIBLE);
-            request.setVisibility(View.INVISIBLE);
+            kick.setVisibility(View.GONE);
+            request.setVisibility(View.GONE);
         }
         else if(user.equals(admin) && !user.equals(item.getKey())){
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) kick.getLayoutParams();
-            params.weight = 0.75f;
+            params.weight = 0.6f;
             kick.setLayoutParams(params);
+            kick.setVisibility(View.VISIBLE);
 
             params = (LinearLayout.LayoutParams) request.getLayoutParams();
-            params.weight = 0.75f;
+            params.weight = 0.6f;
             request.setLayoutParams(params);
+            request.setVisibility(View.VISIBLE);
 
             params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.tv_admin)).getLayoutParams();
             params.weight = 0.0f;
             ((TextView) result.findViewById(R.id.tv_admin)).setLayoutParams(params);
             ((TextView) result.findViewById(R.id.tv_admin)).setVisibility(View.GONE);
 
+            ((TextView) result.findViewById(R.id.tv_you)).setVisibility(View.GONE);
+
             params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
-            params.weight = 3.5f;
+            params.weight = 3.8f;
             ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
 
             if (list.contains(item.getKey())/**&&!item.getKey().equals(user)**/) {
@@ -212,14 +244,17 @@ public class Manage_user_adapter extends BaseAdapter {
 
 
             if (receive.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_received);
+                request.setImageResource(R.drawable.ic_wait);
                 request.setClickable(false);
             } else if (send.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_alreadysent);
+                request.setImageResource(R.drawable.ic_wait);
                 request.setClickable(false);
             } else if(connection.contains(item.getKey())){
-                request.setImageResource(R.drawable.ic_connection);
+                request.setVisibility(View.GONE);
                 request.setClickable(false);
+                params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
+                params.weight = 4.4f;
+                ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
             }
             else {
                 request.setClickable(true);
@@ -266,48 +301,59 @@ public class Manage_user_adapter extends BaseAdapter {
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) kick.getLayoutParams();
                 params.weight = 0.0f;
                 kick.setLayoutParams(params);
-                kick.setVisibility(View.INVISIBLE);
+                kick.setVisibility(View.GONE);
 
                 params = (LinearLayout.LayoutParams) request.getLayoutParams();
-                params.weight = 0.75f;
+                params.weight = 0.6f;
                 request.setLayoutParams(params);
                 request.setVisibility(View.VISIBLE);
 
                 params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
-                params.weight = 4.25f;
+                params.weight = 4.4f;
                 ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
 
                 ((TextView) result.findViewById(R.id.tv_admin)).setVisibility(View.GONE);
 
+                ((TextView) result.findViewById(R.id.tv_you)).setVisibility(View.GONE);
             }
             else{
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) kick.getLayoutParams();
                 params.weight = 0.0f;
                 kick.setLayoutParams(params);
+                kick.setVisibility(View.GONE);
 
                 params = (LinearLayout.LayoutParams) request.getLayoutParams();
-                params.weight = 0.75f;
+                params.weight = 0.6f;
                 request.setLayoutParams(params);
+                request.setVisibility(View.VISIBLE);
 
+                GradientDrawable drawable = (GradientDrawable) ((TextView) result.findViewById(R.id.tv_admin)).getBackground();
+                drawable.setStroke(2, Color.parseColor("#63E722"));
+                ((TextView) result.findViewById(R.id.tv_admin)).setBackgroundResource(R.drawable.card_edge);
                 params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.tv_admin)).getLayoutParams();
                 params.weight = 1.0f;
                 ((TextView) result.findViewById(R.id.tv_admin)).setLayoutParams(params);
                 ((TextView) result.findViewById(R.id.tv_admin)).setVisibility(View.VISIBLE);
 
                 params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
-                params.weight = 3.25f;
+                params.weight = 3.4f;
                 ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
+
+                ((TextView) result.findViewById(R.id.tv_you)).setVisibility(View.GONE);
             }
 
             if (receive.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_received);
+                request.setImageResource(R.drawable.ic_wait);
                 request.setClickable(false);
             } else if (send.contains(item.getKey())) {
-                request.setImageResource(R.drawable.ic_alreadysent);
+                request.setImageResource(R.drawable.ic_wait);
                 request.setClickable(false);
             } else if(connection.contains(item.getKey())){
-                request.setImageResource(R.drawable.ic_connection);
+                request.setVisibility(View.GONE);
                 request.setClickable(false);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ((TextView) result.findViewById(R.id.textView)).getLayoutParams();
+                params.weight = 4.0f;
+                ((TextView) result.findViewById(R.id.textView)).setLayoutParams(params);
             }
             else {
                 request.setClickable(true);
@@ -336,7 +382,7 @@ public class Manage_user_adapter extends BaseAdapter {
                         Model2 m2 = new Model2(to, from, actname);
                         mDatabase.child(user__Id).setValue(m2);
 
-                        request.setImageResource(R.drawable.ic_alreadysent);
+                        request.setImageResource(R.drawable.ic_wait);
                         send.add(item.getKey());
                         receive.add(user);
                         request.setClickable(false);

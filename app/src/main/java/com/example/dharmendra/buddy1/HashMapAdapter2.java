@@ -1,6 +1,7 @@
 package com.example.dharmendra.buddy1;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.util.LongSparseArray;
@@ -122,21 +123,26 @@ public class HashMapAdapter2 extends BaseAdapter {
         TextView counter=(TextView)result.findViewById(R.id.counter);
         TextView lmv=(TextView)result.findViewById(R.id.textView1);
         TextView timev=(TextView)result.findViewById(R.id.textView2);
+        LinearLayout ll = (LinearLayout) result.findViewById(R.id.ll);
+        LinearLayout ll2 = (LinearLayout) result.findViewById(R.id.ll2);
         if(time.equals("0")){
-            timev.setVisibility(View.GONE);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll.getLayoutParams();
+            params.weight = 2.0f;
+            ll.setLayoutParams(params);
+            ll2.setVisibility(View.GONE);
             Log.d("hjk","inside");
         }
         else {
             long t=Long.parseLong(time);
-            String date=DateFormat.format("dd-MM-yyyy", t).toString();
+            String date=DateFormat.format("dd/MM/yyyy", t).toString();
             long c_date=new Date().getTime();
-            String format=DateFormat.format("dd-MM-yyyy", c_date).toString();
+            String format=DateFormat.format("dd/MM/yyyy", c_date).toString();
             final Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DATE, -1);
-            String yest=DateFormat.format("dd-MM-yyyy",cal.getTime()).toString();
+            String yest=DateFormat.format("dd/MM/yyyy",cal.getTime()).toString();
             if(date.equals(format)){
                String nontime= DateFormat.format("HH:mm:ss",t).toString();
-                SimpleDateFormat f1 = new SimpleDateFormat("HH:mm:ss");
+                SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
                 try{
                      Date d = f1.parse(nontime);
                     SimpleDateFormat f2 = new SimpleDateFormat("hh:mm");
@@ -149,10 +155,10 @@ public class HashMapAdapter2 extends BaseAdapter {
 
             }
             else if(date.equals(yest)){
-                timev.setText("Yesterday");
+                timev.setText("YESTERDAY");
             }
             else {
-                timev.setText(DateFormat.format("dd-MM-yyyy", t));
+                timev.setText(DateFormat.format("dd/MM/yyyy", t));
                 Log.d("hjk", "outside");
             }
         }

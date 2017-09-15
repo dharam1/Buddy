@@ -67,7 +67,7 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
         messageText.setText(model.getMessageText());
         messageUser.setText(model.getNickname());
         // Format the date before showing it
-        messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", model.getMessageTime()));
+        messageTime.setText(DateFormat.format("dd/MM/yyyy HH:mm", model.getMessageTime()));
         clipboard=(ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
         v.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

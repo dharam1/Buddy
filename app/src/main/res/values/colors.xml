@@ -5,7 +5,11 @@
     <color name="colorAccent">#EF5350</color>
     <color name="icons">#FFE0B2</color>
     <color name="white">#fff</color>
+    <color name="green">#63E722</color>
+    <color name="orange">#ff7d0c</color>
     <color name="black">#000</color>
+    <color name="chat">#e1f3fb</color>
+    <color name="gray">#607D8B</color>
 </resources>
 
 
