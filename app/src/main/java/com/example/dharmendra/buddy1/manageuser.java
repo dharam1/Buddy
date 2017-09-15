@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -72,8 +74,8 @@ public class manageuser extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         LayoutInflater inflater = LayoutInflater.from(this);
-        final View vv = inflater.inflate(R.layout.footer_layout, null);
-        final TextView footer = (TextView) vv.findViewById(R.id.footer);
+        final CardView card = (CardView) findViewById(R.id.card_view);
+        card.setVisibility(View.GONE);
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         manageuser= (ListView)findViewById(R.id.simpleListView);
         count=(TextView)findViewById(R.id.c);
@@ -121,8 +123,8 @@ public class manageuser extends AppCompatActivity {
                 }
                 if(user.equals(admin)) {
                     Log.d("yuio",user+" "+admin);
-                    manageuser.addFooterView(vv);
-                    footer.setOnClickListener(new View.OnClickListener() {
+                    card.setVisibility(View.VISIBLE);
+                    card.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (haveNetworkConnection()) {
@@ -250,6 +252,7 @@ public class manageuser extends AppCompatActivity {
                 count.setText(String.valueOf(map.size()) + " participants");
                 adapter = new Manage_user_adapter(map,cidd,list,admin,send,receive,connection,activityName,getApplicationContext());
                 manageuser.setAdapter(adapter);
+                setListViewHeightBasedOnChildren(manageuser, adapter);
             }
 
             @Override
@@ -258,6 +261,21 @@ public class manageuser extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    public void setListViewHeightBasedOnChildren(ListView listView, Manage_user_adapter listAdapter) {
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        final float scale = getResources().getDisplayMetrics().density;
+        int pixels = (int) (50 * scale + 0.5f);
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = pixels * listAdapter.getCount();
+        listView.setLayoutParams(params);
     }
 
     @Override
