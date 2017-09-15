@@ -6,7 +6,7 @@ package com.example.dharmendra.buddy1;
 
 public class user {
 
-    public String UID;
+    public String uid;
     public String name,email,fid,url;
 
     // Default constructor required for calls to
@@ -14,9 +14,9 @@ public class user {
     public user() {
     }
 
-    public user(String UID, String fid , String name, String email,String url) {
+    public user(String uid, String fid , String name, String email,String url) {
         this.url=url;
-        this.UID = UID;
+        this.uid = uid;
         this.fid=fid;
         this.name=name;
         this.email=email;
@@ -28,6 +28,13 @@ public class user {
 
     public String getUrl(){
         return url;
+    }
+
+    public String getFid(){
+        return fid;
+    }
+    public String getUid(){
+        return uid;
     }
 }
 

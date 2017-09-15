@@ -22,6 +22,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginResult;
@@ -40,9 +41,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -62,6 +65,7 @@ public class Facebook_login extends AppCompatActivity{
     Boolean exists;
     String profilePicUrl;
     TextView textView,textView1;
+    ArrayList<String> friends = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +84,7 @@ public class Facebook_login extends AppCompatActivity{
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
-        loginButton.setReadPermissions(Arrays.asList("public_profile,email"));
+        loginButton.setReadPermissions(Arrays.asList("public_profile","email","user_friends"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
@@ -110,12 +114,16 @@ public class Facebook_login extends AppCompatActivity{
                                     Log.d("POP",email);
                                     Log.d("POP","POP");
                                     Log.d("POP",profilePicUrl);
+                                    myNewGraphReq();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Log.d("POP","POP12");
                                 }
                             }
                         });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,friendlists");
+                request.setParameters(parameters);
                 request.executeAsync();
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
@@ -136,6 +144,7 @@ public class Facebook_login extends AppCompatActivity{
 
     private void handleFacebookAccessToken(final AccessToken accessToken) {
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -143,6 +152,8 @@ public class Facebook_login extends AppCompatActivity{
                     Toast.makeText(getApplicationContext(),R.string.firebase_error_login, Toast.LENGTH_LONG).show();
                 }
                 else{
+                    for(String friend:friends)
+                        Log.d("POPKL",friend);
                     final String token= FirebaseInstanceId.getInstance().getToken();
                     exists =false;
                     mDatabase = FirebaseDatabase.getInstance().getReference("users");
@@ -153,14 +164,65 @@ public class Facebook_login extends AppCompatActivity{
                             if(dataSnapshot.hasChild(user_id)) {
                                 mDatabase.child(user_id).child("token").setValue(token);
                                 exists = true;
+
+                                mDatabase = FirebaseDatabase.getInstance().getReference("users");
+                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                            user use = postSnapshot.getValue(user.class);
+                                            String fid = use.getFid();
+                                            if (friends.contains(fid)) {
+                                                Log.d("POPKL", "POPKL");
+                                                String uid = use.getUid();
+                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("connection").child(uid);
+                                                mDatabase.setValue(uid);
+                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(uid).child("connection").child(user_id);
+                                                mDatabase.setValue(user_id);
+
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
                             if(exists.equals(false)){
+
                                 mDatabase = FirebaseDatabase.getInstance().getReference("users");
                                 //String userId = mDatabase.push().getKey();
-                                String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                final String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                 user use = new user(user_id, fid, name, email,profilePicUrl);
+                                mDatabase = FirebaseDatabase.getInstance().getReference("users");
                                 mDatabase.child(user_id).setValue(use);
                                 mDatabase.child(user_id).child("token").setValue(token);
+                                mDatabase = FirebaseDatabase.getInstance().getReference("users");
+                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                            user use = postSnapshot.getValue(user.class);
+                                            String fid = use.getFid();
+                                            if (friends.contains(fid)) {
+                                                String uid = use.getUid();
+                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("connection").child(uid);
+                                                mDatabase.setValue(uid);
+                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(uid).child("connection").child(user_id);
+                                                mDatabase.setValue(user_id);
+
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
                             }
                         }
                         @Override
@@ -208,6 +270,33 @@ public class Facebook_login extends AppCompatActivity{
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    private void myNewGraphReq() {
+        final String graphPath = "/me/friends";
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        GraphRequest request = new GraphRequest(token,graphPath, null, HttpMethod.GET, new GraphRequest.Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+                JSONObject object = graphResponse.getJSONObject();
+                try {
+                    JSONArray arrayOfUsersInFriendList= object.getJSONArray("data");
+                    for(int i=0;i<object.length();i++) {
+                        JSONObject user = arrayOfUsersInFriendList.getJSONObject(i);
+                        String usersName = user.getString("name");
+                        String friendId = user.getString("id");
+                        friends.add(friendId);
+                        Log.d("POPNAME", friendId);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        Bundle param = new Bundle();
+        param.putString("fields", "name");
+        request.setParameters(param);
+        request.executeAsync();
     }
 
 }

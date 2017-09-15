@@ -197,7 +197,7 @@ public class HashMapAdapter1 extends BaseAdapter {
                                                postSnapshot.getRef().removeValue();
                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
                                                final String userId = mDatabase.push().getKey();
-                                               mDatabase.child(userId).setValue(user1);
+                                               mDatabase.child(user1).setValue(user1);
                                                Toast.makeText(context, "Accepted ", Toast.LENGTH_SHORT).show();
                                                //FragmentTransaction fragmentTransaction = act.getFragmentManager().beginTransaction();
                                               //Fragment fragment=new ThirdFragment();
@@ -230,7 +230,7 @@ public class HashMapAdapter1 extends BaseAdapter {
                                                mDatabase.child(userId).setValue(m1);
                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("connection");
                                                final String user_Id = mDatabase.push().getKey();
-                                               mDatabase.child(user_Id).setValue(user);
+                                               mDatabase.child(user).setValue(user);
                                                break;
                                            }
                                        }
