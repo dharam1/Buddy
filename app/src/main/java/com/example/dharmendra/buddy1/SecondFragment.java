@@ -447,6 +447,26 @@ public class SecondFragment extends Fragment {
                                         String id=postSnapshot.getValue().toString();
                                         if(id.equals(content)){
                                             postSnapshot.getRef().removeValue();
+                                            /**-------------------------------------------------------------------------------------------**/
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity");
+                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                        user_activity use=postSnapshot.getValue(user_activity.class);
+                                                        String n=use.getUser();
+                                                        if(n.equals(content)){
+                                                            postSnapshot.getRef().removeValue();
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                            /**--------------------------------------------------------------------------------------------**/
                                             Toast.makeText(getContext(), "Successfully Removed", Toast.LENGTH_SHORT).show();
                                             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                                             fragmentTransaction.replace(R.id.second, new SecondFragment());
@@ -489,6 +509,26 @@ public class SecondFragment extends Fragment {
                                         String id = postSnapshot.getValue().toString();
                                         if(id.equals(user)){
                                             postSnapshot.getRef().removeValue();
+                                            /**---------------------------------------------------------------------------------------------**/
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity");
+                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                        user_activity use=postSnapshot.getValue(user_activity.class);
+                                                        String n=use.getUser();
+                                                        if(n.equals(user)){
+                                                            postSnapshot.getRef().removeValue();
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                            /**-----------------------------------------------------------------------------------------------**/
                                             break;
                                         }
                                     }
