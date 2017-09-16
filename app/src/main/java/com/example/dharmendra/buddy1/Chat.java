@@ -212,6 +212,46 @@ public class Chat extends AppCompatActivity {
                                             .setValue(new ChatMessage1(input.getText().toString(),
                                                     FirebaseAuth.getInstance().getCurrentUser().getUid(),nickname)
                                             );
+                                    /**-----------------------------------------------------------------------------------------**/
+                                    /**mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(cidd)).child("users");
+                                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if(dataSnapshot.exists()){
+                                                dataSnapshot.getRef().removeValue();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });**/
+
+                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+                                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if(dataSnapshot.exists()){
+                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                        String user_name = postSnapshot.getValue().toString();
+                                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(cidd));
+                                                        user_activity act=new user_activity(user,cidd);
+                                                        mDatabase.setValue(act);
+                                                    }
+                                                }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
+
+                                    /**-----------------------------------------------------------------------------------------**/
                                     FirebaseDatabase.getInstance()
                                             .getReference("actnoti")
                                             .push()

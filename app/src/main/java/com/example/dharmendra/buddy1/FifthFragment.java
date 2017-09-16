@@ -360,6 +360,36 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
 
 
                                         Toast.makeText(getContext(), "Succesfully Added", Toast.LENGTH_SHORT).show();
+                                        /**-----------------------------------------------------------------------------------**/
+                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(ccid));
+                                        user_activity act=new user_activity(user,ccid);
+                                        mDatabase.setValue(act);
+
+
+                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+                                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if(dataSnapshot.exists()){
+                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                        String user_name = postSnapshot.getValue().toString();
+                                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(ccid));
+                                                        user_activity act=new user_activity(user,ccid);
+                                                        mDatabase.setValue(act);
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+
+
+
+                                        /**------------------------------------------------------------------------------------**/
                                         pwindodd.dismiss();
                                         Intent intent = new Intent(getActivity(), MainActivity.class);
                                         startActivity(intent);

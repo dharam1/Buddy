@@ -267,11 +267,69 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
         Dialog.setMessage("Loading...");
         Dialog.setCanceledOnTouchOutside(false);
         Dialog.show();**/
+        /**------------------------------------------------------------------------------------------**/
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    user_activity use=postSnapshot.getValue(user_activity.class);
+                    final int aid=Integer.parseInt(String.valueOf(use.getAid()));
+                    Log.d("popkl",String.valueOf(aid));
+                   mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(aid));
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.d("popkl","execute");
+                            Activity1 post1 = dataSnapshot.getValue(Activity1.class);
+                            int status=post1.getStatus();
+                            String f_id = post1.getUser();
+                            String n = post1.getName();
+                            Double l = post1.getLatitude();
+                            Double lo = post1.getLongitude();
+                            int ccid=post1.getCcid();
+                            ig = new IconGenerator(getApplicationContext());
+                            Bitmap bmp = ig.makeIcon(n);
+                            if(status==1) {
+                                Boolean check = false;
+                                if (f_id.equals(user)) {
+                                    check = true;
+                                    addItems(l, lo, n, ccid, check);
+                                } else {
+                                    addItems(l, lo, n, ccid, check);
+                                }
+                            }
+                            customRenderer = new CustomRenderer(getApplicationContext(), mMap, mClusterManager);
+                            mClusterManager.setRenderer(customRenderer);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+        /**------------------------------------------------------------------------------------------**/
+        /**user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference("activity");
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
                 Activity1 post1 = dataSnapshot.getValue(Activity1.class);
                 int status=post1.getStatus();
                 String f_id = post1.getUser();
@@ -348,7 +406,7 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });**/
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 10));
         mClusterManager = new ClusterManager<>(getContext(), mMap);
