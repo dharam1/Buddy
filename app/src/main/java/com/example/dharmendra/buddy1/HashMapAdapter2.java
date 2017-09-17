@@ -35,8 +35,9 @@ public class HashMapAdapter2 extends BaseAdapter {
     ArrayList mData1;
     ArrayList lastmessage;
     ArrayList messagetime;
+    ArrayList connectiontype;
 
-    public HashMapAdapter2(LinkedHashMap<String, String> map, LinkedHashMap<String, String> map2,LinkedHashMap<String, String> map3,LinkedHashMap<String, String> map4 ,LinkedHashMap<String,String > map1, Context context) {
+    public HashMapAdapter2(LinkedHashMap<String, String> map,LinkedHashMap<String,String> map5 ,LinkedHashMap<String, String> map2,LinkedHashMap<String, String> map3,LinkedHashMap<String, String> map4 ,LinkedHashMap<String,String > map1, Context context) {
         countlist=new ArrayList();
         //mData1.addAll(map1.entrySet());
         for ( Map.Entry<String, String> entry : map1.entrySet()) {
@@ -62,6 +63,12 @@ public class HashMapAdapter2 extends BaseAdapter {
             messagetime.add(entry.getValue());
         }
         Collections.reverse(messagetime);
+
+        connectiontype=new ArrayList();
+        for ( Map.Entry<String, String> entry1 : map5.entrySet()) {
+            connectiontype.add(entry1.getValue());
+        }
+        Collections.reverse(connectiontype);
        /** countlist = new ArrayList();
         countlist.addAll(countlist1);
         Collections.reverse(countlist);**/
@@ -100,6 +107,10 @@ public class HashMapAdapter2 extends BaseAdapter {
         String url11=url1.get(position).toString();
         String lm=lastmessage.get(position).toString();
         String time=messagetime.get(position).toString();
+        String type=connectiontype.get(position).toString();
+        TextView typev=(TextView)result.findViewById(R.id.type);
+        typev.setText(type);
+
           String count;
         if(countlist.isEmpty()){
             count="0";

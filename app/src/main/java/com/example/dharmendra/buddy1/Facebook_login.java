@@ -66,6 +66,7 @@ public class Facebook_login extends AppCompatActivity{
     String profilePicUrl;
     TextView textView,textView1;
     ArrayList<String> friends = new ArrayList<>();
+    ArrayList<String> fbblockeduser = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,18 +171,54 @@ public class Facebook_login extends AppCompatActivity{
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                            user use = postSnapshot.getValue(user.class);
-                                            String fid = use.getFid();
-                                            if (friends.contains(fid)) {
-                                                Log.d("POPKL", "POPKL");
-                                                String uid = use.getUid();
-                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("connection").child(uid);
-                                                mDatabase.setValue(uid);
-                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(uid).child("connection").child(user_id);
-                                                mDatabase.setValue(user_id);
+                                            final user use = postSnapshot.getValue(user.class);
+                                            final String fid = use.getFid();
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("fbblockeduser").child(user_id);
+                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    //if(dataSnapshot.exists()){
+                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                        String fidd = postSnapshot.getValue().toString();
+                                                        fbblockeduser.add(fidd);
 
-                                            }
+                                                    }
+
+                                                        if (friends.contains(fid)&&(!fbblockeduser.contains(fid))){
+
+                                                            Log.d("POPKLll", "POPKLll");
+                                                            String uid = use.getUid();
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("connection").child(uid);
+                                                            connection_type con = new connection_type(uid, "facebook");
+                                                            mDatabase.setValue(con);
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(uid).child("connection").child(user_id);
+                                                            connection_type conn = new connection_type(user_id, "facebook");
+                                                            mDatabase.setValue(conn);
+
+                                                        }
+
+                                                }
+                                               /** else{
+                                                        if (friends.contains(fid)) {
+                                                            Log.d("POPKL", "POPKL");
+                                                            String uid = use.getUid();
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("connection").child(uid);
+                                                            connection_type con = new connection_type(uid, "facebook");
+                                                            mDatabase.setValue(con);
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(uid).child("connection").child(user_id);
+                                                            connection_type conn = new connection_type(user_id, "facebook");
+                                                            mDatabase.setValue(conn);
+
+                                                        }
+                                                    }**/
+                                                //}
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
                                         }
+
                                     }
 
                                     @Override
@@ -204,17 +241,53 @@ public class Facebook_login extends AppCompatActivity{
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                            user use = postSnapshot.getValue(user.class);
-                                            String fid = use.getFid();
-                                            if (friends.contains(fid)) {
-                                                String uid = use.getUid();
-                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("connection").child(uid);
-                                                mDatabase.setValue(uid);
-                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(uid).child("connection").child(user_id);
-                                                mDatabase.setValue(user_id);
+                                            final user use = postSnapshot.getValue(user.class);
+                                            final String fid = use.getFid();
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("fbblockeduser").child(user_id);
+                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                   // if(dataSnapshot.exists()){
+                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                        String fidd = postSnapshot.getValue().toString();
+                                                        fbblockeduser.add(fidd);
 
-                                            }
+                                                    }
+
+                                                    if (friends.contains(fid)&&(!fbblockeduser.contains(fid))){
+
+                                                        Log.d("POPKLll", "POPKLll");
+                                                        String uid = use.getUid();
+                                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("connection").child(uid);
+                                                        connection_type con = new connection_type(uid, "facebook");
+                                                        mDatabase.setValue(con);
+                                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(uid).child("connection").child(user_id);
+                                                        connection_type conn = new connection_type(user_id, "facebook");
+                                                        mDatabase.setValue(conn);
+
+                                                    }
+                                                    }
+                                                    /**else{
+                                                        if (friends.contains(fid)) {
+                                                            Log.d("POPKL", "POPKL");
+                                                            String uid = use.getUid();
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("connection").child(uid);
+                                                            connection_type con = new connection_type(uid, "facebook");
+                                                            mDatabase.setValue(con);
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(uid).child("connection").child(user_id);
+                                                            connection_type conn = new connection_type(user_id, "facebook");
+                                                            mDatabase.setValue(conn);
+
+                                                        }
+                                                    }**/
+                                               // }
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
                                         }
+
                                     }
 
                                     @Override

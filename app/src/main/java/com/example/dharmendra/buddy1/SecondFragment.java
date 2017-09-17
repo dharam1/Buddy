@@ -69,6 +69,7 @@ public class SecondFragment extends Fragment {
     LinkedHashMap<String,String> s__count_list=new LinkedHashMap<>();
     LinkedHashMap<String,String> count__list=new LinkedHashMap<>();
     LinkedHashMap<String,String> last_message=new LinkedHashMap<>();
+    LinkedHashMap<String,String> connection_type=new LinkedHashMap<>();
     private static final long DRAWER_DELAY = 250;
     LinkedHashMap<String,String> message_time=new LinkedHashMap<>();
     LinkedHashMap<String,String> b_connection_list=new LinkedHashMap<>();
@@ -311,7 +312,9 @@ public class SecondFragment extends Fragment {
                 if (dataSnapshot.exists()){
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         Log.d("sui","sui");
-                        final String user1 = String.valueOf(postSnapshot.getValue());
+                        final connection_type con=postSnapshot.getValue(connection_type.class);
+                        final String user1=con.getUid();
+                        final String type=con.getType();
 
                         mDatabase1 = FirebaseDatabase.getInstance().getReference("users").child(user1);
                         mDatabase1.addValueEventListener(new ValueEventListener() {
@@ -325,6 +328,7 @@ public class SecondFragment extends Fragment {
                                 url_list.put(user1,url);
                                 s_urllist.add(url);
                                 connection_list.put(user1, name);
+                                connection_type.put(user1,type);
 
 
                             }
@@ -393,7 +397,7 @@ public class SecondFragment extends Fragment {
                                     countlist.add(count);
                                     s_countlist.add(count);
                                 }
-                                HashMapAdapter2 adapter = new HashMapAdapter2(connection_list, url_list,last_message ,message_time,count__list,getContext());
+                                HashMapAdapter2 adapter = new HashMapAdapter2(connection_list,connection_type ,url_list,last_message ,message_time,count__list,getContext());
                                 connectionlist.setAdapter(adapter);
                             }
 
@@ -444,8 +448,62 @@ public class SecondFragment extends Fragment {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                        String id=postSnapshot.getValue().toString();
+                                        connection_type con=postSnapshot.getValue(connection_type.class);
+                                        final String id=con.getUid();
                                         if(id.equals(content)){
+                                            /**-------------------------------------------------------------------------------------------**/
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection").child(content);
+                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    connection_type con=dataSnapshot.getValue(connection_type.class);
+                                                    String type=con.getType().toString();
+                                                    if(type.equals("facebook")){
+
+                                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("fid");
+                                                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                String fid=dataSnapshot.getValue().toString();
+                                                                mDatabase = FirebaseDatabase.getInstance().getReference("fbblockeduser").child(user).child(content);
+                                                                mDatabase.setValue(fid);
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(DatabaseError databaseError) {
+
+                                                            }
+                                                        });
+                                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("fid");
+                                                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                String fid=dataSnapshot.getValue().toString();
+                                                                mDatabase = FirebaseDatabase.getInstance().getReference("fbblockeduser").child(content).child(user);
+                                                                mDatabase.setValue(fid);
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(DatabaseError databaseError) {
+
+                                                            }
+                                                        });
+
+
+
+
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+
+
+                                            /**-------------------------------------------------------------------------------------------**/
                                             postSnapshot.getRef().removeValue();
                                             /**-------------------------------------------------------------------------------------------**/
                                             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity");
@@ -506,7 +564,8 @@ public class SecondFragment extends Fragment {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                        String id = postSnapshot.getValue().toString();
+                                        connection_type con=postSnapshot.getValue(connection_type.class);
+                                        final String id=con.getUid();
                                         if(id.equals(user)){
                                             postSnapshot.getRef().removeValue();
                                             /**---------------------------------------------------------------------------------------------**/

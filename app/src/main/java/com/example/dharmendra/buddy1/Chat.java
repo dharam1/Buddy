@@ -234,7 +234,8 @@ public class Chat extends AppCompatActivity {
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if(dataSnapshot.exists()){
                                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                        String user_name = postSnapshot.getValue().toString();
+                                                        connection_type con=postSnapshot.getValue(connection_type.class);
+                                                        String user_name = con.getUid().toString();
                                                         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(cidd));
                                                         user_activity act=new user_activity(user,cidd);
                                                         mDatabase.setValue(act);
