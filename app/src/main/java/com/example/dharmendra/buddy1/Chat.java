@@ -95,6 +95,7 @@ public class Chat extends AppCompatActivity {
         rootView = findViewById(R.id.root_view);
         emojiButton = (ImageView) findViewById(R.id.emoji_btn);
         input=(EmojiconEditText) findViewById(R.id.input);
+        input.setUseSystemDefault(true);
         getWindow().setBackgroundDrawableResource(R.drawable.background) ;
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null){
