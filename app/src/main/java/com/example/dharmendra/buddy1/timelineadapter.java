@@ -129,7 +129,7 @@ public class timelineadapter extends BaseAdapter {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Activity1 post1 = dataSnapshot.getValue(Activity1.class);
-                int status=post1.getStatus();
+                int status = post1.getStatus();
                 if(status==1) {
                     t.setText(name + " has started following activity " + post1.getName());
                 }
