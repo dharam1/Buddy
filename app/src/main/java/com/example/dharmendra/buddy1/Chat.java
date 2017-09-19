@@ -237,7 +237,8 @@ public class Chat extends AppCompatActivity {
                                                         connection_type con=postSnapshot.getValue(connection_type.class);
                                                         String user_name = con.getUid().toString();
                                                         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(cidd));
-                                                        user_activity act=new user_activity(user,cidd);
+                                                        String type="not created";
+                                                        user_activity act=new user_activity(user,cidd,type);
                                                         mDatabase.setValue(act);
                                                     }
                                                 }

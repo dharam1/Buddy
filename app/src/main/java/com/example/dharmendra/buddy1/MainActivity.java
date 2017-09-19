@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,7 +59,8 @@ import java.lang.reflect.Field;
 
 public class MainActivity extends AppCompatActivity implements FirstFragment.OnFragmentInteractionListener,
 SecondFragment.OnFragmentInteractionListener,ThirdFragment.OnFragmentInteractionListener,FourthFragment.OnFragmentInteractionListener,
-FifthFragment.OnFragmentInteractionListener,SixthFragment.OnFragmentInteractionListener,GoogleApiClient.OnConnectionFailedListener{
+FifthFragment.OnFragmentInteractionListener,SixthFragment.OnFragmentInteractionListener,GoogleApiClient.OnConnectionFailedListener
+,TimeLine.OnFragmentInteractionListener{
     FirebaseAuth firebaseAuth;
     private TextView mTextMessage;
     String user_login;
@@ -178,7 +180,7 @@ FifthFragment.OnFragmentInteractionListener,SixthFragment.OnFragmentInteractionL
         }
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content, FirstFragment.newInstance());
+        fragmentTransaction.replace(R.id.content, TimeLine/**FirstFragment**/.newInstance());
         fragmentTransaction.commit();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
 
@@ -238,7 +240,7 @@ FifthFragment.OnFragmentInteractionListener,SixthFragment.OnFragmentInteractionL
                 //Fragment fragment = null;
                 switch (item.getItemId()) {
                     case R.id.navigation_maps:
-                        fragment = FirstFragment.newInstance();
+                        fragment = TimeLine/**FirstFragment**/.newInstance();
                         break;
                     case R.id.navigation_connection:
                         fragment = SecondFragment.newInstance();

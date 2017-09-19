@@ -37,6 +37,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -259,6 +261,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
         initiatePopupRequest();
     }
     private PopupWindow pwindodd;
+
     private void initiatePopupRequest() {
         try {
             LayoutInflater inflater = (LayoutInflater) getContext()
@@ -269,6 +272,8 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             //pwindodd.setBackgroundDrawable(new ColorDrawable(
               //      android.graphics.Color.TRANSPARENT));
             editText=(EditText)layout.findViewById(R.id.edittext);
+
+
             Button add_activity = (Button) layout.findViewById(R.id.add_activity);
             final TextView countv=(TextView)layout.findViewById(R.id.count);
             final TextWatcher mTextEditorWatcher = new TextWatcher() {
@@ -362,7 +367,8 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                         Toast.makeText(getContext(), "Succesfully Added", Toast.LENGTH_SHORT).show();
                                         /**-----------------------------------------------------------------------------------**/
                                         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(ccid));
-                                        user_activity act=new user_activity(user,ccid);
+                                        String type= "Created";
+                                        user_activity act=new user_activity(user,ccid,type);
                                         mDatabase.setValue(act);
 
 
@@ -375,7 +381,8 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                                         connection_type con=postSnapshot.getValue(connection_type.class);
                                                         String user_name = con.getUid().toString();
                                                         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(ccid));
-                                                        user_activity act=new user_activity(user,ccid);
+                                                        String type= "Created";
+                                                        user_activity act=new user_activity(user,ccid,type);
                                                         mDatabase.setValue(act);
                                                     }
                                                 }

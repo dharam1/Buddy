@@ -83,7 +83,7 @@
         android:layout_height="60dp"
         android:id="@+id/add_activity"
         android:layout_alignParentBottom="true"
-        android:text="NEXT"
+        android:text="Submit"
         android:background="#ff0000"
         android:textColor="#fff"
         />
