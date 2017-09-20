@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by Dharmendra on 02-06-2017.
  */
@@ -108,8 +110,12 @@ public class HashMapAdapter2 extends BaseAdapter {
         String lm=lastmessage.get(position).toString();
         String time=messagetime.get(position).toString();
         String type=connectiontype.get(position).toString();
-        TextView typev=(TextView)result.findViewById(R.id.type);
-        typev.setText(type);
+        CircleImageView typev=(CircleImageView)result.findViewById(R.id.type);
+
+        if(type.equals("facebook"))
+            typev.setImageResource(R.drawable.ic_active_fb);
+        else if(type.equals("buddy"))
+            typev.setImageResource(R.mipmap.ic_launcher);
 
           String count;
         if(countlist.isEmpty()){

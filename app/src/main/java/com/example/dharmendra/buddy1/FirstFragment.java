@@ -78,7 +78,7 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
+        getActivity().setTitle("Map");
         gps=new GPSTracker(getContext());
         if (gps.canGetLocation()) {
             latitude = gps.getLatitude();
