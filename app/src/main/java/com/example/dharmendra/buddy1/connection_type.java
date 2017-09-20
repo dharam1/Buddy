@@ -25,6 +25,6 @@ public class connection_type {
     }
 
     public String getType(){
-        return type;
+        return type.toLowerCase();
     }
 }

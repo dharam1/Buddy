@@ -81,6 +81,7 @@ public class TimeLine extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        getActivity().setTitle("Timeline");
     }
 
     private void goLoginScreen() {
@@ -287,7 +288,7 @@ public class TimeLine extends Fragment {
                 }
                 Log.d("POPKLL",followeduser.size()+"");
 
-                adapter=new timelineadapter(followedactivityid,followeduser/**,followedactivity,followeddate**/,getActivity());
+                adapter=new timelineadapter(followedactivityid,followeduser,/**,followedactivity,followeddate**/getApplicationContext(),getActivity());
                 timeline.setAdapter(adapter);
             }
 

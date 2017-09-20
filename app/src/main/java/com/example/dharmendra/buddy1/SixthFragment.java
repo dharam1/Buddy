@@ -68,6 +68,7 @@ public class SixthFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        getActivity().setTitle("Notifications");
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

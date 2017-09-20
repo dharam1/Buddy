@@ -37,4 +37,14 @@
         app:layout_constraintBottom_toBottomOf="@+id/message_text"
         app:layout_constraintRight_toLeftOf="@+id/message_text" />
 
+    <TextView
+        android:id="@+id/message_date"
+        android:text="11:40"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:layout_marginRight="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/message_text"
+        app:layout_constraintRight_toLeftOf="@+id/message_text" />
+
 </android.support.constraint.ConstraintLayout>

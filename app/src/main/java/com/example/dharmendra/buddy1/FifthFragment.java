@@ -115,7 +115,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
+        getActivity().setTitle("Add a Topic");
     }
     private boolean haveNetworkConnection() {
         boolean haveConnectedWifi = false;

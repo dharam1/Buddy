@@ -121,15 +121,15 @@ public class HashMapAdapter1 extends BaseAdapter {
 
         TextView timev=(TextView)result.findViewById(R.id.textView2);
         long t=Long.parseLong(time);
-        String date=DateFormat.format("dd-MM-yyyy", t).toString();
+        String date=DateFormat.format("dd/MM/yyyy", t).toString();
         long c_date=new Date().getTime();
-        String format=DateFormat.format("dd-MM-yyyy", c_date).toString();
+        String format=DateFormat.format("dd/MM/yyyy", c_date).toString();
         final Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
-        String yest=DateFormat.format("dd-MM-yyyy",cal.getTime()).toString();
+        String yest=DateFormat.format("dd/MM/yyyy",cal.getTime()).toString();
         if(date.equals(format)){
-            String nontime= DateFormat.format("HH:mm:ss",t).toString();
-            SimpleDateFormat f1 = new SimpleDateFormat("HH:mm:ss");
+            String nontime= DateFormat.format("HH:mm",t).toString();
+            SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
             try{
                 Date d = f1.parse(nontime);
                 SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
@@ -142,8 +142,8 @@ public class HashMapAdapter1 extends BaseAdapter {
 
         }
         else if(date.equals(yest)){
-            String nontime= DateFormat.format("HH:mm:ss",t).toString();
-            SimpleDateFormat f1 = new SimpleDateFormat("HH:mm:ss");
+            String nontime= DateFormat.format("HH:mm",t).toString();
+            SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
             try{
                 Date d = f1.parse(nontime);
                 SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
@@ -155,9 +155,9 @@ public class HashMapAdapter1 extends BaseAdapter {
         }
 
         else {
-            String date1=DateFormat.format("dd-MM-yyyy",t).toString();
-            String nontime= DateFormat.format("HH:mm:ss",t).toString();
-            SimpleDateFormat f1 = new SimpleDateFormat("HH:mm:ss");
+            String date1=DateFormat.format("dd/MM/yyyy",t).toString();
+            String nontime= DateFormat.format("HH:mm",t).toString();
+            SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
             try{
                 Date d = f1.parse(nontime);
                 SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");

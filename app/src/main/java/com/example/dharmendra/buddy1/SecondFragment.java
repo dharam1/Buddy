@@ -100,6 +100,7 @@ public class SecondFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        getActivity().setTitle("Friends");
     }
     private void goLoginScreen() {
         Intent intent = new Intent(getContext(), Facebook_login.class);
