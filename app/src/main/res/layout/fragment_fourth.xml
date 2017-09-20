@@ -28,7 +28,7 @@
             android:id="@+id/simpleListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@drawable/divider1"/>
+            android:divider="@drawable/divider1" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
     </FrameLayout>

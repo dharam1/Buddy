@@ -140,13 +140,13 @@ public class Chat extends AppCompatActivity {
         ImageView fab = (ImageView) findViewById(R.id.fab);
         //final EditText input = (EditText) findViewById(R.id.input);
         listView = (ListView) findViewById(R.id.list);
-       t=(TextView) findViewById(R.id.activity_name);
+        t=(TextView) findViewById(R.id.activity_name);
         b= getIntent().getExtras();
         if (b!= null){
             cidd=b.getInt("int_key");
         }
         else{
-          //  Toast.makeText(this, "Not Passed", Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(this, "Not Passed", Toast.LENGTH_SHORT).show();
         }
 
         rand=new Random();
@@ -215,34 +215,34 @@ public class Chat extends AppCompatActivity {
                                             );
                                     /**-----------------------------------------------------------------------------------------**/
                                     /**mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(cidd)).child("users");
-                                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if(dataSnapshot.exists()){
-                                                dataSnapshot.getRef().removeValue();
-                                            }
-                                        }
+                                     mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.exists()){
+                                    dataSnapshot.getRef().removeValue();
+                                    }
+                                    }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                        }
+                                    }
                                     });**/
 
                                     mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
                                     mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if(dataSnapshot.exists()){
-                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                        connection_type con=postSnapshot.getValue(connection_type.class);
-                                                        String user_name = con.getUid().toString();
-                                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(cidd));
-                                                        String type="not created";
-                                                        user_activity act=new user_activity(user,cidd,type);
-                                                        mDatabase.setValue(act);
-                                                    }
+                                            if(dataSnapshot.exists()){
+                                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                    connection_type con=postSnapshot.getValue(connection_type.class);
+                                                    String user_name = con.getUid().toString();
+                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(cidd));
+                                                    String type="not created";
+                                                    user_activity act=new user_activity(user,cidd,type);
+                                                    mDatabase.setValue(act);
                                                 }
+                                            }
                                         }
 
                                         @Override
@@ -347,7 +347,7 @@ public class Chat extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item)
                     {
-                      //  Toast.makeText(Chat.this, "Collapse", Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(Chat.this, "Collapse", Toast.LENGTH_SHORT).show();
                         adapter = new MessageAdapter(Chat.this, ChatMessage1.class, R.layout.item_in_message,
                                 FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd);
                         listView.setAdapter(adapter);
@@ -357,7 +357,7 @@ public class Chat extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item)
                     {
-                       // Toast.makeText(Chat.this, "Expand", Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(Chat.this, "Expand", Toast.LENGTH_SHORT).show();
                         SearchManager searchManager =
                                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
                         SearchView searchView =

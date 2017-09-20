@@ -223,7 +223,8 @@ public class manageuser extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     //Model m = postSnapshot.getValue(Model.class);
-                    connection.add(postSnapshot.getValue().toString());
+                    connection_type con=postSnapshot.getValue(connection_type.class);
+                    connection.add(con.getUid());
                 }
             }
 

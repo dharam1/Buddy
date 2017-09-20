@@ -51,6 +51,7 @@ public class timelineadapter extends BaseAdapter {
     String user;
     String name;
     Activity act;
+    int flag=0;
 
 
     public timelineadapter(LinkedHashMap<Integer,Integer> map, LinkedHashMap<Integer,String> map1/**, LinkedHashMap<String, String> map2, LinkedHashMap<String, Long> map3**/,Activity act) {
@@ -93,7 +94,7 @@ public class timelineadapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         final View result;
 
         if (convertView == null) {
@@ -106,15 +107,16 @@ public class timelineadapter extends BaseAdapter {
         final TextView t=(TextView)result.findViewById(R.id.textView);
         final TextView t2=(TextView)result.findViewById(R.id.textView1);
         cardView=(CardView)result.findViewById(R.id.card_view);
-        String user1=followeduser.get(position).toString();
-
+        final String user1=followeduser.get(position).toString();
+        Log.d("POPkll",user1);
 
             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user1).child("name");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     name = dataSnapshot.getValue().toString();
-
+                    flag=1;
+                    Log.d("POPkll",user1);
                 }
 
                 @Override
@@ -122,19 +124,22 @@ public class timelineadapter extends BaseAdapter {
 
                 }
             });
-        int aid = item.getValue();
-        Log.d("POPkl",name+"");
+        final int aid = item.getValue();
+        Log.d("POPkll",aid+"");
         mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(aid));
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("POPkll",aid+"");
                 Activity1 post1 = dataSnapshot.getValue(Activity1.class);
                 int status = post1.getStatus();
-                if(status==1) {
-                    t.setText(name + " has started following activity " + post1.getName());
-                }
-                else{
-                   cardView.setVisibility(View.GONE);
+                if(flag==1) {
+                    flag=0;
+                    if (status == 1) {
+                        t.setText(name + " has started following activity " + post1.getName());
+                    } else {
+                        parent.getChildAt(position).setVisibility(View.GONE);
+                    }
                 }
             }
 

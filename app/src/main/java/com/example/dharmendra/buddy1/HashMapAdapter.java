@@ -103,6 +103,7 @@ public class HashMapAdapter extends BaseAdapter {
         } else {
             result = convertView;
         }
+        Log.d("POl__KL1","POl__KL1");
         cardview=(CardView)result.findViewById(R.id.card_view);
         final LinkedHashMap.Entry<Integer, String> item = getItem(position);
         manageuser=(ImageButton)result.findViewById(R.id.manageuser);
