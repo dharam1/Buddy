@@ -65,16 +65,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
+import co.ceryle.radiorealbutton.RadioRealButton;
+import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.dharmendra.buddy1.R.id.image;
 import static com.example.dharmendra.buddy1.R.id.map;
 import static com.example.dharmendra.buddy1.R.id.match_parent;
 import static com.example.dharmendra.buddy1.R.id.thing_proto;
+import static com.example.dharmendra.buddy1.R.id.toolbar;
 import static com.example.dharmendra.buddy1.R.id.wrap_content;
 import static java.lang.System.out;
 
@@ -273,6 +279,47 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
               //      android.graphics.Color.TRANSPARENT));
             editText=(EditText)layout.findViewById(R.id.edittext);
 
+            final RadioRealButton button1 = (RadioRealButton) layout.findViewById(R.id.btn_global);
+            final RadioRealButton button2 = (RadioRealButton) layout.findViewById(R.id.btn_private);
+
+            RadioRealButtonGroup group = (RadioRealButtonGroup) layout.findViewById(R.id.btn_group);
+
+            // onClickButton listener detects any click performed on buttons by touch
+            group.setOnClickedButtonListener(new RadioRealButtonGroup.OnClickedButtonListener() {
+                @Override
+                public void onClickedButton(RadioRealButton button, int position) {
+                    Toast.makeText(getActivity(), "Clicked! Position: " + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // onPositionChanged listener detects if there is any change in position
+            group.setOnPositionChangedListener(new RadioRealButtonGroup.OnPositionChangedListener() {
+                @Override
+                public void onPositionChanged(RadioRealButton button, int position, int lastPosition) {
+                    Toast.makeText(getActivity(), "Position Changed! Position: " + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // onLongClickedButton detects long clicks which are made on any button in group.
+            // return true if you only want to detect long click, nothing else
+            // return false if you want to detect long click and change position when you release
+            group.setOnLongClickedButtonListener(new RadioRealButtonGroup.OnLongClickedButtonListener() {
+                @Override
+                public boolean onLongClickedButton(RadioRealButton button, int position) {
+                    Toast.makeText(getActivity(), "Long Clicked! Position: " + position, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+
+            Shimmer shimmer = new Shimmer();
+            shimmer.setDuration(1500)
+                    .setStartDelay(500);
+            shimmer.start((ShimmerTextView) layout.findViewById(R.id.tv_great));
+
+            Shimmer shimmer1 = new Shimmer();
+            shimmer1.setDuration(2000)
+                    .setStartDelay(300);
+            shimmer1.start((ShimmerTextView) layout.findViewById(R.id.tv_great2));
 
             Button add_activity = (Button) layout.findViewById(R.id.add_activity);
             final TextView countv=(TextView)layout.findViewById(R.id.count);

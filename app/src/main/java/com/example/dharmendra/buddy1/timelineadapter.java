@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -213,7 +214,7 @@ public class timelineadapter extends BaseAdapter {
                 int status = post1.getStatus();
 
                 if(status==1) {
-                    t.setText(name + " has started following activity " + post1.getName());
+                    t.setText(Html.fromHtml(name + " has started following activity <b>" + post1.getName() + "</b>"));
                 }
                 else{
                    cardView.setVisibility(View.GONE);

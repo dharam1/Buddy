@@ -4,23 +4,23 @@
 
     <item
         android:id="@+id/navigation_maps"
-        android:icon="@drawable/maps"
+        android:icon="@drawable/ic_timeline"
         android:title="@string/title_maps" />
 
     <item
         android:id="@+id/navigation_connection"
-        android:icon="@drawable/connection"
+        android:icon="@drawable/ic_connection"
         android:title="@string/title_connection" />
 
 
 
     <item
         android:id="@+id/navigation_delete"
-        android:icon="@drawable/delete"
+        android:icon="@drawable/ic_location"
         android:title="@string/title_delete" />
     <item
         android:id="@+id/navigation_add"
-        android:icon="@drawable/add"
+        android:icon="@drawable/ic_add_location"
         android:title="@string/title_add" />
 
 </menu>
