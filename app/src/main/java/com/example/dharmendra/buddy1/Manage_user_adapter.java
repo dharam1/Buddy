@@ -106,7 +106,24 @@ public class Manage_user_adapter extends BaseAdapter {
         cardView = (CardView) result.findViewById(R.id.card_view);
         final LinkedHashMap.Entry<String, String> item = getItem(position);
         //if(!item.getKey().equals(user))
-        ((TextView) result.findViewById(R.id.textView)).setText(item.getValue());
+        if(connection.contains(item.getKey())){
+            mDatabase=FirebaseDatabase.getInstance().getReference("users").child(item.getKey()).child("name");
+            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ((TextView) result.findViewById(R.id.textView)).setText(dataSnapshot.getValue().toString());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }else{
+            ((TextView) result.findViewById(R.id.textView)).setText(item.getValue());
+        }
+
         Log.d("grp info", user + " " + admin + " " + item.getKey());
         if(user.equals(item.getKey())){
             if(user.equals(admin)){

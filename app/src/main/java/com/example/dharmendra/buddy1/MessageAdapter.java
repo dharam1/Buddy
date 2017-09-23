@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StreamDownloadTask;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
@@ -34,13 +35,16 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
     int seen;
     boolean exist;
     int cidd;
+    ArrayList connectionlist;
 
-    public MessageAdapter(Chat activity, Class<ChatMessage1> modelClass, int modelLayout, DatabaseReference ref,int cidd) {
+    public MessageAdapter(Chat activity, Class<ChatMessage1> modelClass, int modelLayout, DatabaseReference ref, int cidd, ArrayList connectionlist1) {
         super(activity, modelClass, modelLayout, ref);
         this.activity = activity;
         this.mDatabase1=ref;
         this.cidd=cidd;
         user=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        connectionlist=new ArrayList();
+        this.connectionlist=connectionlist1;
     }
     private boolean haveNetworkConnection() {
         boolean haveConnectedWifi = false;
@@ -62,11 +66,27 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
     @Override
     protected void populateView(View v, final ChatMessage1 model, int position) {
         TextView messageText = (TextView) v.findViewById(R.id.message_text);
-        TextView messageUser = (TextView) v.findViewById(R.id.message_user);
+        final TextView messageUser = (TextView) v.findViewById(R.id.message_user);
        TextView messageTime = (TextView) v.findViewById(R.id.message_time);
         TextView messageDate = (TextView) v.findViewById(R.id.message_date);
+        if(connectionlist.contains(model.getMessageUserId())){
+            mDatabase=FirebaseDatabase.getInstance().getReference("users").child(model.getMessageUserId()).child("name");
+            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    messageUser.setText(dataSnapshot.getValue().toString());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }else{
+            messageUser.setText(model.getNickname());
+        }
         messageText.setText(model.getMessageText());
-        messageUser.setText(model.getNickname());
+
         // Format the date before showing it
         messageDate.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()).toString());
         messageTime.setText(DateFormat.format("HH:mm", model.getMessageTime()).toString());
@@ -81,161 +101,7 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
                         return true;
             }
         });
-       /** v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name=activity.activityname();
-                AlertDialog alertDialog = new AlertDialog.Builder(v.getRootView().getContext()).create();
-                alertDialog.setMessage("Send Request To this Person");
-                alertDialog.setButton("Send Request", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(haveNetworkConnection()){
-                            final String content =model.getMessageText();
-                            user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            mDatabase= FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd));
-                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                        ChatMessage post1 = postSnapshot.getValue(ChatMessage.class);
-                                        String message=post1.getMessageText();
-                                        String uid=post1.getMessageUserId();
-                                        if(content.equals(message)){
-                                            if(user.equals(uid)){
-                                                Toast.makeText(activity, "Cannot send to Yourself", Toast.LENGTH_SHORT).show();
-                                          }
-                                            else{
-                                                user1=post1.getMessageUserId();
-                                            exist=false;
-                                            if(exist==false) {
-                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("sendTo");
-                                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        if (dataSnapshot.exists()) {
-                                                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                                if(postSnapshot.exists()){
-                                                                Model m = postSnapshot.getValue(Model.class);
-                                                                final String value = m.getUser();
-                                                                if (user1.equals(value)) {
-                                                                    Log.d("pele", "1");
-                                                                    exist = true;
-                                                                    Toast.makeText(activity, "Already Sent", Toast.LENGTH_SHORT).show();
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                        }
-                                                    }
 
-                                                    @Override
-                                                    public void onCancelled(DatabaseError databaseError) {
-
-                                                    }
-                                                });
-                                            }
-                                                        if(exist==false){
-                                                            mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("receiveFrom");
-                                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                                    if (dataSnapshot.exists()) {
-                                                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                                            Model m = postSnapshot.getValue(Model.class);
-                                                                            final String value = m.getUser();
-                                                                            if (user1.equals(value)) {
-                                                                                Log.d("pele", "2");
-                                                                                exist = true;
-                                                                                Toast.makeText(activity, "Already Receive", Toast.LENGTH_SHORT).show();
-                                                                                break;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                                @Override
-                                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                                }
-                                                            });
-                                                        }
-
-                                                        if(exist==false) {
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
-                                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                                    if(dataSnapshot.exists()) {
-                                                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                                            String value = String.valueOf(postSnapshot.getValue());
-                                                                            if (user1.equals(value)) {
-                                                                                Log.d("pele", "2");
-                                                                                exist = true;
-                                                                                Toast.makeText(activity, "Already Connected", Toast.LENGTH_SHORT).show();
-                                                                                break;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    if(exist==false){
-                                                                        Log.d("pele","3");
-                                                                        String activityname=activity.activityname();
-                                                                        mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("sendTo");
-                                                                        final String userId = mDatabase.push().getKey();
-                                                                        Model m1 = new Model(user1,activityname);
-                                                                        mDatabase.child(userId).setValue(m1);
-                                                                        Toast.makeText(activity, "Succesfully Send", Toast.LENGTH_SHORT).show();
-
-
-                                                                        seen=0;
-                                                                        mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user1).child("receiveFrom");
-                                                                        final String user_Id = mDatabase.push().getKey();
-                                                                        long time = new Date().getTime();
-                                                                        Model3 m = new Model3(user,activityname,seen,time);
-                                                                        mDatabase.child(user_Id).setValue(m);
-                                                                        mDatabase=FirebaseDatabase.getInstance().getReference("reqnoti");
-                                                                        final String user__Id = mDatabase.push().getKey();
-                                                                        final String to=user1;
-                                                                        final String from =user;
-                                                                        Model2 m2 = new Model2(to,from,activityname);
-                                                                        mDatabase.child(user__Id).setValue(m2);
-                                                                    }
-                                                                }
-
-                                                                @Override
-                                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                                }
-                                                            });
-                                                        }
-
-                                            }
-
-
-
-                                            break;
-                                        }
-
-                                    }
-                                    Log.d("ronaldo",user+"Wants to Connect to "+user1+"from activity"+activity.activityname());
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-                        else{
-                            Toast.makeText(activity, "Network error", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-                alertDialog.show();
-
-
-                }
-        });**/
     }
 
     @Override

@@ -73,6 +73,7 @@ public class Chat extends AppCompatActivity {
     ArrayList<String> search_user_list=new ArrayList<>();
     ArrayList<String> search_list=new ArrayList<>();
     ArrayList<String> search_nick=new ArrayList<>();
+    ArrayList<String> connectionlist=new ArrayList<>();
     AdapterSearch1 searchadapter;
     FirebaseAuth firebaseAuth;
     ArrayList<String> x=new ArrayList<>(Arrays.asList("Barney","Ted","Marchel","Lily","Tyrion","Sersi","Rachel","Phoebe","Heisenberg","Joey","chandler","Jon Snow","Sansa"
@@ -83,6 +84,7 @@ public class Chat extends AppCompatActivity {
     EmojiconTextView textView;
     ImageView emojiButton;
     View rootView;
+    int global_buddies;
     //EditText input;
 
 
@@ -128,14 +130,6 @@ public class Chat extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-
-
-
         /**--------------------------------------------------------------**/
         ImageView fab = (ImageView) findViewById(R.id.fab);
         //final EditText input = (EditText) findViewById(R.id.input);
@@ -159,6 +153,21 @@ public class Chat extends AppCompatActivity {
                 Activity1 post1 = dataSnapshot.getValue(Activity1.class);
                 activityName=post1.getName();
                 t.setText(activityName);
+                global_buddies=post1.getType();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    connectionlist.add(postSnapshot.getKey());
+                }
             }
 
             @Override
@@ -239,7 +248,7 @@ public class Chat extends AppCompatActivity {
                                                     String user_name = con.getUid().toString();
                                                     mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(cidd));
                                                     String type="not created";
-                                                    user_activity act=new user_activity(user,cidd,type);
+                                                    user_activity act=new user_activity(user,cidd,type,1,global_buddies);
                                                     mDatabase.setValue(act);
                                                 }
                                             }
@@ -281,6 +290,7 @@ public class Chat extends AppCompatActivity {
         });
     }
     private boolean haveNetworkConnection() {
+
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
 
@@ -349,7 +359,7 @@ public class Chat extends AppCompatActivity {
                     {
                         //  Toast.makeText(Chat.this, "Collapse", Toast.LENGTH_SHORT).show();
                         adapter = new MessageAdapter(Chat.this, ChatMessage1.class, R.layout.item_in_message,
-                                FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd);
+                                FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd,connectionlist);
                         listView.setAdapter(adapter);
                         return true; // Return true to collapse action view
                     }
@@ -414,19 +424,9 @@ public class Chat extends AppCompatActivity {
         Log.d("lol",String.valueOf(cidd));
 
         adapter = new MessageAdapter(Chat.this, ChatMessage1.class, R.layout.item_in_message,
-                FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd);
+                FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd,connectionlist);
         listView.setAdapter(adapter);
-        /**clipboard=(ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        String content =listView.getItemAtPosition(position).toString();
-        Log.d("ronaldo",content);
-        myClip = ClipData.newPlainText("text",content);
-        clipboard.setPrimaryClip(myClip);
-        return false;
-        }
-        });**/
+
     }
     public String activityname(){
         mDatabase=FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(cidd));

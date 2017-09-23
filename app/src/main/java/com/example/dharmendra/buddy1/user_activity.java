@@ -12,15 +12,18 @@ public class user_activity {
     int aid;
     public long time;
     public String type;
+    int fromconnection,global_buddies;
 
     public user_activity() {
     }
 
-    public user_activity(String user,int aid,String type) {
+    public user_activity(String user,int aid,String type,int fromconnection,int global_buddies) {
         this.user=user;
         this.aid=aid;
         time= new Date().getTime();
         this.type=type;
+        this.fromconnection=fromconnection;
+        this.global_buddies=global_buddies;
 
     }
     public String getUser(){
@@ -36,6 +39,12 @@ public class user_activity {
          return type;
      }
 
+     public int getFromconnection(){
+         return fromconnection;
+     }
+        public int getGlobal_buddies(){
+            return global_buddies;
+        }
 
 
 
