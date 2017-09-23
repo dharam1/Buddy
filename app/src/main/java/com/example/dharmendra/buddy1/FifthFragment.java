@@ -275,6 +275,8 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             layout = inflater.inflate(R.layout.popup,(ViewGroup) getView().findViewById(R.id.popup_element));
             pwindodd = new PopupWindow(layout, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
             pwindodd.showAtLocation(layout, Gravity.CENTER, 0, 0);
+            pwindodd.setOutsideTouchable(true);
+            pwindodd.setFocusable(true);
             //pwindodd.setBackgroundDrawable(new ColorDrawable(
               //      android.graphics.Color.TRANSPARENT));
             editText=(EditText)layout.findViewById(R.id.edittext);

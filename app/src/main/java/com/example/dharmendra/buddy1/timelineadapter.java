@@ -1,21 +1,29 @@
 package com.example.dharmendra.buddy1;
 
+import android.animation.AnimatorInflater;
+import android.animation.StateListAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -111,7 +119,28 @@ public class timelineadapter extends BaseAdapter {
         final TextView t2=(TextView)result.findViewById(R.id.textView1);
         final CircleImageView iv = (CircleImageView) result.findViewById(R.id.imageview);
         cardView=(CardView)result.findViewById(R.id.card_view);
+        View line = (View) result.findViewById(R.id.vertical_bar);
         String user1=followeduser.get(position).toString();
+
+        Resources r = context.getResources();
+        int px = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                10,
+                r.getDisplayMetrics()
+        );
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) line.getLayoutParams();
+
+        if(position == 0){
+            params.setMargins(0, px, 0, 0);
+        }
+        else if(position == getCount() - 1){
+            params.setMargins(0, 0, 0, px);
+        }
+        else{
+            params.setMargins(0, 0, 0, 0);
+        }
+
+        line.setLayoutParams(params);
 
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user1).child("url");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {

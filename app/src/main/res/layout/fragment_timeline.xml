@@ -11,9 +11,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffff"
+        android:background="@color/white"
         android:id="@+id/timeline"
-        android:paddingBottom="5dp"
 
         tools:context="com.example.dharmendra.buddy1.ThirdFragment">
         <TextView
@@ -32,7 +31,8 @@
                 android:id="@+id/simpleListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/divider1" />
+                android:divider="@color/white"
+                android:dividerHeight="0dp" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </FrameLayout>
