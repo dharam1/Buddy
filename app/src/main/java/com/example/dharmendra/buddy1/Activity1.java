@@ -16,7 +16,7 @@ public class Activity1 {
     public int status;
     public String address;
     long actdate;
-    String type;
+    int type;
     //String pos;
 
 
@@ -25,7 +25,7 @@ public class Activity1 {
     public Activity1() {
     }
 
-    public Activity1(String user, String name, Double latitude, Double longitude, int ccid, int status,String address,String type) {
+    public Activity1(String user, String name, Double latitude, Double longitude, int ccid, int status,String address,int type) {
         this.user=user;
         this.name=name;
         this.latitude=latitude;
@@ -69,7 +69,7 @@ public class Activity1 {
         return  actdate;
     }
 
-    public  String getType(){
+    public  int getType(){
         return type;
     }
 }

@@ -83,7 +83,7 @@ public class Chat extends AppCompatActivity {
     EmojiconTextView textView;
     ImageView emojiButton;
     View rootView;
-    String global_buddies;
+    int global_buddies;
     //EditText input;
 
 
@@ -241,12 +241,9 @@ public class Chat extends AppCompatActivity {
                                                     String user_name = con.getUid().toString();
                                                     mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(cidd));
                                                     String type="not created";
-                                                    int x;
-                                                    if(global_buddies.equals("everyone"))
-                                                        x=0;
-                                                    else
-                                                        x=1;
-                                                    user_activity act=new user_activity(user,cidd,type,1,x);
+
+
+                                                    user_activity act=new user_activity(user,cidd,type,1,global_buddies);
                                                     mDatabase.setValue(act);
                                                 }
                                             }

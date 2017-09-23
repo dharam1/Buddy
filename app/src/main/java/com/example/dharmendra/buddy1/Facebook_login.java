@@ -220,7 +220,7 @@ public class Facebook_login extends AppCompatActivity{
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                             Activity1 act=postSnapshot.getValue(Activity1.class);
-                                            if(act.getType().equals("everyone")){
+                                            if(act.getType()==0){
                                                 mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("activity").child(String.valueOf(act.getCcid()));
                                                 user_activity a=new user_activity(act.getUser(),act.getCcid(),"not created",0,0);
                                                 mDatabase.setValue(a);
@@ -300,7 +300,7 @@ public class Facebook_login extends AppCompatActivity{
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                             Activity1 act=postSnapshot.getValue(Activity1.class);
-                                            if(act.getType().equals("everyone")){
+                                            if(act.getType()==0){
                                                 mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("activity").child(String.valueOf(act.getCcid()));
                                                 user_activity a=new user_activity(act.getUser(),act.getCcid(),"not created",0,0);
                                                 mDatabase.setValue(a);

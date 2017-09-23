@@ -420,12 +420,8 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                         mDatabase = FirebaseDatabase.getInstance().getReference("activity");
                                         status=1;
                                         String type1;
-                                        if(global_position==0){
-                                            type1="everyone";
-                                        }else{
-                                            type1="buddies";
-                                        }
-                                        act1 = new Activity1(user, content, latitude, longitude,ccid,status,address,type1);
+
+                                        act1 = new Activity1(user, content, latitude, longitude,ccid,status,address,global_position);
 
 
                                         rand=new Random();
