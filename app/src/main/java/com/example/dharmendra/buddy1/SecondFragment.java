@@ -359,17 +359,12 @@ public class SecondFragment extends Fragment {
                                     time=0;
                                     s_countlist.add(count);
                                 }
-                                //Log.d("POPKLL",name+" "+type+" "+url+" "+message+" "+time+" "+count);
+
                                 Date d=new Date(time);
                                 connection_class con=new connection_class(name,type,url,message,time,String.valueOf(count),d);
                                 con_list.add(con);
-                                for(connection_class c:con_list){
-                                    Log.d("POPKLL",c.getName()+":"+c.type+":"+c.getUrl()+":"+c.getMessage()+":"+c.getTime()+":"+c.getCount());
-                                }
-                                Log.d("POPKLL","POPKL_EXE1");
-                                //Collections.sort(con_list);
+                                Collections.sort(con_list);
                                 HashMapAdapter2 adapter = new HashMapAdapter2(map,con_list,getContext());
-                                Log.d("POPKLL","POPKL_EXE2");
                                 connectionlist.setAdapter(adapter);
                             }
 
