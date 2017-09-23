@@ -361,10 +361,15 @@ public class SecondFragment extends Fragment {
                                 }
 
                                 Date d=new Date(time);
-                                connection_class con=new connection_class(name,type,url,message,time,String.valueOf(count),d);
+                                connection_class con=new connection_class( user1,name,type,url,message,time,String.valueOf(count),d);
                                 con_list.add(con);
                                 Collections.sort(con_list);
-                                HashMapAdapter2 adapter = new HashMapAdapter2(map,con_list,getContext());
+                                Collections.reverse(con_list);
+                                for(connection_class c:con_list){
+                                    Log.d("POPKLLLL", c.getName() + "" + c.getUrl() + "" +c.getMessage() + "" + c.getTime() + "" +c.getCount());
+                                }
+                                //Log.d("POPKLLLL", name + "" + url+ "" + message + "" + time + "" +count);
+                                HashMapAdapter2 adapter = new HashMapAdapter2(map,con_list,getContext(),getActivity(),getFragmentManager());
                                 connectionlist.setAdapter(adapter);
                             }
 
@@ -398,7 +403,7 @@ public class SecondFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
-        connectionlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+       /** connectionlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 String content1 =connectionlist.getItemAtPosition(position).toString();
@@ -418,8 +423,7 @@ public class SecondFragment extends Fragment {
                                         connection_type con=postSnapshot.getValue(connection_type.class);
                                         final String id=con.getUid();
                                         if(id.equals(content)){
-                                            /**-------------------------------------------------------------------------------------------**/
-                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection").child(content);
+                                             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection").child(content);
                                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -470,9 +474,7 @@ public class SecondFragment extends Fragment {
 
 
 
-                                            /**-------------------------------------------------------------------------------------------**/
-                                            postSnapshot.getRef().removeValue();
-                                            /**-------------------------------------------------------------------------------------------**/
+                                             postSnapshot.getRef().removeValue();
                                             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity");
                                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
@@ -497,7 +499,6 @@ public class SecondFragment extends Fragment {
 
                                                 }
                                             });
-                                            /**--------------------------------------------------------------------------------------------**/
                                             Toast.makeText(getContext(), "Successfully Removed", Toast.LENGTH_SHORT).show();
                                             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                                             fragmentTransaction.replace(R.id.second, new SecondFragment());
@@ -541,8 +542,7 @@ public class SecondFragment extends Fragment {
                                         final String id=con.getUid();
                                         if(id.equals(user)){
                                             postSnapshot.getRef().removeValue();
-                                            /**---------------------------------------------------------------------------------------------**/
-                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity");
+                                           mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity");
                                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -565,7 +565,6 @@ public class SecondFragment extends Fragment {
 
                                                 }
                                             });
-                                            /**-----------------------------------------------------------------------------------------------**/
                                             break;
                                         }
                                     }
@@ -608,10 +607,10 @@ public class SecondFragment extends Fragment {
 
                 return true;
             }
-        });
+        });**/
 
 
-        connectionlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /**connectionlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String content1 =connectionlist.getItemAtPosition(position).toString();
@@ -625,7 +624,7 @@ public class SecondFragment extends Fragment {
                 getActivity().overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
                 Log.d("pele",content);
             }
-        });
+        });**/
 
         return rootview;
     }

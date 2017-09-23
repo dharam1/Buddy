@@ -214,7 +214,7 @@ public class Facebook_login extends AppCompatActivity{
                                     }
                                 });
                                 /**-----------------------------------------------------------------------------------------**/
-                                mDatabase = FirebaseDatabase.getInstance().getReference("activity");
+                                /**mDatabase = FirebaseDatabase.getInstance().getReference("activity");
                                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -232,7 +232,7 @@ public class Facebook_login extends AppCompatActivity{
                                     public void onCancelled(DatabaseError databaseError) {
 
                                     }
-                                });
+                                });**/
 
 
 

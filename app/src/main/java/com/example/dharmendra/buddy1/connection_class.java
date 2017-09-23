@@ -8,13 +8,13 @@ import java.util.StringTokenizer;
  */
 
 public class connection_class implements Comparable<connection_class> {
-     String name,type,url,message,count;
+     String name,type,url,message,count,id;
     long time;
     Date date;
     public connection_class() {
     }
 
-    public connection_class(String name, String type, String url, String messsage, long time, String count,Date date) {
+    public connection_class(String id,String name, String type, String url, String messsage, long time, String count,Date date) {
         this.name=name;
         this.type=type;
         this.url=url;
@@ -22,6 +22,7 @@ public class connection_class implements Comparable<connection_class> {
         this.time=time;
         this.count=count;
         this.date=date;
+        this.id=id;
     }
 
 
@@ -46,10 +47,16 @@ public class connection_class implements Comparable<connection_class> {
     public Date getDate(){
         return date;
     }
+    public String getId(){
+        return id;
+    }
 
     @Override
     public int compareTo(connection_class o) {
-        return this.getDate().compareTo(o.getDate());
+        if (getDate() == null || o.getDate() == null)
+            return 0;
+        return getDate().compareTo(o.getDate());
     }
+
 
 }
