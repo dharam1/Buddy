@@ -490,7 +490,7 @@ public class SecondFragment extends Fragment {
                                                             postSnapshot.getRef().removeValue();
                                                         }
                                                         else if(n.equals(content)&&x==0){
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(use.getUser())).child("fromconnection");
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(use.getAid())).child("fromconnection");
                                                             mDatabase.setValue(0);
                                                         }
 
@@ -559,7 +559,7 @@ public class SecondFragment extends Fragment {
                                                             postSnapshot.getRef().removeValue();
                                                         }
                                                         else if(n.equals(user)&&x==0){
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity").child(String.valueOf(use.getUser())).child("fromconnection");
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity").child(String.valueOf(use.getAid())).child("fromconnection");
                                                             mDatabase.setValue(0);
                                                         }
                                                     }
