@@ -48,6 +48,7 @@ dependencies {
     compile 'com.github.hani-momanii:SuperNova-Emoji:1.1'
     compile 'com.romainpiel.shimmer:library:1.4.0@aar'
     compile 'com.github.ceryle:RadioRealButton:v2.1.1'
+    compile 'com.sothree.slidinguppanel:library:3.3.1'
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'

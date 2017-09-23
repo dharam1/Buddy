@@ -1,17 +1,10 @@
 package com.example.dharmendra.buddy1;
 
-import android.animation.AnimatorInflater;
-import android.animation.StateListAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Build;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -20,13 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -109,12 +99,13 @@ public class timelineadapter extends BaseAdapter {
         final TextView t2=(TextView)result.findViewById(R.id.textView1);
         final CircleImageView iv = (CircleImageView) result.findViewById(R.id.imageview);
         cardView=(CardView)result.findViewById(R.id.card_view);
+        TextView dot = (TextView) result.findViewById(R.id.tv_dot);
+        final ImageView type = (ImageView) result.findViewById(R.id.type);
         View line = (View) result.findViewById(R.id.vertical_bar);
+        dot.setVisibility(View.VISIBLE);
+        line.setVisibility(View.VISIBLE);
+        type.setVisibility(View.VISIBLE);
         String user1=followeduser.get(position).toString();
-        if(user1.equals("Anonymous")){
-            int aid = item.getValue();
-            String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
 
         Resources r = context.getResources();
         int px = (int) TypedValue.applyDimension(
@@ -135,6 +126,12 @@ public class timelineadapter extends BaseAdapter {
         }
 
         line.setLayoutParams(params);
+
+        if(user1.equals("Anonymous")){
+            int aid = item.getValue();
+            String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+
 
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user1).child("url");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -219,7 +216,7 @@ public class timelineadapter extends BaseAdapter {
                         int status = post1.getStatus();
 
                         if (status == 1) {
-                            t.setText(  "Anonymous has started following activity " + post1.getName());
+                            t.setText("Anonymous has started following activity " + post1.getName());
                         } else {
                             cardView.setVisibility(View.GONE);
                         }
@@ -317,7 +314,11 @@ public class timelineadapter extends BaseAdapter {
                                 int status = post1.getStatus();
 
                                 if (status == 1) {
-                                    t.setText(name + " has started following activity " + post1.getName());
+                                    t.setText(Html.fromHtml("<b>" + name + "</b> has started following activity <b>" + post1.getName() + "</b>"));
+                                    if(post1.getType() == 0)
+                                        type.setImageResource(R.drawable.ic_global);
+                                    else
+                                        type.setImageResource(R.drawable.ic_private);
                                 } else {
                                     cardView.setVisibility(View.GONE);
                                 }

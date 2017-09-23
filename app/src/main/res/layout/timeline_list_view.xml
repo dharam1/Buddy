@@ -24,9 +24,9 @@
                 android:layout_width="4dp"
                 android:layout_height="match_parent"
                 android:background="@color/gray"
+                android:visibility="gone"
                 android:alpha="0.5"
-                android:layout_centerHorizontal="true"
-                />
+                android:layout_centerHorizontal="true" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="match_parent"
@@ -77,12 +77,13 @@
                     android:layout_marginLeft="4dp"
                     android:textSize="14sp"
                     android:id="@+id/tv_dot"
+                    android:visibility="gone"
                     android:textColor="@color/gray"/>
 
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/ic_global"
+                    android:visibility="gone"
                     android:id="@+id/type"
                     android:layout_toRightOf="@+id/tv_dot"
                     android:layout_marginLeft="4dp"/>
