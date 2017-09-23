@@ -485,9 +485,15 @@ public class SecondFragment extends Fragment {
                                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                                         user_activity use=postSnapshot.getValue(user_activity.class);
                                                         String n=use.getUser();
-                                                        if(n.equals(content)){
+                                                        int x=use.getGlobal_buddies();
+                                                        if(n.equals(content)&&x==1){
                                                             postSnapshot.getRef().removeValue();
                                                         }
+                                                        else if(n.equals(content)&&x==0){
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(use.getUser())).child("fromconnection");
+                                                            mDatabase.setValue(0);
+                                                        }
+
                                                     }
                                                 }
 
@@ -548,8 +554,13 @@ public class SecondFragment extends Fragment {
                                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                                         user_activity use=postSnapshot.getValue(user_activity.class);
                                                         String n=use.getUser();
-                                                        if(n.equals(user)){
+                                                        int x=use.getGlobal_buddies();
+                                                        if(n.equals(user)&&x==1){
                                                             postSnapshot.getRef().removeValue();
+                                                        }
+                                                        else if(n.equals(user)&&x==0){
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity").child(String.valueOf(use.getUser())).child("fromconnection");
+                                                            mDatabase.setValue(0);
                                                         }
                                                     }
                                                 }

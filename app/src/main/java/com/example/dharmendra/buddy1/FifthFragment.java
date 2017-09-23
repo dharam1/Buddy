@@ -285,7 +285,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             final RadioRealButton button1 = (RadioRealButton) layout.findViewById(R.id.btn_global);
             final RadioRealButton button2 = (RadioRealButton) layout.findViewById(R.id.btn_private);
 
-            RadioRealButtonGroup group = (RadioRealButtonGroup) layout.findViewById(R.id.btn_group);
+            final RadioRealButtonGroup group = (RadioRealButtonGroup) layout.findViewById(R.id.btn_group);
 
             // onClickButton listener detects any click performed on buttons by touch
             group.setOnClickedButtonListener(new RadioRealButtonGroup.OnClickedButtonListener() {
@@ -447,7 +447,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                         /**-----------------------------------------------------------------------------------**/
                                         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(ccid));
                                         String type= "Created";
-                                        user_activity act=new user_activity(user,ccid,type,1);
+                                        user_activity act=new user_activity(user,ccid,type,1,global_position);
                                         mDatabase.setValue(act);
 
 
@@ -462,7 +462,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                                             String user_name = con.getUid().toString();
                                                             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(ccid));
                                                             String type = "Created";
-                                                            user_activity act = new user_activity(user, ccid, type,1);
+                                                            user_activity act = new user_activity(user, ccid, type,1,global_position);
                                                             mDatabase.setValue(act);
                                                         }
                                                     }
@@ -485,13 +485,13 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                                            if(connectionlist.contains(u.getUid())) {
                                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(u.getUid()).child("activity").child(String.valueOf(ccid));
                                                                String type = "Created";
-                                                               user_activity act = new user_activity(user, ccid, type, 1);
+                                                               user_activity act = new user_activity(user, ccid, type, 1,global_position);
                                                                mDatabase.setValue(act);
                                                            }
                                                                else if(!u.getUid().equals(user)){
                                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(u.getUid()).child("activity").child(String.valueOf(ccid));
                                                                    String type = "Created";
-                                                                   user_activity act = new user_activity(user, ccid, type,0);
+                                                                   user_activity act = new user_activity(user, ccid, type,0,global_position);
                                                                    mDatabase.setValue(act);
                                                                }
                                                            }
