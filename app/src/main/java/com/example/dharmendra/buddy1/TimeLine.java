@@ -229,68 +229,33 @@ public class TimeLine extends Fragment {
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            int io=0;
+            int io = 0;
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     user_activity use = postSnapshot.getValue(user_activity.class);
                     final int aid = Integer.parseInt(String.valueOf(use.getAid()));
                     final String userid = use.getUser();
                     final long time = use.getTime();
-                    //if(!userid.equals(user)) {
+                    if (use.getFromconnection() == 1) {
                         followeduser.put(io, userid);
                         followedactivityid.put(io, aid);
-                    //} //Log.d("POPKL",aid+" "+time+" "+userid);
-                    /**mDatabase = FirebaseDatabase.getInstance().getReference("users").child(userid).child("name");
-                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            name = dataSnapshot.getValue().toString();
+                    } else {
+                        followeduser.put(io, "Anonymous");
+                        followedactivityid.put(io, aid);
+                    }
 
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });**/
-                    /**final String name="Dharam";
-
-
-                    mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(aid));
-                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot){
-
-                            Activity1 post1 = dataSnapshot.getValue(Activity1.class);
-                            status = post1.getStatus();
-                             n = post1.getName();
-                            if (status == 1) {
-                                Log.d("POPKL",aid+" "+name+" "+n+" "+time);
-                                followedactivity.put(userid, n);
-                                followeddate.put(userid, time);
-                                followeduser.put(userid, name);
-                                followedactivityid.put(aid, n);
-
-                            }
-
-
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });**/
-
-                    //Log.d("POPKL","POPKLEXECUTE");
                     io++;
-                    Log.d("POPKL",aid+" "+time+" "+userid+" ");
                 }
-                Log.d("POPKLL",followeduser.size()+"");
 
-                adapter=new timelineadapter(followedactivityid,followeduser,/**,followedactivity,followeddate**/getApplicationContext(),getActivity());
+                Log.d("POPKLL", followeduser.size() + "");
+
+                adapter = new timelineadapter(followedactivityid, followeduser,/**,followedactivity,followeddate**/getApplicationContext(), getActivity());
                 timeline.setAdapter(adapter);
             }
+        }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {

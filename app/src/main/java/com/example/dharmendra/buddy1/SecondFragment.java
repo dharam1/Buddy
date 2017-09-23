@@ -1,3 +1,4 @@
+/**Second Fragment**/
 package com.example.dharmendra.buddy1;
 
 /**
@@ -53,6 +54,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -66,18 +69,8 @@ public class SecondFragment extends Fragment {
     int count1;
     DatabaseReference mDatabase,mDatabase1,mDatabase2,mDatabase3;
     LinkedHashMap<String,String> connection_list=new LinkedHashMap<>();
-    LinkedHashMap<String,String> s__count_list=new LinkedHashMap<>();
-    LinkedHashMap<String,String> count__list=new LinkedHashMap<>();
-    LinkedHashMap<String,String> last_message=new LinkedHashMap<>();
-    LinkedHashMap<String,String> connection_type=new LinkedHashMap<>();
+    LinkedHashMap<String,String> map=new LinkedHashMap<String, String>();
     private static final long DRAWER_DELAY = 250;
-    LinkedHashMap<String,String> message_time=new LinkedHashMap<>();
-    LinkedHashMap<String,String> b_connection_list=new LinkedHashMap<>();
-    LinkedHashMap<String,String> url_list=new LinkedHashMap<>();
-    ArrayList<String> urllist = new ArrayList<String>();
-    ArrayList<String> b_urllist = new ArrayList<String>();
-    ArrayList<Integer> countlist = new ArrayList<Integer>();
-    ArrayList<String> namelist = new ArrayList<String>();
     ArrayList<Integer> s_countlist = new ArrayList<Integer>();
     ArrayList<Integer> ss_countlist = new ArrayList<Integer>();
     ArrayList<String> s_urllist = new ArrayList<String>();
@@ -89,6 +82,7 @@ public class SecondFragment extends Fragment {
     Boolean refresh=false;
     String temp;
     Boolean check=false;
+    ArrayList<connection_class> con_list=new ArrayList<>();
 
     private OnFragmentInteractionListener listener;
 
@@ -199,7 +193,7 @@ public class SecondFragment extends Fragment {
 
 
 
-       SearchManager searchManager =
+        SearchManager searchManager =
                 (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.menu_search).getActionView();
@@ -238,8 +232,8 @@ public class SecondFragment extends Fragment {
                     }
                     HashMapAdapter2s adapter = new HashMapAdapter2s(s_connection_list, ss_urllist, getContext());
                     connectionlist.setAdapter(adapter);
-                i++;
-            }
+                    i++;
+                }
                 return false;
             }
         });
@@ -248,14 +242,14 @@ public class SecondFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.menu_sign_out) {
-           /** try {
-                FirebaseInstanceId.getInstance().deleteInstanceId();
-            }catch (Exception e){
+            /** try {
+             FirebaseInstanceId.getInstance().deleteInstanceId();
+             }catch (Exception e){
 
-            }
-            user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("token");
-            mDatabase.removeValue();**/
+             }
+             user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+             mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("token");
+             mDatabase.removeValue();**/
             FirebaseAuth firebaseAuth= FirebaseAuth.getInstance();
             firebaseAuth.signOut();
             LoginManager.getInstance().logOut();
@@ -318,20 +312,14 @@ public class SecondFragment extends Fragment {
                         final String type=con.getType();
 
                         mDatabase1 = FirebaseDatabase.getInstance().getReference("users").child(user1);
-                        mDatabase1.addValueEventListener(new ValueEventListener() {
+                        mDatabase1.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 user use = dataSnapshot.getValue(user.class);
                                 name = use.getName();
-                                namelist.add(name);
+                                map.put(user1,name);
                                 url = use.getUrl();
-                                urllist.add(url);
-                                url_list.put(user1,url);
                                 s_urllist.add(url);
-                                connection_list.put(user1, name);
-                                connection_type.put(user1,type);
-
-
                             }
 
                             @Override
@@ -341,7 +329,7 @@ public class SecondFragment extends Fragment {
                         });
                         temp="null";
                         mDatabase2 = FirebaseDatabase.getInstance().getReference("pcchats").child(user).child(user1);
-                        mDatabase2.addValueEventListener(new ValueEventListener() {
+                        mDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 //Log.d("tempooo",user1);
@@ -362,43 +350,26 @@ public class SecondFragment extends Fragment {
                                     }
 
                                     Log.d("hjkl",message);
-                                    String value=count__list.get(user1);
-                                    last_message.put(user1,message);
-                                    message_time.put(user1,String.valueOf(time));
-                                    if(value!=null&&check.equals(true)){
 
-                                        Log.d("tempooo","if");
-                                        count__list.remove(user1);
-                                        count__list.put(user1,String.valueOf(count));
-                                        String a=connection_list.get(user1);
-                                        connection_list.remove(user1);
-                                        connection_list.put(user1,a);
-                                        String b=url_list.get(user1);
-                                        url_list.remove(user1);
-                                       /** LinkedHashMap<String, String> newurl=(LinkedHashMap<String, String>) url_list.clone();
-                                        url_list.clear();
-                                        url_list.put(user1,b);
-                                        url_list.putAll(newurl);**/
-                                       url_list.put(user1,b);
-                                    }
-                                    else {
-                                        Log.d("tempooo","else");
-                                        Log.d("serth", String.valueOf(count));
-
-                                        count__list.put(user1, String.valueOf(count));
-                                        countlist.add(count);
-                                        s_countlist.add(count);
-                                    }
                                 }
                                 else{
                                     Log.d("serth", String.valueOf(count));
-                                    count__list.put(user1,"0");
-                                    last_message.put(user1,"0");
-                                    message_time.put(user1,"0");
-                                    countlist.add(count);
+                                    count=0;
+                                    message="0";
+                                    time=0;
                                     s_countlist.add(count);
                                 }
-                                HashMapAdapter2 adapter = new HashMapAdapter2(connection_list,connection_type ,url_list,last_message ,message_time,count__list,getContext());
+                                //Log.d("POPKLL",name+" "+type+" "+url+" "+message+" "+time+" "+count);
+                                Date d=new Date(time);
+                                connection_class con=new connection_class(name,type,url,message,time,String.valueOf(count),d);
+                                con_list.add(con);
+                                for(connection_class c:con_list){
+                                    Log.d("POPKLL",c.getName()+":"+c.type+":"+c.getUrl()+":"+c.getMessage()+":"+c.getTime()+":"+c.getCount());
+                                }
+                                Log.d("POPKLL","POPKL_EXE1");
+                                //Collections.sort(con_list);
+                                HashMapAdapter2 adapter = new HashMapAdapter2(map,con_list,getContext());
+                                Log.d("POPKLL","POPKL_EXE2");
                                 connectionlist.setAdapter(adapter);
                             }
 
@@ -412,8 +383,8 @@ public class SecondFragment extends Fragment {
 
                     }
 
-            }
-            else{
+                }
+                else{
                     datashow.setText("No Connection");
                 }
             }
@@ -668,22 +639,22 @@ public class SecondFragment extends Fragment {
         super.onDetach();
         listener = null;
     }
-   /**@Override
+    /**@Override
     public void onStop() {
-        super.onStop();
-        refresh = true;
+    super.onStop();
+    refresh = true;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Check should we need to refresh the fragment
-        if(refresh) {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.second, new SecondFragment());
-            fragmentTransaction.commit();
-        }
-    }**/
+     @Override
+     public void onResume() {
+     super.onResume();
+     // Check should we need to refresh the fragment
+     if(refresh) {
+     FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+     fragmentTransaction.replace(R.id.second, new SecondFragment());
+     fragmentTransaction.commit();
+     }
+     }**/
 
 
 

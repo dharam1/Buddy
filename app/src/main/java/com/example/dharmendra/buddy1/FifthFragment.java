@@ -106,7 +106,9 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
     LatLngBounds l;
     View layout;
     ImageButton imageButton;
+    int global_position;
     Random rand;
+    ArrayList<String> connectionlist=new ArrayList<>();
     ArrayList<String> x=new ArrayList<>(Arrays.asList("Barney","Ted","Marchel","Lily","Tyrion","Sersi","Rachel","Phoebe","Heisenberg","Joey","chandler","Jon Snow","Sansa"
             ,"Little Finger","Daenerys","Arya ","Joffery","Dwight","Jim","Angela","Kevin","Michael","Walter White","Jesse Pinkman","Skyler White"
             ,"Harvey Specter","Michael Ross","Rachel Zane","Jessica Pearson"));
@@ -264,6 +266,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions()
                 .position(pos));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos,15));
+
         initiatePopupRequest();
     }
     private PopupWindow pwindodd;
@@ -288,6 +291,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             group.setOnClickedButtonListener(new RadioRealButtonGroup.OnClickedButtonListener() {
                 @Override
                 public void onClickedButton(RadioRealButton button, int position) {
+                    global_position=position;
                     Toast.makeText(getActivity(), "Clicked! Position: " + position, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -296,6 +300,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             group.setOnPositionChangedListener(new RadioRealButtonGroup.OnPositionChangedListener() {
                 @Override
                 public void onPositionChanged(RadioRealButton button, int position, int lastPosition) {
+                    global_position=position;
                     Toast.makeText(getActivity(), "Position Changed! Position: " + position, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -306,10 +311,30 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             group.setOnLongClickedButtonListener(new RadioRealButtonGroup.OnLongClickedButtonListener() {
                 @Override
                 public boolean onLongClickedButton(RadioRealButton button, int position) {
+                    global_position=position;
                     Toast.makeText(getActivity(), "Long Clicked! Position: " + position, Toast.LENGTH_SHORT).show();
                     return false;
                 }
             });
+            /**-------------------------------------------------------------------------------------------**/
+            String loginuser=FirebaseAuth.getInstance().getCurrentUser().getUid();
+            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(loginuser).child("connection");
+            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        connection_type con = postSnapshot.getValue(connection_type.class);
+                        connectionlist.add(con.getUid());
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            /**--------------------------------------------------------------------------------------------**/
 
             Shimmer shimmer = new Shimmer();
             shimmer.setDuration(1500)
@@ -342,6 +367,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             add_activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
             if(haveNetworkConnection()){
             content = editText.getText().toString().trim();
             if (content.equals("")) {
@@ -393,7 +419,13 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                         Log.d("flag", "t");
                                         mDatabase = FirebaseDatabase.getInstance().getReference("activity");
                                         status=1;
-                                        act1 = new Activity1(user, content, latitude, longitude,ccid,status,address);
+                                        String type1;
+                                        if(global_position==0){
+                                            type1="everyone";
+                                        }else{
+                                            type1="buddies";
+                                        }
+                                        act1 = new Activity1(user, content, latitude, longitude,ccid,status,address,type1);
 
 
                                         rand=new Random();
@@ -405,7 +437,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                                 .push()
                                                 .setValue(new ChatMessage1("Welcome to "+content+" admin here",user,nickname)
                                                 );
-                                        DatabaseReference mDatabase2 = FirebaseDatabase.getInstance().getReference("chats").child("nickname").child(String.valueOf(ccid));
+                                        final DatabaseReference mDatabase2 = FirebaseDatabase.getInstance().getReference("chats").child("nickname").child(String.valueOf(ccid));
                                         mDatabase2.child(user).setValue(nickname);
 
 
@@ -415,31 +447,64 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                         /**-----------------------------------------------------------------------------------**/
                                         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(ccid));
                                         String type= "Created";
-                                        user_activity act=new user_activity(user,ccid,type);
+                                        user_activity act=new user_activity(user,ccid,type,1);
                                         mDatabase.setValue(act);
 
 
-                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
-                                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if(dataSnapshot.exists()){
-                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                        connection_type con=postSnapshot.getValue(connection_type.class);
-                                                        String user_name = con.getUid().toString();
-                                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(ccid));
-                                                        String type= "Created";
-                                                        user_activity act=new user_activity(user,ccid,type);
-                                                        mDatabase.setValue(act);
+                                        if(global_position==1) {
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    if (dataSnapshot.exists()) {
+                                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                            connection_type con = postSnapshot.getValue(connection_type.class);
+                                                            String user_name = con.getUid().toString();
+                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(ccid));
+                                                            String type = "Created";
+                                                            user_activity act = new user_activity(user, ccid, type,1);
+                                                            mDatabase.setValue(act);
+                                                        }
                                                     }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
 
-                                            }
-                                        });
+                                                }
+                                            });
+                                        }
+                                        else{
+                                            Log.d("POPKLL","POPKLL_1");
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("users");
+                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                        user u=postSnapshot.getValue(user.class);
+                                                           if(connectionlist.contains(u.getUid())) {
+                                                               mDatabase = FirebaseDatabase.getInstance().getReference("users").child(u.getUid()).child("activity").child(String.valueOf(ccid));
+                                                               String type = "Created";
+                                                               user_activity act = new user_activity(user, ccid, type, 1);
+                                                               mDatabase.setValue(act);
+                                                           }
+                                                               else if(!u.getUid().equals(user)){
+                                                                   mDatabase = FirebaseDatabase.getInstance().getReference("users").child(u.getUid()).child("activity").child(String.valueOf(ccid));
+                                                                   String type = "Created";
+                                                                   user_activity act = new user_activity(user, ccid, type,0);
+                                                                   mDatabase.setValue(act);
+                                                               }
+                                                           }
+                                                        }
+
+
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                        }
 
 
 

@@ -183,7 +183,6 @@ public class Facebook_login extends AppCompatActivity{
                                                         fbblockeduser.add(fidd);
 
                                                     }
-
                                                         if (friends.contains(fid)&&(!fbblockeduser.contains(fid))){
 
                                                             Log.d("POPKLll", "POPKLll");
@@ -198,26 +197,14 @@ public class Facebook_login extends AppCompatActivity{
                                                         }
 
                                                 }
-                                               /** else{
-                                                        if (friends.contains(fid)) {
-                                                            Log.d("POPKL", "POPKL");
-                                                            String uid = use.getUid();
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("connection").child(uid);
-                                                            connection_type con = new connection_type(uid, "facebook");
-                                                            mDatabase.setValue(con);
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(uid).child("connection").child(user_id);
-                                                            connection_type conn = new connection_type(user_id, "facebook");
-                                                            mDatabase.setValue(conn);
 
-                                                        }
-                                                    }**/
-                                                //}
                                                 @Override
                                                 public void onCancelled(DatabaseError databaseError) {
 
                                                 }
                                             });
                                         }
+
 
                                     }
 
@@ -226,6 +213,30 @@ public class Facebook_login extends AppCompatActivity{
 
                                     }
                                 });
+                                /**-----------------------------------------------------------------------------------------**/
+                                mDatabase = FirebaseDatabase.getInstance().getReference("activity");
+                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                            Activity1 act=postSnapshot.getValue(Activity1.class);
+                                            if(act.getType().equals("everyone")){
+                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("activity").child(String.valueOf(act.getCcid()));
+                                                user_activity a=new user_activity(act.getUser(),act.getCcid(),"not created",0);
+                                                mDatabase.setValue(a);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+
+                                /**-----------------------------------------------------------------------------------------**/
                             }
                             if(exists.equals(false)){
 
@@ -267,20 +278,7 @@ public class Facebook_login extends AppCompatActivity{
 
                                                     }
                                                     }
-                                                    /**else{
-                                                        if (friends.contains(fid)) {
-                                                            Log.d("POPKL", "POPKL");
-                                                            String uid = use.getUid();
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("connection").child(uid);
-                                                            connection_type con = new connection_type(uid, "facebook");
-                                                            mDatabase.setValue(con);
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(uid).child("connection").child(user_id);
-                                                            connection_type conn = new connection_type(user_id, "facebook");
-                                                            mDatabase.setValue(conn);
 
-                                                        }
-                                                    }**/
-                                               // }
                                                 @Override
                                                 public void onCancelled(DatabaseError databaseError) {
 
@@ -295,6 +293,29 @@ public class Facebook_login extends AppCompatActivity{
 
                                     }
                                 });
+                                /**-----------------------------------------------------------------------------------------**/
+                                mDatabase = FirebaseDatabase.getInstance().getReference("activity");
+                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                            Activity1 act=postSnapshot.getValue(Activity1.class);
+                                            if(act.getType().equals("everyone")){
+                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("activity").child(String.valueOf(act.getCcid()));
+                                                user_activity a=new user_activity(act.getUser(),act.getCcid(),"not created",0);
+                                                mDatabase.setValue(a);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+                                /**-----------------------------------------------------------------------------------------**/
 
                             }
                         }

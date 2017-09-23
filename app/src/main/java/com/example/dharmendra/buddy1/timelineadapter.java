@@ -52,7 +52,6 @@ public class timelineadapter extends BaseAdapter {
 
     DatabaseReference mDatabase;
     String user;
-    String name;
     Activity act;
 
 
@@ -67,16 +66,7 @@ public class timelineadapter extends BaseAdapter {
         Collections.reverse(followeduser);
         this.act=act;
         this.context=context;
-        /**followedactivityname=new ArrayList();
-        for ( Map.Entry<String, String> entry : map2.entrySet()) {
-            followedactivityname.add(entry.getValue());
-        }
-        Collections.reverse(followedactivityname);
-        followeddate=new ArrayList();
-        for ( Map.Entry<String, Long> entry : map3.entrySet()) {
-            followeddate.add(entry.getValue());
-        }
-        Collections.reverse(followeddate);**/
+
 
     }
 
@@ -112,27 +102,188 @@ public class timelineadapter extends BaseAdapter {
         final CircleImageView iv = (CircleImageView) result.findViewById(R.id.imageview);
         cardView=(CardView)result.findViewById(R.id.card_view);
         String user1=followeduser.get(position).toString();
+        if(user1.equals("Anonymous")){
+            int aid = item.getValue();
+            String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user1).child("url");
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String url = dataSnapshot.getValue().toString();
-                Log.d("IMAGE", url);
-                Picasso.with(context).load(url).fit().centerCrop().into(iv);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user1).child("name");
+            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(aid)).child("time");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    name = dataSnapshot.getValue().toString();
+                    if (dataSnapshot.exists()) {
+                        long t = Long.valueOf(dataSnapshot.getValue().toString());
+                        String date = DateFormat.format("dd/MM/yyyy", t).toString();
+                        long c_date = new Date().getTime();
+                        String format = DateFormat.format("dd/MM/yyyy", c_date).toString();
+                        final Calendar cal = Calendar.getInstance();
+                        cal.add(Calendar.DATE, -1);
+                        String yest = DateFormat.format("dd/MM/yyyy", cal.getTime()).toString();
+                        if (date.equals(format)) {
+                            String nontime = DateFormat.format("HH:mm", t).toString();
+                            SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
+                            try {
+                                Date d = f1.parse(nontime);
+                                SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
+                                t2.setText("Today at " + f2.format(d).toUpperCase());
+                            } catch (Exception e) {
+
+                            }
+
+
+                        } else if (date.equals(yest)) {
+                            String nontime = DateFormat.format("HH:mm", t).toString();
+                            SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
+                            try {
+                                Date d = f1.parse(nontime);
+                                SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
+                                t2.setText("Yesterday at " + f2.format(d).toUpperCase());
+                            } catch (Exception e) {
+
+                            }
+
+                        } else {
+                            String date1 = DateFormat.format("d MMMM", t).toString();
+                            String nontime = DateFormat.format("HH:mm", t).toString();
+                            SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
+                            try {
+                                Date d = f1.parse(nontime);
+                                SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
+                                t2.setText(date1);
+                            } catch (Exception e) {
+
+                            }
+                        }
+                        //timev.setText(DateFormat.format("dd
+
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(aid));
+            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Activity1 post1 = dataSnapshot.getValue(Activity1.class);
+                        int status = post1.getStatus();
+
+                        if (status == 1) {
+                            t.setText(  "Anonymous has started following activity " + post1.getName());
+                        } else {
+                            cardView.setVisibility(View.GONE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }
+        else {
+
+            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user1);
+            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    user use = dataSnapshot.getValue(user.class);
+                    final String name = use.getName();
+                    String url = use.getUrl();
+                    Log.d("IMAGE", url);
+                    Picasso.with(context).load(url).fit().centerCrop().into(iv);
+
+                    int aid = item.getValue();
+                    String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+
+                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(aid)).child("time");
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                long t = Long.valueOf(dataSnapshot.getValue().toString());
+                                String date = DateFormat.format("dd/MM/yyyy", t).toString();
+                                long c_date = new Date().getTime();
+                                String format = DateFormat.format("dd/MM/yyyy", c_date).toString();
+                                final Calendar cal = Calendar.getInstance();
+                                cal.add(Calendar.DATE, -1);
+                                String yest = DateFormat.format("dd/MM/yyyy", cal.getTime()).toString();
+                                if (date.equals(format)) {
+                                    String nontime = DateFormat.format("HH:mm", t).toString();
+                                    SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
+                                    try {
+                                        Date d = f1.parse(nontime);
+                                        SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
+                                        t2.setText("Today at " + f2.format(d).toUpperCase());
+                                    } catch (Exception e) {
+
+                                    }
+
+
+                                } else if (date.equals(yest)) {
+                                    String nontime = DateFormat.format("HH:mm", t).toString();
+                                    SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
+                                    try {
+                                        Date d = f1.parse(nontime);
+                                        SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
+                                        t2.setText("Yesterday at " + f2.format(d).toUpperCase());
+                                    } catch (Exception e) {
+
+                                    }
+
+                                } else {
+                                    String date1 = DateFormat.format("d MMMM", t).toString();
+                                    String nontime = DateFormat.format("HH:mm", t).toString();
+                                    SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
+                                    try {
+                                        Date d = f1.parse(nontime);
+                                        SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
+                                        t2.setText(date1);
+                                    } catch (Exception e) {
+
+                                    }
+                                }
+                                //timev.setText(DateFormat.format("dd
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(aid));
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                Activity1 post1 = dataSnapshot.getValue(Activity1.class);
+                                int status = post1.getStatus();
+
+                                if (status == 1) {
+                                    t.setText(name + " has started following activity " + post1.getName());
+                                } else {
+                                    cardView.setVisibility(View.GONE);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                 }
 
@@ -141,91 +292,7 @@ public class timelineadapter extends BaseAdapter {
 
                 }
             });
-        int aid = item.getValue();
-        String user=FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        Log.d("POPkl",name+"");
-        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(aid)).child("time");
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                long t=Long.valueOf(dataSnapshot.getValue().toString());
-                String date = DateFormat.format("dd/MM/yyyy", t).toString();
-                long c_date=new Date().getTime();
-                String format=DateFormat.format("dd/MM/yyyy", c_date).toString();
-                final Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.DATE, -1);
-                String yest=DateFormat.format("dd/MM/yyyy",cal.getTime()).toString();
-                if(date.equals(format)){
-                    String nontime= DateFormat.format("HH:mm",t).toString();
-                    SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
-                    try{
-                        Date d = f1.parse(nontime);
-                        SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
-                        t2.setText("Today at "+f2.format(d).toUpperCase());
-                    }
-                    catch (Exception e){
-
-                    }
-
-
-                }
-                else if(date.equals(yest)){
-                    String nontime= DateFormat.format("HH:mm",t).toString();
-                    SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
-                    try{
-                        Date d = f1.parse(nontime);
-                        SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
-                        t2.setText("Yesterday at "+f2.format(d).toUpperCase());
-                    }catch (Exception e){
-
-                    }
-
-                }
-
-                else {
-                    String date1=DateFormat.format("d MMMM",t).toString();
-                    String nontime= DateFormat.format("HH:mm",t).toString();
-                    SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
-                    try{
-                        Date d = f1.parse(nontime);
-                        SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
-                        t2.setText(date1);
-                    }
-                    catch (Exception e){
-
-                    }
-                }
-                //timev.setText(DateFormat.format("dd
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(aid));
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Activity1 post1 = dataSnapshot.getValue(Activity1.class);
-                int status = post1.getStatus();
-
-                if(status==1) {
-                    t.setText(Html.fromHtml(name + " has started following activity <b>" + post1.getName() + "</b>"));
-                }
-                else{
-                   cardView.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        }
     cardView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {

@@ -1,3 +1,4 @@
+/**Hash Map Adapter**/
 package com.example.dharmendra.buddy1;
 
 import android.content.Context;
@@ -30,63 +31,31 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class HashMapAdapter2 extends BaseAdapter {
-    private final ArrayList mData;
-    ArrayList url1;
+    ArrayList<connection_class> con;
+    private ArrayList mData;
     Context context;
-    ArrayList countlist;
-    ArrayList mData1;
-    ArrayList lastmessage;
-    ArrayList messagetime;
-    ArrayList connectiontype;
 
-    public HashMapAdapter2(LinkedHashMap<String, String> map,LinkedHashMap<String,String> map5 ,LinkedHashMap<String, String> map2,LinkedHashMap<String, String> map3,LinkedHashMap<String, String> map4 ,LinkedHashMap<String,String > map1, Context context) {
-        countlist=new ArrayList();
-        //mData1.addAll(map1.entrySet());
-        for ( Map.Entry<String, String> entry : map1.entrySet()) {
-            countlist.add(entry.getValue());
-        }
-        Collections.reverse(countlist);
-        mData = new ArrayList();
+
+    public HashMapAdapter2(LinkedHashMap<String, String> map, ArrayList<connection_class> con1, Context context) {
+        Log.d("POPKLLL", con1.size() + "");
+        mData = new ArrayList<>();
         mData.addAll(map.entrySet());
-       Collections.reverse(mData);
-        url1 = new ArrayList();
-        for ( Map.Entry<String, String> entry1 : map2.entrySet()) {
-            url1.add(entry1.getValue());
-        }
-        Collections.reverse(url1);
-        this.context=context;
-        lastmessage=new ArrayList();
-        for ( Map.Entry<String, String> entry : map3.entrySet()) {
-            lastmessage.add(entry.getValue());
-        }
-        Collections.reverse(lastmessage);
-        messagetime=new ArrayList();
-        for ( Map.Entry<String, String> entry : map4.entrySet()) {
-            messagetime.add(entry.getValue());
-        }
-        Collections.reverse(messagetime);
-
-        connectiontype=new ArrayList();
-        for ( Map.Entry<String, String> entry1 : map5.entrySet()) {
-            connectiontype.add(entry1.getValue());
-        }
-        Collections.reverse(connectiontype);
-       /** countlist = new ArrayList();
-        countlist.addAll(countlist1);
-        Collections.reverse(countlist);**/
-
+        con = new ArrayList<>();
+        this.con = con1;
+        this.context = context;
 
     }
 
     @Override
     public int getCount() {
-        return mData.size();
+        return con.size();
     }
 
     @Override
     public LinkedHashMap.Entry<String, String> getItem(int position) {
         return (LinkedHashMap.Entry) mData.get(position);
     }
+
 
     @Override
     public long getItemId(int position) {
@@ -97,7 +66,7 @@ public class HashMapAdapter2 extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final View result;
-
+        Log.d("POPKLL", "POPKL_EXE");
         if (convertView == null) {
             result = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_list_view, parent, false);
         } else {
@@ -105,110 +74,88 @@ public class HashMapAdapter2 extends BaseAdapter {
         }
 
         LinkedHashMap.Entry<String, String> item = getItem(position);
+        String name = con.get(position).getName();
+        String url11 = con.get(position).getUrl();
+        String lm = con.get(position).getMessage();
+        String time = String.valueOf(con.get(position).getTime());
+        String type = con.get(position).getType();
+        CircleImageView typev = (CircleImageView) result.findViewById(R.id.type);
+        Log.d("POPKLLL", name + "" + url11 + "" + lm + "" + time + "" + type);
 
-        String url11=url1.get(position).toString();
-        String lm=lastmessage.get(position).toString();
-        String time=messagetime.get(position).toString();
-        String type=connectiontype.get(position).toString();
-        CircleImageView typev=(CircleImageView)result.findViewById(R.id.type);
-
-        if(type.equals("facebook"))
+        if (type.equals("facebook"))
             typev.setImageResource(R.drawable.ic_active_fb);
-        else if(type.equals("buddy"))
+        else if (type.equals("buddy"))
             typev.setImageResource(R.mipmap.ic_launcher);
 
-          String count;
-        if(countlist.isEmpty()){
-            count="0";
-        }
-        else if(countlist.size()-1>(position)){
-            count = countlist.get(position).toString();
-            Log.d("qwerty","inside");
-        }
-        else if(countlist.size()-1==(position)){
-            count = countlist.get(position).toString();
-            Log.d("qwerty","outside");
-        }
-        else {
-            count = "0";
-        }
+        String count = con.get(position).getCount();
+
         // TODO replace findViewById by ViewHolder
         //((TextView) result.findViewById(R.id.textView)).setText(String.valueOf(item.getKey()));
-        ((TextView) result.findViewById(R.id.textView)).setText(item.getValue());
-        ImageView imgv=(ImageView) result.findViewById(R.id.imageview);
+        ((TextView) result.findViewById(R.id.textView)).setText(name);
+        ImageView imgv = (ImageView) result.findViewById(R.id.imageview);
         Picasso.with(context).load(url11).fit().centerCrop().into(imgv);
-        TextView counter=(TextView)result.findViewById(R.id.counter);
-        TextView lmv=(TextView)result.findViewById(R.id.textView1);
-        TextView timev=(TextView)result.findViewById(R.id.textView2);
+        TextView counter = (TextView) result.findViewById(R.id.counter);
+        TextView lmv = (TextView) result.findViewById(R.id.textView1);
+        TextView timev = (TextView) result.findViewById(R.id.textView2);
         LinearLayout ll = (LinearLayout) result.findViewById(R.id.ll);
         LinearLayout ll2 = (LinearLayout) result.findViewById(R.id.ll2);
-        if(time.equals("0")){
+        if (time.equals("0")) {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll.getLayoutParams();
             params.weight = 2.0f;
             ll.setLayoutParams(params);
             ll2.setVisibility(View.GONE);
-            Log.d("hjk","inside");
-        }
-        else {
-            long t=Long.parseLong(time);
-            String date=DateFormat.format("dd/MM/yyyy", t).toString();
-            long c_date=new Date().getTime();
-            String format=DateFormat.format("dd/MM/yyyy", c_date).toString();
+            Log.d("hjk", "inside");
+        } else {
+            long t = Long.parseLong(time);
+            String date = DateFormat.format("dd/MM/yyyy", t).toString();
+            long c_date = new Date().getTime();
+            String format = DateFormat.format("dd/MM/yyyy", c_date).toString();
             final Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DATE, -1);
-            String yest=DateFormat.format("dd/MM/yyyy",cal.getTime()).toString();
-            if(date.equals(format)){
-               String nontime= DateFormat.format("HH:mm:ss",t).toString();
+            String yest = DateFormat.format("dd/MM/yyyy", cal.getTime()).toString();
+            if (date.equals(format)) {
+                String nontime = DateFormat.format("HH:mm:ss", t).toString();
                 SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
-                try{
-                     Date d = f1.parse(nontime);
+                try {
+                    Date d = f1.parse(nontime);
                     SimpleDateFormat f2 = new SimpleDateFormat("hh:mm");
                     timev.setText(f2.format(d).toUpperCase());
-                }
-                catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
 
-            }
-            else if(date.equals(yest)){
+            } else if (date.equals(yest)) {
                 timev.setText("YESTERDAY");
-            }
-            else {
+            } else {
                 timev.setText(DateFormat.format("dd/MM/yyyy", t));
                 Log.d("hjk", "outside");
             }
         }
-        if(count.equals("0")){
+        if (count.equals("0")) {
             counter.setVisibility(View.GONE);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) lmv.getLayoutParams();
             params.weight = 8.0f;
             lmv.setLayoutParams(params);
-            Log.d("hjk","inside");
-        }
-        else {
+            Log.d("hjk", "inside");
+        } else {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) lmv.getLayoutParams();
             params.weight = 7.0f;
             lmv.setLayoutParams(params);
             counter.setText(count);
-            Log.d("hjk","outside");
+            Log.d("hjk", "outside");
         }
-        if(lm.equals("0")){
+        if (lm.equals("0")) {
             lmv.setVisibility(View.GONE);
-            Log.d("hjk","inside");
-        }
-        else {
-            int size=lm.length();
-            /**if(size>25){
-                String sub=lm.substring(0,25);
-                lmv.setText(sub+"...");
-            }**/
-           // else {
-                lmv.setText(lm);
-           // }
+            Log.d("hjk", "inside");
+        } else {
+            int size = lm.length();
 
-            Log.d("hjk","outside");
+            lmv.setText(lm);
         }
+
+        Log.d("hjk", "outside");
+
         return result;
     }
 }
