@@ -270,17 +270,17 @@ public class HashMapAdapter2 extends BaseAdapter {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                        user_activity use=postSnapshot.getValue(user_activity.class);
-                                                        String n=use.getUser();
-                                                        int x=use.getGlobal_buddies();
-                                                        if(n.equals(content)&&x==1){
-                                                            postSnapshot.getRef().removeValue();
+                                                        for (DataSnapshot snapshot : postSnapshot.getChildren()) {
+                                                            user_activity use = snapshot.getValue(user_activity.class);
+                                                            String n = use.getUser();
+                                                            int x = use.getGlobal_buddies();
+                                                            if (n.equals(content) && x == 1) {
+                                                                snapshot.getRef().removeValue();
+                                                            } else if (n.equals(content) && x == 0) {
+                                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(content).child(String.valueOf(use.getAid())).child("fromconnection");
+                                                                mDatabase.setValue(0);
+                                                            }
                                                         }
-                                                        else if(n.equals(content)&&x==0){
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(use.getAid())).child("fromconnection");
-                                                            mDatabase.setValue(0);
-                                                        }
-
                                                     }
                                                 }
 
@@ -337,15 +337,16 @@ public class HashMapAdapter2 extends BaseAdapter {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                        user_activity use=postSnapshot.getValue(user_activity.class);
-                                                        String n=use.getUser();
-                                                        int x=use.getGlobal_buddies();
-                                                        if(n.equals(user)&&x==1){
-                                                            postSnapshot.getRef().removeValue();
-                                                        }
-                                                        else if(n.equals(user)&&x==0){
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity").child(String.valueOf(use.getAid())).child("fromconnection");
-                                                            mDatabase.setValue(0);
+                                                        for (DataSnapshot Snapshot : postSnapshot.getChildren()) {
+                                                            user_activity use = Snapshot.getValue(user_activity.class);
+                                                            String n = use.getUser();
+                                                            int x = use.getGlobal_buddies();
+                                                            if (n.equals(user) && x == 1) {
+                                                                Snapshot.getRef().removeValue();
+                                                            } else if (n.equals(user) && x == 0) {
+                                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity").child(user).child(String.valueOf(use.getAid())).child("fromconnection");
+                                                                mDatabase.setValue(0);
+                                                            }
                                                         }
                                                     }
                                                 }

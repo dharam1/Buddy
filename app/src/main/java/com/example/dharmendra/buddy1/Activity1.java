@@ -14,7 +14,7 @@ public class Activity1 {
     public Double longitude;
     public int ccid;
     public int status;
-    public String address;
+    public String address,mapurl;
     long actdate;
     int type;
     //String pos;
@@ -25,7 +25,7 @@ public class Activity1 {
     public Activity1() {
     }
 
-    public Activity1(String user, String name, Double latitude, Double longitude, int ccid, int status,String address,int type) {
+    public Activity1(String user, String name, Double latitude, Double longitude, int ccid, int status,String address,int type,String mapurl) {
         this.user=user;
         this.name=name;
         this.latitude=latitude;
@@ -35,6 +35,7 @@ public class Activity1 {
         this.address=address;
         actdate = new Date().getTime();
         this.type=type;
+        this.mapurl=mapurl;
     }
 
     public String getName() {
@@ -71,5 +72,9 @@ public class Activity1 {
 
     public  int getType(){
         return type;
+    }
+
+    public String getMapurl(){
+        return mapurl;
     }
 }

@@ -43,7 +43,10 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 import static com.example.dharmendra.buddy1.R.id.map;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -69,6 +72,7 @@ public class TimeLine extends Fragment {
     timelineadapter adapter;
     String name,n;
     int status;
+    ArrayList<Integer> aidlist=new ArrayList<>();
 
 
     private OnFragmentInteractionListener listener;
@@ -201,12 +205,12 @@ public class TimeLine extends Fragment {
                 }
             }, DRAWER_DELAY);
         }
-        if (item.getItemId() == R.id.refresh) {
+        /**if (item.getItemId() == R.id.refresh) {
             Fragment fragment = TimeLine.newInstance();
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.first, fragment);
             fragmentTransaction.commit();
-        }
+        }**/
 
 
         return false;
@@ -214,7 +218,7 @@ public class TimeLine extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
           View rootview= inflater.inflate(R.layout.fragment_timeline, container, false);
         SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout)rootview.findViewById(R.id.activity_main_swipe_refresh_layout);
         timeline= (ListView)rootview.findViewById(R.id.simpleListView);
@@ -235,24 +239,32 @@ public class TimeLine extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    user_activity use = postSnapshot.getValue(user_activity.class);
-                    final int aid = Integer.parseInt(String.valueOf(use.getAid()));
-                    final String userid = use.getUser();
-                    final long time = use.getTime();
-                    if (use.getFromconnection() == 1) {
-                        followeduser.put(io, userid);
-                        followedactivityid.put(io, aid);
-                    } else {
-                        followeduser.put(io, "Anonymous");
-                        followedactivityid.put(io, aid);
-                    }
+                    if (!postSnapshot.getKey().equals(user)) {
+                        for (DataSnapshot snapshot : postSnapshot.getChildren()) {
+                            user_activity use = snapshot.getValue(user_activity.class);
+                                final int aid = Integer.parseInt(String.valueOf(use.getAid()));
+                                final String userid = use.getUser();
+                                final long time = use.getTime();
+                                if (use.getFromconnection() == 1) {
+                                    followeduser.put(io, "-" + userid);
+                                    followedactivityid.put(io, aid);
+                                } else {
+                                    //if (!aidlist.contains(Integer.parseInt(snapshot.getKey()))) {
+                                        aidlist.add(Integer.parseInt(snapshot.getKey()));
+                                    followeduser.put(io, "Anonymous-" + userid);
+                                    followedactivityid.put(io, aid);
 
-                    io++;
+                                }
+
+                                io++;
+                            //}
+                        }
+                    }
                 }
 
                 Log.d("POPKLL", followeduser.size() + "");
 
-                adapter = new timelineadapter(followedactivityid, followeduser,/**,followedactivity,followeddate**/getApplicationContext(), getActivity());
+                adapter = new timelineadapter(followedactivityid, followeduser,/**,followedactivity,followeddate**/getApplicationContext(), getActivity(),getFragmentManager(),savedInstanceState);
                 timeline.setAdapter(adapter);
             }
         }

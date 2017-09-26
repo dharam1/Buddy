@@ -209,12 +209,12 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
                 }
             }, DRAWER_DELAY);
         }
-        if (item.getItemId() == R.id.refresh) {
+        /**if (item.getItemId() == R.id.refresh) {
             Fragment fragment = FirstFragment.newInstance();
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.first, fragment);
             fragmentTransaction.commit();
-        }
+        }**/
 
 
         return false;

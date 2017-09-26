@@ -1,9 +1,13 @@
 package com.example.dharmendra.buddy1;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.text.format.DateFormat;
@@ -16,7 +20,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.formats.NativeAd;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +50,9 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.dharmendra.buddy1.R.id.map;
+import static com.example.dharmendra.buddy1.R.id.place_autocomplete_powered_by_google;
+
 /**
  * Created by Dharmendra on 02-06-2017.
  */
@@ -47,13 +65,18 @@ public class timelineadapter extends BaseAdapter {
     Context context;
     ArrayList timelist;
     CardView cardView;
-
+    FragmentManager fragmentManager;
     DatabaseReference mDatabase;
     String user;
     Activity act;
+    Bundle b;
+    GoogleMap mMap;
+    Double lat,longi;
+    int aid;
+    String type1;
 
 
-    public timelineadapter(LinkedHashMap<Integer,Integer> map, LinkedHashMap<Integer,String> map1,Context context/**, LinkedHashMap<String, String> map2, LinkedHashMap<String, Long> map3**/,Activity act) {
+    public timelineadapter(LinkedHashMap<Integer,Integer> map, LinkedHashMap<Integer,String> map1,Context context/**, LinkedHashMap<String, String> map2, LinkedHashMap<String, Long> map3**/, Activity act, FragmentManager fragmentManager,Bundle b) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
         Collections.reverse(mData);
@@ -64,7 +87,8 @@ public class timelineadapter extends BaseAdapter {
         Collections.reverse(followeduser);
         this.act=act;
         this.context=context;
-
+        this.fragmentManager=fragmentManager;
+        this.b=b;
 
     }
 
@@ -87,12 +111,16 @@ public class timelineadapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final View result;
+        MapView mapView;
+
+
 
         if (convertView == null) {
             result = LayoutInflater.from(parent.getContext()).inflate(R.layout.timeline_list_view, parent, false);
         } else {
             result = convertView;
         }
+
 
         final LinkedHashMap.Entry<Integer, Integer> item = getItem(position);
         final TextView t=(TextView)result.findViewById(R.id.textView);
@@ -101,11 +129,15 @@ public class timelineadapter extends BaseAdapter {
         cardView=(CardView)result.findViewById(R.id.card_view);
         TextView dot = (TextView) result.findViewById(R.id.tv_dot);
         final ImageView type = (ImageView) result.findViewById(R.id.type);
+        final ImageView mapview=(ImageView)result.findViewById(R.id.map);
         View line = (View) result.findViewById(R.id.vertical_bar);
         dot.setVisibility(View.VISIBLE);
         line.setVisibility(View.VISIBLE);
         type.setVisibility(View.VISIBLE);
-        String user1=followeduser.get(position).toString();
+        final String user11=followeduser.get(position).toString();
+        String[] split=user11.split("-");
+        final String user1=split[1];
+        final String user2=split[0];
 
         Resources r = context.getResources();
         int px = (int) TypedValue.applyDimension(
@@ -127,13 +159,12 @@ public class timelineadapter extends BaseAdapter {
 
         line.setLayoutParams(params);
 
-        if(user1.equals("Anonymous")){
-            int aid = item.getValue();
+        if(user2.equals("Anonymous")){
+             aid = item.getValue();
             String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-
-
-        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user1).child("url");
+        /**---------------Load Anonymous Photo---------------------------------------------------**/
+       /** mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user1).child("url");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -146,10 +177,10 @@ public class timelineadapter extends BaseAdapter {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });**/
 
 
-            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(aid)).child("time");
+            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(user1).child(String.valueOf(aid)).child("time");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -214,9 +245,12 @@ public class timelineadapter extends BaseAdapter {
                     if (dataSnapshot.exists()) {
                         Activity1 post1 = dataSnapshot.getValue(Activity1.class);
                         int status = post1.getStatus();
-
+                        lat=post1.getLatitude();
+                        longi=post1.getLongitude();
+                        String url=post1.getMapurl();
                         if (status == 1) {
                             t.setText("Anonymous has started following activity " + post1.getName());
+                            Picasso.with(context).load(url).fit().centerCrop().into(mapview);
                         } else {
                             cardView.setVisibility(View.GONE);
                         }
@@ -243,16 +277,18 @@ public class timelineadapter extends BaseAdapter {
                     Log.d("IMAGE", url);
                     Picasso.with(context).load(url).fit().centerCrop().into(iv);
 
-                    int aid = item.getValue();
+                    aid = item.getValue();
                     String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
-                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(aid)).child("time");
+                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(user1).child(String.valueOf(aid));
                     mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                long t = Long.valueOf(dataSnapshot.getValue().toString());
+                                user_activity use=dataSnapshot.getValue(user_activity.class);
+                                type1=use.getType();
+                                long t = use.getTime();
                                 String date = DateFormat.format("dd/MM/yyyy", t).toString();
                                 long c_date = new Date().getTime();
                                 String format = DateFormat.format("dd/MM/yyyy", c_date).toString();
@@ -312,9 +348,17 @@ public class timelineadapter extends BaseAdapter {
                             if (dataSnapshot.exists()) {
                                 Activity1 post1 = dataSnapshot.getValue(Activity1.class);
                                 int status = post1.getStatus();
-
+                                lat=post1.getLatitude();
+                                longi=post1.getLongitude();
+                                String url=post1.getMapurl();
                                 if (status == 1) {
-                                    t.setText(Html.fromHtml("<b>" + name + "</b> has started following activity <b>" + post1.getName() + "</b>"));
+                                    Picasso.with(context).load(url).fit().centerCrop().into(mapview);
+
+                                    if(type1.equals("Created"))
+                                        t.setText(Html.fromHtml("<b>" + name + "</b> has created new activity <b>" + post1.getName() + "</b>"));
+                                    else
+                                        t.setText(Html.fromHtml("<b>" + name + "</b> has Started Following activity <b>" + post1.getName() + "</b>"));
+
                                     if(post1.getType() == 0)
                                         type.setImageResource(R.drawable.ic_global);
                                     else
@@ -356,4 +400,5 @@ public class timelineadapter extends BaseAdapter {
 
         return result;
     }
+
 }

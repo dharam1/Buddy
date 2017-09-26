@@ -104,16 +104,7 @@ public class Chat extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent i = new Intent(Chat.this, manageuser.class);
-                i.putExtra("int_key", cidd);
-                startActivity(i);
-                overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
-            }
-        });
         /**-----------------------------emoji----------------------------------**/
         emojIcon = new EmojIconActions(this, rootView,input, emojiButton);
         emojIcon.setIconsIds(R.drawable.ic_keyboard, R.drawable.ic_emoji);
@@ -142,6 +133,16 @@ public class Chat extends AppCompatActivity {
         else{
             //  Toast.makeText(this, "Not Passed", Toast.LENGTH_SHORT).show();
         }
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(Chat.this, manageuser.class);
+                i.putExtra("int_key", cidd);
+                startActivity(i);
+                overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
+            }
+        });
 
         rand=new Random();
         user=FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -245,11 +246,29 @@ public class Chat extends AppCompatActivity {
                                             if(dataSnapshot.exists()){
                                                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                                     connection_type con=postSnapshot.getValue(connection_type.class);
-                                                    String user_name = con.getUid().toString();
-                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(String.valueOf(cidd));
-                                                    String type="not created";
-                                                    user_activity act=new user_activity(user,cidd,type,1,global_buddies);
-                                                    mDatabase.setValue(act);
+                                                    final String user_name = con.getUid().toString();
+                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(user);/**.child(String.valueOf(cidd));**/
+                                                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            if(!dataSnapshot.exists()){
+                                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(user).child(String.valueOf(cidd));
+                                                                String type="not created";
+                                                                user_activity act=new user_activity(user,cidd,type,1,global_buddies);
+                                                                mDatabase.setValue(act);
+                                                            }
+                                                            else{
+                                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(user).child(String.valueOf(cidd)).child("fromconnection");
+                                                                mDatabase.setValue(1);
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+
                                                 }
                                             }
                                         }

@@ -69,6 +69,7 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
         final TextView messageUser = (TextView) v.findViewById(R.id.message_user);
        TextView messageTime = (TextView) v.findViewById(R.id.message_time);
         TextView messageDate = (TextView) v.findViewById(R.id.message_date);
+
         if(connectionlist.contains(model.getMessageUserId())){
             mDatabase=FirebaseDatabase.getInstance().getReference("users").child(model.getMessageUserId()).child("name");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
