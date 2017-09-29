@@ -62,6 +62,7 @@ import java.util.Map;
 
 public class SecondFragment extends Fragment {
     int i;
+    long x=0;
     String message;
     long time;
     ListView connectionlist;
@@ -78,11 +79,12 @@ public class SecondFragment extends Fragment {
     LinkedHashMap<String,String> s_connection_list=new LinkedHashMap<>();
     TextView datashow;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    int count=0;
+    int count=0,c=0;
     Boolean refresh=false;
     String temp;
     Boolean check=false;
     ArrayList<connection_class> con_list=new ArrayList<>();
+    LinkedHashMap<String, connection_class> con_map=new LinkedHashMap<>();
 
     private OnFragmentInteractionListener listener;
 
@@ -310,6 +312,7 @@ public class SecondFragment extends Fragment {
                         final connection_type con=postSnapshot.getValue(connection_type.class);
                         final String user1=con.getUid();
                         final String type=con.getType();
+                        Log.d("qwerty1",user1);
 
                         mDatabase1 = FirebaseDatabase.getInstance().getReference("users").child(user1);
                         mDatabase1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -320,6 +323,9 @@ public class SecondFragment extends Fragment {
                                 map.put(user1,name);
                                 url = use.getUrl();
                                 s_urllist.add(url);
+                                Log.d("qwerty2",user1);
+                                c=0;
+                                count = 0;
                             }
 
                             @Override
@@ -327,16 +333,15 @@ public class SecondFragment extends Fragment {
 
                             }
                         });
-                        temp="null";
+
                         mDatabase2 = FirebaseDatabase.getInstance().getReference("pcchats").child(user).child(user1);
-                        mDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        mDatabase2.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 //Log.d("tempooo",user1);
                                 check=false;
                                 if (dataSnapshot.exists()) {
                                     count = 0;
-
                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                         Log.d("dharam", "called");
                                         ChatMessage m = postSnapshot.getValue(ChatMessage.class);
@@ -348,29 +353,48 @@ public class SecondFragment extends Fragment {
                                             check=true;
                                         }
                                     }
+                                    connection_class c=con_map.get(user1);
+                                    if(c==null){
+                                        Log.d("aswd","aswd");
+                                        Date d=new Date(time);
+                                        connection_class con=new connection_class( user1,name,type,url,message,time,String.valueOf(count),d);
+                                        con_list.add(con);
+                                        con_map.put(user1,con);
 
-                                    Log.d("hjkl",message);
+                                    }else{
+                                        Log.d("aswd","aswd1");
+                                        Date d=new Date(time);
+                                        connection_class con=new connection_class(c.getId(),c.getName(),c.getType(),c.getUrl(),message,time,String.valueOf(count),d);
+                                        int pos=con_list.indexOf(c);
+                                        con_list.remove(pos);
+                                        con_list.add(con);
+                                        con_map.put(user1,con);
+                                    }
 
+                                    //Log.d("QWERTY", user1+"---"+name + "---" +type+"---"+ url+ "---" + message + "---" + time + "---" +count);
                                 }
                                 else{
-                                    Log.d("serth", String.valueOf(count));
+                                    Log.d("aswd","aswd2");
                                     count=0;
                                     message="0";
                                     time=0;
                                     s_countlist.add(count);
-                                }
+                                    Date d=new Date(time);
+                                    connection_class con=new connection_class( user1,name,type,url,message,time,String.valueOf(count),d);
+                                    con_list.add(con);
+                                    con_map.put(user1,con);
 
-                                Date d=new Date(time);
-                                connection_class con=new connection_class( user1,name,type,url,message,time,String.valueOf(count),d);
-                                con_list.add(con);
+                                }
+                                /**for ( Map.Entry<String, connection_class> entry : con_map.entrySet()) {
+                                    con_list.add(entry.getValue());
+                                }**/
+                                Log.d("aswd","aswd4");
                                 Collections.sort(con_list);
                                 Collections.reverse(con_list);
-                                for(connection_class c:con_list){
-                                    Log.d("POPKLLLL", c.getName() + "" + c.getUrl() + "" +c.getMessage() + "" + c.getTime() + "" +c.getCount());
-                                }
                                 //Log.d("POPKLLLL", name + "" + url+ "" + message + "" + time + "" +count);
                                 HashMapAdapter2 adapter = new HashMapAdapter2(map,con_list,getContext(),getActivity(),getFragmentManager());
                                 connectionlist.setAdapter(adapter);
+
                             }
 
 
@@ -403,228 +427,7 @@ public class SecondFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
-       /** connectionlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                String content1 =connectionlist.getItemAtPosition(position).toString();
-                String[] parts = content1.split("=");
-                final String content=(parts[0]);
-                AlertDialog alertDialog=new AlertDialog.Builder(getContext()).create();
-                alertDialog.setMessage("Remove From Connection");
-                alertDialog.setButton("Remove", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(haveNetworkConnection()){
-                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
-                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                        connection_type con=postSnapshot.getValue(connection_type.class);
-                                        final String id=con.getUid();
-                                        if(id.equals(content)){
-                                             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection").child(content);
-                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    connection_type con=dataSnapshot.getValue(connection_type.class);
-                                                    String type=con.getType().toString();
-                                                    if(type.equals("facebook")){
 
-                                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("fid");
-                                                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                                String fid=dataSnapshot.getValue().toString();
-                                                                mDatabase = FirebaseDatabase.getInstance().getReference("fbblockeduser").child(user).child(content);
-                                                                mDatabase.setValue(fid);
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(DatabaseError databaseError) {
-
-                                                            }
-                                                        });
-                                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("fid");
-                                                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                                String fid=dataSnapshot.getValue().toString();
-                                                                mDatabase = FirebaseDatabase.getInstance().getReference("fbblockeduser").child(content).child(user);
-                                                                mDatabase.setValue(fid);
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(DatabaseError databaseError) {
-
-                                                            }
-                                                        });
-
-
-
-
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                }
-                                            });
-
-
-
-                                             postSnapshot.getRef().removeValue();
-                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity");
-                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                        user_activity use=postSnapshot.getValue(user_activity.class);
-                                                        String n=use.getUser();
-                                                        int x=use.getGlobal_buddies();
-                                                        if(n.equals(content)&&x==1){
-                                                            postSnapshot.getRef().removeValue();
-                                                        }
-                                                        else if(n.equals(content)&&x==0){
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(String.valueOf(use.getAid())).child("fromconnection");
-                                                            mDatabase.setValue(0);
-                                                        }
-
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                }
-                                            });
-                                            Toast.makeText(getContext(), "Successfully Removed", Toast.LENGTH_SHORT).show();
-                                            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                                            fragmentTransaction.replace(R.id.second, new SecondFragment());
-                                            fragmentTransaction.commit();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("Noti");
-                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.exists()) {
-                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                            Model1 m = postSnapshot.getValue(Model1.class);
-                                            String id = m.getUser();
-                                            if (id.equals(content)) {
-                                                postSnapshot.getRef().removeValue();
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("connection");
-                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                        connection_type con=postSnapshot.getValue(connection_type.class);
-                                        final String id=con.getUid();
-                                        if(id.equals(user)){
-                                            postSnapshot.getRef().removeValue();
-                                           mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity");
-                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                        user_activity use=postSnapshot.getValue(user_activity.class);
-                                                        String n=use.getUser();
-                                                        int x=use.getGlobal_buddies();
-                                                        if(n.equals(user)&&x==1){
-                                                            postSnapshot.getRef().removeValue();
-                                                        }
-                                                        else if(n.equals(user)&&x==0){
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity").child(String.valueOf(use.getAid())).child("fromconnection");
-                                                            mDatabase.setValue(0);
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                }
-                                            });
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("Noti");
-                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.exists()) {
-                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                            Model1 m = postSnapshot.getValue(Model1.class);
-                                            String id = m.getUser();
-                                            if (id.equals(user)) {
-                                                postSnapshot.getRef().removeValue();
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-                        else{
-                            Toast.makeText(getContext(), "Network Error", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-                alertDialog.show();
-
-                return true;
-            }
-        });**/
-
-
-        /**connectionlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String content1 =connectionlist.getItemAtPosition(position).toString();
-                String[] parts = content1.split("=");
-                String content=(parts[0]);
-                String content11=(parts[1]);
-                Intent i = new Intent(getActivity(), PcChat.class);
-                i.putExtra("int_key",content);
-                i.putExtra("int_key1",content11);
-                startActivity(i);
-                getActivity().overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
-                Log.d("pele",content);
-            }
-        });**/
 
         return rootview;
     }

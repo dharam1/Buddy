@@ -53,7 +53,7 @@ import static android.R.attr.theme;
 import static java.security.AccessController.getContext;
 
 
-public class manageuser extends AppCompatActivity implements OnMapReadyCallback {
+public class manageuser extends AppCompatActivity {
     String user;
     ListView manageuser;
     Bundle b;
@@ -81,7 +81,7 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
         card.setVisibility(View.GONE);
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         manageuser= (ListView)findViewById(R.id.simpleListView);
-        count=(TextView)findViewById(R.id.c);
+        //count=(TextView)findViewById(R.id.c);
         //ttt=(TextView)findViewById(R.id.date);
         //tt=(TextView)findViewById(R.id.activity_name);
         b= getIntent().getExtras();
@@ -176,9 +176,9 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
             }
         });
 
-        mapView = (MapView) findViewById(R.id.map_view);
+        /**mapView = (MapView) findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        mapView.getMapAsync(this);**/
 
         mDatabase = FirebaseDatabase.getInstance().getReference("chats").child("kick").child(String .valueOf(cidd));
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -278,13 +278,13 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
 
     }
 
-    @Override
+    /**@Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 10));
-    }
+    }**/
     public void setListViewHeightBasedOnChildren(ListView listView, Manage_user_adapter listAdapter) {
         if (listAdapter == null) {
             // pre-condition

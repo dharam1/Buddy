@@ -74,7 +74,7 @@ public class HashMapAdapter2 extends BaseAdapter {
     }
 
     @Override
-    public LinkedHashMap.Entry<String, String> getItem(int position) {
+    public LinkedHashMap.Entry<String,String> getItem(int position) {
         return (LinkedHashMap.Entry) mData.get(position);
     }
 
@@ -95,7 +95,7 @@ public class HashMapAdapter2 extends BaseAdapter {
             result = convertView;
         }
 
-        LinkedHashMap.Entry<String, String> item = getItem(position);
+        LinkedHashMap.Entry<String,String> item = getItem(position);
         String name = con.get(position).getName();
         String url11 = con.get(position).getUrl();
         String lm = con.get(position).getMessage();
