@@ -44,6 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -65,8 +66,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.romainpiel.shimmer.Shimmer;
-import com.romainpiel.shimmer.ShimmerTextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,14 +74,8 @@ import java.util.Random;
 import co.ceryle.radiorealbutton.RadioRealButton;
 import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 
-import static android.app.Activity.RESULT_OK;
-import static com.example.dharmendra.buddy1.R.id.image;
 import static com.example.dharmendra.buddy1.R.id.map;
-import static com.example.dharmendra.buddy1.R.id.match_parent;
-import static com.example.dharmendra.buddy1.R.id.thing_proto;
-import static com.example.dharmendra.buddy1.R.id.toolbar;
-import static com.example.dharmendra.buddy1.R.id.wrap_content;
-import static java.lang.System.out;
+
 
 public class FifthFragment extends Fragment implements OnMapReadyCallback {
     SupportMapFragment mapFragment;
@@ -338,15 +331,15 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
 
             /**--------------------------------------------------------------------------------------------**/
 
-            Shimmer shimmer = new Shimmer();
-            shimmer.setDuration(1500)
-                    .setStartDelay(500);
-            shimmer.start((ShimmerTextView) layout.findViewById(R.id.tv_great));
+            ShimmerFrameLayout shimmer = (ShimmerFrameLayout) layout.findViewById(R.id.tv_great);
+            shimmer.setDuration(1500);
+            shimmer.setRepeatDelay(2000);
+            shimmer.startShimmerAnimation();
 
-            Shimmer shimmer1 = new Shimmer();
-            shimmer1.setDuration(2000)
-                    .setStartDelay(300);
-            shimmer1.start((ShimmerTextView) layout.findViewById(R.id.tv_great2));
+            ShimmerFrameLayout shimmer1 = (ShimmerFrameLayout) layout.findViewById(R.id.tv_great2);
+            shimmer1.setDuration(2000);
+            shimmer1.setRepeatDelay(2000);
+            shimmer1.startShimmerAnimation();
 
             Button add_activity = (Button) layout.findViewById(R.id.add_activity);
             final TextView countv=(TextView)layout.findViewById(R.id.count);

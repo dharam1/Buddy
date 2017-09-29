@@ -21,20 +21,19 @@
 
             <View
                 android:id="@+id/vertical_bar"
-                android:layout_width="4dp"
+                android:layout_width="3dp"
                 android:layout_height="match_parent"
                 android:background="@color/gray"
                 android:visibility="gone"
-                android:alpha="0.5"
+                android:alpha="0.3"
                 android:layout_centerHorizontal="true" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/imageview"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_gravity="center|left"/>
+                />
         </RelativeLayout>
 
 

@@ -138,10 +138,10 @@ public class HashMapAdapter2 extends BaseAdapter {
             String yest = DateFormat.format("dd/MM/yyyy", cal.getTime()).toString();
             if (date.equals(format)) {
                 String nontime = DateFormat.format("HH:mm:ss", t).toString();
-                SimpleDateFormat f1 = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat f1 = new SimpleDateFormat("kk:mm");
                 try {
                     Date d = f1.parse(nontime);
-                    SimpleDateFormat f2 = new SimpleDateFormat("hh:mm");
+                    SimpleDateFormat f2 = new SimpleDateFormat("kk:mm");
                     timev.setText(f2.format(d).toUpperCase());
                 } catch (Exception e) {
 

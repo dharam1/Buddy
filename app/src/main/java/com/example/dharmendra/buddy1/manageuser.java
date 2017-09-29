@@ -7,29 +7,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,13 +39,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
-import static android.R.attr.lines;
-import static android.R.attr.mode;
-import static android.R.attr.theme;
-import static java.security.AccessController.getContext;
 
-
-public class manageuser extends AppCompatActivity implements OnMapReadyCallback {
+public class manageuser extends AppCompatActivity  {
     String user;
     ListView manageuser;
     Bundle b;
@@ -69,6 +56,7 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
     ArrayList<String> connection=new ArrayList<>();
     TextView tt,count,ttt;
     String admin,activityName;
+    ImageView mapImage;
     LatLng pos;
 
     @Override
@@ -76,18 +64,19 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manageuser);
 
-        LayoutInflater inflater = LayoutInflater.from(this);
         final CardView card = (CardView) findViewById(R.id.card_view);
         card.setVisibility(View.GONE);
-        user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        manageuser= (ListView)findViewById(R.id.simpleListView);
         count=(TextView)findViewById(R.id.c);
-        //ttt=(TextView)findViewById(R.id.date);
-        //tt=(TextView)findViewById(R.id.activity_name);
+        ttt=(TextView)findViewById(R.id.date);
+        tt=(TextView)findViewById(R.id.activity_name);
+        manageuser = (ListView) findViewById(R.id.simpleListView);
+        mapImage = (ImageView) findViewById(R.id.map);
         b= getIntent().getExtras();
         if (b!= null){
             cidd=b.getInt("int_key");
         }
+
+        user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         mDatabase=FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(cidd));
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -96,14 +85,13 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
                 Activity1 post1 = dataSnapshot.getValue(Activity1.class);
                 long t =post1.getActdate();
                 activityName=post1.getName();
+
+                String imageURL = post1.getMapurl();
+                Picasso.with(getApplication()).load(imageURL).fit().centerCrop().noFade().into(mapImage);
+
                 admin=post1.getUser();
                 Log.d("yuio",admin);
-                //tt.setText(activityName);
-
-                Double longitude = post1.getLongitude();
-                Double latitude = post1.getLatitude();
-                pos = new LatLng(latitude, longitude);
-
+                tt.setText(activityName);
 
                 String date= DateFormat.format("dd-MM-yyyy", t).toString();
                 long c_date=new Date().getTime();
@@ -117,17 +105,17 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
                     try{
                         Date d = f1.parse(nontime);
                         SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
-                        //ttt.setText("Created Today at "+f2.format(d).toUpperCase());
+                        ttt.setText("Created Today at "+f2.format(d).toUpperCase());
                     }
                     catch (Exception e){
 
                     }
                 }
                 else if(date.equals(yest)){
-                    //ttt.setText("Created Yesterday");
+                    ttt.setText("Created Yesterday");
                 }
                 else {
-                    //ttt.setText("Created on "+DateFormat.format("dd-MM-yyyy", t));
+                    ttt.setText("Created on "+DateFormat.format("dd-MM-yyyy", t));
                     Log.d("hjk", "outside");
                 }
                 if(user.equals(admin)) {
@@ -175,10 +163,6 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
 
             }
         });
-
-        mapView = (MapView) findViewById(R.id.map_view);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference("chats").child("kick").child(String .valueOf(cidd));
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -263,7 +247,7 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
                     map.put(users,nickname);
 
                 }
-                count.setText(String.valueOf(map.size()) + " participants");
+                count.setText(String.valueOf(map.size()));
                 adapter = new Manage_user_adapter(map,cidd,list,admin,send,receive,connection,activityName,getApplicationContext());
                 manageuser.setAdapter(adapter);
                 setListViewHeightBasedOnChildren(manageuser, adapter);
@@ -278,13 +262,7 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
 
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.getUiSettings().setRotateGesturesEnabled(false);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 10));
-    }
+
     public void setListViewHeightBasedOnChildren(ListView listView, Manage_user_adapter listAdapter) {
         if (listAdapter == null) {
             // pre-condition
@@ -324,7 +302,5 @@ public class manageuser extends AppCompatActivity implements OnMapReadyCallback 
         }
         return haveConnectedWifi || haveConnectedMobile;
     }
-
-
 
 }

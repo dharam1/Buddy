@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -16,8 +17,10 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,7 +77,7 @@ public class timelineadapter extends BaseAdapter {
     Double lat,longi;
     int aid;
     String type1;
-
+    int count = 0;
 
     public timelineadapter(LinkedHashMap<Integer,Integer> map, LinkedHashMap<Integer,String> map1,Context context/**, LinkedHashMap<String, String> map2, LinkedHashMap<String, Long> map3**/, Activity act, FragmentManager fragmentManager,Bundle b) {
         mData = new ArrayList();
@@ -140,21 +143,37 @@ public class timelineadapter extends BaseAdapter {
         final String user2=split[0];
 
         Resources r = context.getResources();
-        int px = (int) TypedValue.applyDimension(
+        final int px = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 10,
                 r.getDisplayMetrics()
         );
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) line.getLayoutParams();
 
-        if(position == 0){
+        ViewTreeObserver vto = iv.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                int x;
+                iv.getViewTreeObserver().removeOnPreDrawListener(this);
+                x = iv.getMeasuredWidth();
+                iv.setLayoutParams(new RelativeLayout.LayoutParams(x,x));
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv.getLayoutParams();
+                params.setMargins(0, px, 0, 0);
+                return true;
+            }
+        });
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) line.getLayoutParams();
+        Log.d("POSITION", String.valueOf(position));
+        if(position == 0 && position == getCount() - 1 - count ){
+            params.setMargins(0, px, 0, px);
+        }
+        else if(position == 0){
+            Log.d("POSITION", "INSIDE 1");
             params.setMargins(0, px, 0, 0);
         }
-        else if(position == getCount() - 1){
+        else if(position == getCount() - 1 - count){
+            Log.d("POSITION", "INSIDE 2");
             params.setMargins(0, 0, 0, px);
-        }
-        else{
-            params.setMargins(0, 0, 0, 0);
         }
 
         line.setLayoutParams(params);
@@ -253,6 +272,7 @@ public class timelineadapter extends BaseAdapter {
                             Picasso.with(context).load(url).fit().centerCrop().into(mapview);
                         } else {
                             cardView.setVisibility(View.GONE);
+                            count++;
                         }
                     }
                 }
@@ -275,7 +295,7 @@ public class timelineadapter extends BaseAdapter {
                     final String name = use.getName();
                     String url = use.getUrl();
                     Log.d("IMAGE", url);
-                    Picasso.with(context).load(url).fit().centerCrop().into(iv);
+                    Picasso.with(context).load(url).fit().centerCrop().noFade().into(iv);
 
                     aid = item.getValue();
                     String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -365,6 +385,7 @@ public class timelineadapter extends BaseAdapter {
                                         type.setImageResource(R.drawable.ic_private);
                                 } else {
                                     cardView.setVisibility(View.GONE);
+                                    count++;
                                 }
                             }
                         }
