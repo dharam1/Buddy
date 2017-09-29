@@ -8,7 +8,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/tv_date"
         android:layout_centerHorizontal="true"
-        android:text="AHHAHAHA"
         android:background="@drawable/card_edge"
         android:padding="5dp"
         android:backgroundTint="@color/gray"

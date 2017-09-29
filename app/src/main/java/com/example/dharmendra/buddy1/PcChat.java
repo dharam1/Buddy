@@ -56,7 +56,6 @@ import java.util.ArrayList;
 public class PcChat extends AppCompatActivity implements SecondFragment.OnFragmentInteractionListener{
     String user1;
     private ListView listView;
-    int PICK_IMAGE_REQUEST = 111;
     Bundle b;
     String user,name;
     String loggedInUserName;
@@ -76,14 +75,24 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
     AdapterSearch searchadapter;
     EditText input;
     FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageRef = storage.getReferenceFromUrl("gs://budddy-f974a.appspot.com/");    //change the url according to your firebase app
-
+    int flag=0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pc_chat);
+        Intent startingIntent = getIntent();
+        if (startingIntent != null) {
+                user1 = startingIntent.getStringExtra("Pcchatid");
+                name = startingIntent.getStringExtra("Pcname");
+                if(user1==null||name==null)
+                    flag=0;
+                else
+                    flag=1;
+                Log.d("POPKLJM",user1+"  "+name);
+        }
+
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         getWindow().setBackgroundDrawableResource(R.drawable.background) ;
@@ -101,15 +110,15 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
         listView = (ListView) findViewById(R.id.list);
         t=(TextView) findViewById(R.id.activity_name);
         imageView=(ImageView)findViewById(R.id.img);
+        Log.d("POPKlJM",flag+"");
+        if(flag==0) {
+            b = getIntent().getExtras();
+            if (b != null) {
+                user1 = b.getString("int_key");
+                name = b.getString("int_key1");
+            }
+        }
 
-        b= getIntent().getExtras();
-        if (b!= null){
-            user1=b.getString("int_key");
-            name=b.getString("int_key1");
-        }
-        else{
-           // Toast.makeText(this, "Not Passed", Toast.LENGTH_SHORT).show();
-        }
         t.setText(name);
         mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user1);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {

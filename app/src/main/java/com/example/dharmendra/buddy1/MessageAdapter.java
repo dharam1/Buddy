@@ -23,28 +23,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StreamDownloadTask;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
     ClipData myClip;
     ClipboardManager clipboard ;
-     Chat activity;
+    Chat activity;
     String user,user1;
     DatabaseReference mDatabase,mDatabase1;
     int seen;
     boolean exist;
     int cidd;
-    ArrayList connectionlist;
 
-    public MessageAdapter(Chat activity, Class<ChatMessage1> modelClass, int modelLayout, DatabaseReference ref, int cidd, ArrayList connectionlist1) {
+    public MessageAdapter(Chat activity, Class<ChatMessage1> modelClass, int modelLayout, DatabaseReference ref,int cidd) {
         super(activity, modelClass, modelLayout, ref);
         this.activity = activity;
         this.mDatabase1=ref;
         this.cidd=cidd;
         user=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        connectionlist=new ArrayList();
-        this.connectionlist=connectionlist1;
     }
     private boolean haveNetworkConnection() {
         boolean haveConnectedWifi = false;
@@ -66,40 +62,28 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
     @Override
     protected void populateView(View v, final ChatMessage1 model, int position) {
         TextView messageText = (TextView) v.findViewById(R.id.message_text);
-        final TextView messageUser = (TextView) v.findViewById(R.id.message_user);
-       TextView messageTime = (TextView) v.findViewById(R.id.message_time);
-        TextView messageDate = (TextView) v.findViewById(R.id.message_date);
-
-        if(connectionlist.contains(model.getMessageUserId())){
-            mDatabase=FirebaseDatabase.getInstance().getReference("users").child(model.getMessageUserId()).child("name");
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    messageUser.setText(dataSnapshot.getValue().toString());
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }else{
-            messageUser.setText(model.getNickname());
-        }
+        TextView messageUser = (TextView) v.findViewById(R.id.message_user);
+        TextView messageTime = (TextView) v.findViewById(R.id.message_time);
+        String user=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        //TextView messageDate = (TextView) v.findViewById(R.id.message_date);
         messageText.setText(model.getMessageText());
-
+        if(model.getMessageUserId().equals(user)){
+            messageUser.setText("You");
+        }
+        else
+        messageUser.setText(model.getNickname());
         // Format the date before showing it
-        messageDate.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()).toString());
+       // messageDate.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()).toString());
         messageTime.setText(DateFormat.format("HH:mm", model.getMessageTime()).toString());
         clipboard=(ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
         v.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                        String content =model.getMessageText();
-                        Log.d("ronaldo",content);
-                        myClip = ClipData.newPlainText("text",content);
-                        clipboard.setPrimaryClip(myClip);
-                        return true;
+                String content =model.getMessageText();
+                Log.d("ronaldo",content);
+                myClip = ClipData.newPlainText("text",content);
+                clipboard.setPrimaryClip(myClip);
+                return true;
             }
         });
 

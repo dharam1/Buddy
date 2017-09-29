@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.uguratar.countingtextview.countingTextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,11 +67,19 @@ public class manageuser extends AppCompatActivity  {
 
         final CardView card = (CardView) findViewById(R.id.card_view);
         card.setVisibility(View.GONE);
+
         count=(TextView)findViewById(R.id.c);
         ttt=(TextView)findViewById(R.id.date);
         tt=(TextView)findViewById(R.id.activity_name);
         manageuser = (ListView) findViewById(R.id.simpleListView);
         mapImage = (ImageView) findViewById(R.id.map);
+
+        user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        manageuser= (ListView)findViewById(R.id.simpleListView);
+        final countingTextView count = (countingTextView) findViewById(R.id.c);
+        ttt=(TextView)findViewById(R.id.date);
+        tt=(TextView)findViewById(R.id.activity_name);
+
         b= getIntent().getExtras();
         if (b!= null){
             cidd=b.getInt("int_key");
@@ -261,7 +270,6 @@ public class manageuser extends AppCompatActivity  {
 
 
     }
-
 
     public void setListViewHeightBasedOnChildren(ListView listView, Manage_user_adapter listAdapter) {
         if (listAdapter == null) {
