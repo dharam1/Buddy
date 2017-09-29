@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -65,10 +66,16 @@ public class manageuser extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manageuser);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         final CardView card = (CardView) findViewById(R.id.card_view);
         card.setVisibility(View.GONE);
 
-        count=(TextView)findViewById(R.id.c);
         ttt=(TextView)findViewById(R.id.date);
         tt=(TextView)findViewById(R.id.activity_name);
         manageuser = (ListView) findViewById(R.id.simpleListView);
@@ -256,7 +263,7 @@ public class manageuser extends AppCompatActivity  {
                     map.put(users,nickname);
 
                 }
-                count.setText(String.valueOf(map.size()));
+                count.animateText(0, map.size());
                 adapter = new Manage_user_adapter(map,cidd,list,admin,send,receive,connection,activityName,getApplicationContext());
                 manageuser.setAdapter(adapter);
                 setListViewHeightBasedOnChildren(manageuser, adapter);
