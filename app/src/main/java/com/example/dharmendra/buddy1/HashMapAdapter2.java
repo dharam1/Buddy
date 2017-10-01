@@ -116,7 +116,7 @@ public class HashMapAdapter2 extends BaseAdapter {
         //((TextView) result.findViewById(R.id.textView)).setText(String.valueOf(item.getKey()));
         ((TextView) result.findViewById(R.id.textView)).setText(name);
         ImageView imgv = (ImageView) result.findViewById(R.id.imageview);
-        Picasso.with(context).load(url11).fit().centerCrop().into(imgv);
+        Picasso.with(context).load(url11).fit().centerCrop().noFade().into(imgv);
         TextView counter = (TextView) result.findViewById(R.id.counter);
         TextView lmv = (TextView) result.findViewById(R.id.textView1);
         TextView timev = (TextView) result.findViewById(R.id.textView2);
@@ -276,9 +276,12 @@ public class HashMapAdapter2 extends BaseAdapter {
                                                             int x = use.getGlobal_buddies();
                                                             if (n.equals(content) && x == 1) {
                                                                 snapshot.getRef().removeValue();
-                                                            } else if (n.equals(content) && x == 0) {
+                                                            } else if (n.equals(content) && x == 0&&use.getType().equals("Created")) {
                                                                 mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(content).child(String.valueOf(use.getAid())).child("fromconnection");
                                                                 mDatabase.setValue(0);
+                                                            }
+                                                            else if (n.equals(content) && x == 0&&use.getType().equals("not created")) {
+                                                                snapshot.getRef().removeValue();
                                                             }
                                                         }
                                                     }
@@ -343,9 +346,12 @@ public class HashMapAdapter2 extends BaseAdapter {
                                                             int x = use.getGlobal_buddies();
                                                             if (n.equals(user) && x == 1) {
                                                                 Snapshot.getRef().removeValue();
-                                                            } else if (n.equals(user) && x == 0) {
+                                                            } else if (n.equals(user) && x == 0&&use.getType().equals("Created")) {
                                                                 mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity").child(user).child(String.valueOf(use.getAid())).child("fromconnection");
                                                                 mDatabase.setValue(0);
+                                                            }
+                                                            else if (n.equals(user) && x == 0&&use.getType().equals("not created")) {
+                                                                Snapshot.getRef().removeValue();
                                                             }
                                                         }
                                                     }

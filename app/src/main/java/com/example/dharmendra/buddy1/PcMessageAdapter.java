@@ -51,30 +51,21 @@ public class PcMessageAdapter extends FirebaseListAdapter<ChatMessage> {
         //TextView messageUser = (TextView) v.findViewById(R.id.message_user);
         //final ImageView img=(ImageView)v.findViewById(R.id.loadimage);
         messageTime = (TextView) v.findViewById(R.id.message_time);
-        TextView messageTime1=(TextView)v.findViewById(R.id.message_time_1);
+
         String message=model.getMessageText();
-
+        TextView messageuser=(TextView)v.findViewById(R.id.message_user);
+        messageuser.setVisibility(View.INVISIBLE);
             String date=DateFormat.format("dd-MM-yyyy", model.getMessageTime()).toString();
-            //temp=date;
-            /**if(!temp.equals(date)){
-                temp=DateFormat.format("dd-MM-yyyy", model.getMessageTime()).toString();
-                messageTime1.setText(DateFormat.format("dd-MM-yyyy", model.getMessageTime()));
-                messageText.setText(model.getMessageText());
-                Log.d("sarthak","inside");
-            }
-            else{
-                messageText.setText(model.getMessageText());
-                Log.d("sarthak","outside");
-            }**/
 
-        messageTime.setText(DateFormat.format("dd-MM-yyyy", model.getMessageTime()));
+
+        //messageTime.setText(DateFormat.format("HH:mm", model.getMessageTime()).toString());
         String date1=DateFormat.format("dd-MM-yyyy", model.getMessageTime()).toString();
         String nontime= DateFormat.format("HH:mm:ss",model.getMessageTime()).toString();
         SimpleDateFormat f1 = new SimpleDateFormat("HH:mm:ss");
         try{
             Date d = f1.parse(nontime);
             SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
-            messageTime.setText(date1+" "+f2.format(d).toUpperCase());
+            messageTime.setText(f2.format(d).toUpperCase());
         }
         catch (Exception e){
 

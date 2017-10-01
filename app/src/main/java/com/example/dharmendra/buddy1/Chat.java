@@ -75,7 +75,7 @@ public class Chat extends AppCompatActivity {
     ArrayList<String> search_list=new ArrayList<>();
     ArrayList<String> search_nick=new ArrayList<>();
     ArrayList<String> connectionlist=new ArrayList<>();
-    AdapterSearch1 searchadapter;
+    TopicChatAdapterSearch searchadapter;
     FirebaseAuth firebaseAuth;
     ArrayList<String> x=new ArrayList<>(Arrays.asList("Barney","Ted","Marchel","Lily","Tyrion","Sersi","Rachel","Phoebe","Heisenberg","Joey","chandler","Jon Snow","Sansa"
             ,"Little Finger","Daenerys","Arya ","Joffery","Dwight","Jim","Angela","Kevin","Michael","Walter White","Jesse Pinkman","Skyler White"
@@ -108,7 +108,7 @@ public class Chat extends AppCompatActivity {
             }
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         rootView = findViewById(R.id.root_view);
         emojiButton = (ImageView) findViewById(R.id.emoji_btn);
         input=(EmojiconEditText) findViewById(R.id.input);
@@ -171,7 +171,8 @@ public class Chat extends AppCompatActivity {
                 Log.d("MJKL",String.valueOf(cidd));
                 Activity1 post1 = dataSnapshot.getValue(Activity1.class);
                 activityName=post1.getName();
-                t.setText(activityName);
+                toolbar.setTitle(activityName);
+                toolbar.setSubtitle("Tap here for group info");
                 global_buddies=post1.getType();
             }
 
@@ -400,8 +401,8 @@ public class Chat extends AppCompatActivity {
                     {
                         //  Toast.makeText(Chat.this, "Collapse", Toast.LENGTH_SHORT).show();
                         /**adapter = new MessageAdapter(Chat.this, ChatMessage1.class, R.layout.item_in_message,
-                                FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd,connectionlist);
-                        listView.setAdapter(adapter);**/
+                         FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd,connectionlist);
+                         listView.setAdapter(adapter);**/
                         return true; // Return true to collapse action view
                     }
 
@@ -447,7 +448,7 @@ public class Chat extends AppCompatActivity {
                                             search_nick.add(nick);
                                         }
                                     }
-                                    searchadapter = new AdapterSearch1(search_list, search_time_list, search_user_list,search_nick, Chat.this, ChatMessage.class, R.layout.item_in_message);
+                                    searchadapter = new TopicChatAdapterSearch(search_list, search_time_list, search_user_list,search_nick, Chat.this, ChatMessage.class, R.layout.item_in_message);
                                     listView.setAdapter(searchadapter);
                                 }
                                 return true;
