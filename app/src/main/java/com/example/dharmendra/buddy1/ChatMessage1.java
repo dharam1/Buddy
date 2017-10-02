@@ -7,16 +7,22 @@ public class ChatMessage1 {
     private String messageUser;
     private String messageUserId,nickname;
     private long messageTime;
+    boolean timeMessage;
 
     public ChatMessage1(String messageText, String messageUserId,String nickname) {
         this.nickname=nickname;
         this.messageText = messageText;
         messageTime = new Date().getTime();
         this.messageUserId = messageUserId;
+        timeMessage = false;
     }
 
     public ChatMessage1(){
 
+    }
+
+    public void setTimeMessage(boolean timeMessage){
+        this.timeMessage = timeMessage;
     }
 
     public String getMessageUserId() {

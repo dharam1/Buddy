@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -86,6 +87,7 @@ public class Chat extends AppCompatActivity {
     ImageView emojiButton;
     View rootView;
     int global_buddies;
+    TextView dateView;
     ArrayList<ChatAdpaterModelClass> list=new ArrayList<>();
     int flag=0;
     //EditText input;
@@ -97,6 +99,7 @@ public class Chat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_chat);
+        dateView = (TextView) findViewById(R.id.tv_date);
         Intent startingIntent = getIntent();
         if (startingIntent != null) {
             try {
@@ -233,7 +236,7 @@ public class Chat extends AppCompatActivity {
                                     Toast.makeText(Chat.this, "Please enter some texts!", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
-                                    if(exist==false) {
+                                    if(!exist) {
                                         mDatabase2 = FirebaseDatabase.getInstance().getReference("chats").child("nickname").child(String.valueOf(cidd));
                                         mDatabase2.child(user).setValue(nickname);
                                     }
@@ -268,7 +271,7 @@ public class Chat extends AppCompatActivity {
                                                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                                     Log.d("POIUY","POIUY");
                                                     connection_type con=postSnapshot.getValue(connection_type.class);
-                                                    final String user_name = con.getUid().toString();
+                                                    final String user_name = con.getUid();
                                                     mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(user).child(String.valueOf(cidd));
                                                     mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
@@ -479,7 +482,11 @@ public class Chat extends AppCompatActivity {
         return false;
         }
         });**/
+        TextView view = (TextView)findViewById(R.id.tv_date);
+
+        listView.setOnScrollListener(new ChatOnScrollListener(view, adapter));
     }
+
     public String activityname(){
         mDatabase=FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(cidd));
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -2,7 +2,9 @@ package com.example.dharmendra.buddy1;
 
 import android.*;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.format.Time;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,6 +58,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Field;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 public class MainActivity extends AppCompatActivity implements FirstFragment.OnFragmentInteractionListener,
@@ -168,6 +173,7 @@ FifthFragment.OnFragmentInteractionListener,SixthFragment.OnFragmentInteractionL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mGoogleApiClient = new GoogleApiClient
                 .Builder(MainActivity.this)
                 .addApi(Places.GEO_DATA_API)

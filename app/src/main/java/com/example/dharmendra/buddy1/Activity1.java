@@ -6,6 +6,7 @@ import java.util.Date;
  * Created by Dharmendra on 11-05-2017.
  */
 
+
 public class Activity1 {
 
     public String user;
