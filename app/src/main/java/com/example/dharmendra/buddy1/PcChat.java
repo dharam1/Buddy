@@ -72,7 +72,7 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
     ArrayList<Long> search_time_list=new ArrayList<>();
     ArrayList<String> search_user_list=new ArrayList<>();
     ArrayList<String> search_list=new ArrayList<>();
-    AdapterSearch searchadapter;
+    PcChatAdapterSearch searchadapter;
     EditText input;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     int flag=0;
@@ -82,29 +82,35 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pc_chat);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         Intent startingIntent = getIntent();
         if (startingIntent != null) {
                 user1 = startingIntent.getStringExtra("Pcchatid");
                 name = startingIntent.getStringExtra("Pcname");
                 if(user1==null||name==null)
                     flag=0;
-                else
-                    flag=1;
+                else {
+                    flag = 1;
+
+                    setSupportActionBar(toolbar);
+                    if (getSupportActionBar() != null){
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                        getSupportActionBar().setDisplayShowHomeEnabled(true);
+                    }
+
+                }
+
+
                 Log.d("POPKLJM",user1+"  "+name);
         }
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         getWindow().setBackgroundDrawableResource(R.drawable.background) ;
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.item_out_message_pc, null);
         messageText = (TextView) view.findViewById(R.id.message_text);
 
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
+
         ImageView fab = (ImageView) findViewById(R.id.fab);
         input = (EditText) findViewById(R.id.input);
         listView = (ListView) findViewById(R.id.list);
@@ -117,6 +123,11 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
                 user1 = b.getString("int_key");
                 name = b.getString("int_key1");
             }
+            setSupportActionBar(toolbar);
+            if (getSupportActionBar() != null){
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+            }
         }
 
         t.setText(name);
@@ -126,7 +137,7 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
             public void onDataChange(DataSnapshot dataSnapshot) {
                 user user = dataSnapshot.getValue(user.class);
                 String url=user.getUrl();
-                Picasso.with(PcChat.this).load(url).fit().centerCrop().into(imageView);
+                Picasso.with(PcChat.this).load(url).fit().centerCrop().noFade().into(imageView);
             }
 
             @Override
@@ -138,7 +149,7 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
 
         showAllOldMessages(user1);
         mDatabase=FirebaseDatabase.getInstance().getReference("pcchats").child(user).child(user1);
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
@@ -255,76 +266,6 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
         }
         return haveConnectedWifi || haveConnectedMobile;
     }
-  /**  @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Uri filePath;
-        user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            filePath = data.getData();
-
-            try {
-                //getting image from gallery
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                if(filePath != null) {
-                    final int id=(int) System.currentTimeMillis();
-                    final ProgressDialog pd = new ProgressDialog(this);
-                    pd.setMessage("Uploading...");
-                    pd.show();
-                    StorageReference childRef = storageRef.child("pcchats").child(user).child(id+".jpg");
-                    UploadTask uploadTask = childRef.putFile(filePath);
-                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            pd.hide();
-                            Toast.makeText(PcChat.this, "Upload successful", Toast.LENGTH_SHORT).show();
-                            storageRef.child("pcchats").child(user).child(id+".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    // Got the download URL for 'users/me/profile.png'
-                                    String url=uri.toString();
-                                    Log.d("imagelink",url);
-                                    message_status=1;
-                                    FirebaseDatabase.getInstance()
-                                            .getReference("pcchats").child(user).child(user1)
-                                            .push()
-                                            .setValue(new ChatMessage("@@$$@"+url,
-                                                    FirebaseAuth.getInstance().getCurrentUser().getUid(),message_status)
-                                            );
-                                    message_status=0;
-                                    FirebaseDatabase.getInstance()
-                                            .getReference("pcchats").child(user1).child(user)
-                                            .push()
-                                            .setValue(new ChatMessage("@@$$@"+url,
-                                                    FirebaseAuth.getInstance().getCurrentUser().getUid(),message_status)
-                                            );
-
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle any errors
-                                    Toast.makeText(PcChat.this, "not got", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                            Toast.makeText(PcChat.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-        }
-    }**/
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.main1, menu);
@@ -396,7 +337,7 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
 
                                 }
                             }
-                                searchadapter = new AdapterSearch(search_list, search_time_list, search_user_list, PcChat.this, ChatMessage.class, R.layout.item_in_message);
+                                searchadapter = new PcChatAdapterSearch(search_list, search_time_list, search_user_list, PcChat.this, ChatMessage.class, R.layout.item_in_message);
                                 listView.setAdapter(searchadapter);
                             }
                         return true;

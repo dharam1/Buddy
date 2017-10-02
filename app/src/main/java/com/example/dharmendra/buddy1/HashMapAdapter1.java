@@ -183,8 +183,8 @@ public class HashMapAdapter1 extends BaseAdapter {
                                c_count = c_count + 1;
                                Log.d("kumree",String.valueOf(c_count));
                            }
-                           if(c_count>30){
-                               Toast.makeText(context, "Delete non recent connection (max allow 30)", Toast.LENGTH_SHORT).show();
+                           if(c_count>2000){
+                               Toast.makeText(context, "Delete non recent connection (max allow 2000)", Toast.LENGTH_SHORT).show();
                            }else{
                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("receiveFrom");
                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {

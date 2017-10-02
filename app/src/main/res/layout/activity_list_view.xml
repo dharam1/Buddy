@@ -16,8 +16,8 @@
             android:layout_height="match_parent"
             android:layout_weight="0.75">
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_weight=".75"
                 android:id="@+id/imageview"
                 android:layout_gravity="bottom"/>
@@ -25,7 +25,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="20dp"
                 android:layout_alignParentBottom="true"
                 app:civ_border_color="@color/white"
                 android:id="@+id/type"

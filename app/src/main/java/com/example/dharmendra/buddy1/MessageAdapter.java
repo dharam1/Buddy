@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StreamDownloadTask;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
@@ -72,9 +73,17 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
         }
         else
         messageUser.setText(model.getNickname());
-        // Format the date before showing it
-       // messageDate.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()).toString());
-        messageTime.setText(DateFormat.format("HH:mm", model.getMessageTime()).toString());
+
+        String nontime= DateFormat.format("HH:mm:ss",model.getMessageTime()).toString();
+        SimpleDateFormat f1 = new SimpleDateFormat("HH:mm:ss");
+        try{
+            Date d = f1.parse(nontime);
+            SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
+            messageTime.setText(f2.format(d).toUpperCase());
+        }
+        catch (Exception e){
+
+        }
         clipboard=(ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
         v.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

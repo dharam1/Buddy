@@ -268,7 +268,7 @@ public class timelineadapter extends BaseAdapter {
                         longi=post1.getLongitude();
                         String url=post1.getMapurl();
                         if (status == 1) {
-                            t.setText("Anonymous has started following activity " + post1.getName());
+                            t.setText("Anonymous has Created activity " + post1.getName());
                             Picasso.with(context).load(url).fit().centerCrop().into(mapview);
                         } else {
                             cardView.setVisibility(View.GONE);
