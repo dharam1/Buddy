@@ -280,7 +280,7 @@ public class Chat extends AppCompatActivity {
                                                             if(!dataSnapshot.exists()){
                                                                 mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(user).child(String.valueOf(cidd));
                                                                 String type="not created";
-                                                                user_activity act=new user_activity(user,cidd,type,1,global_buddies);
+                                                                user_activity act=new user_activity(user,cidd,type,1,global_buddies,1);
                                                                 mDatabase.setValue(act);
                                                             }
                                                             else{

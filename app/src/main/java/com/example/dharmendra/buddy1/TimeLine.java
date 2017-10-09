@@ -245,17 +245,19 @@ public class TimeLine extends Fragment {
                                 final int aid = Integer.parseInt(String.valueOf(use.getAid()));
                                 final String userid = use.getUser();
                                 final long time = use.getTime();
-                                if (use.getFromconnection() == 1) {
+                                if (use.getFromconnection() == 1&&use.getStatus()==1) {
+                                    Log.d("POPIKLJ",aid+"");
                                     followeduser.put(io, "-" + userid);
                                     followedactivityid.put(io, aid);
-                                } else {
+                                } else{
+                                if(use.getStatus()==1) {
+                                    Log.d("POPIKLJ", aid + "");
                                     //if (!aidlist.contains(Integer.parseInt(snapshot.getKey()))) {
-                                        aidlist.add(Integer.parseInt(snapshot.getKey()));
+                                    aidlist.add(Integer.parseInt(snapshot.getKey()));
                                     followeduser.put(io, "Anonymous-" + userid);
                                     followedactivityid.put(io, aid);
-
                                 }
-
+                                }
                                 io++;
                             //}
                         }

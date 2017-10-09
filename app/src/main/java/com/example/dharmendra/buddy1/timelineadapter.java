@@ -267,13 +267,13 @@ public class timelineadapter extends BaseAdapter {
                         lat=post1.getLatitude();
                         longi=post1.getLongitude();
                         String url=post1.getMapurl();
-                        if (status == 1) {
+                        //if (status == 1) {
                             t.setText("Anonymous has Created activity " + post1.getName());
                             Picasso.with(context).load(url).fit().centerCrop().into(mapview);
-                        } else {
+                        /**} else {
                             cardView.setVisibility(View.GONE);
                             count++;
-                        }
+                        }**/
                     }
                 }
 
@@ -371,7 +371,7 @@ public class timelineadapter extends BaseAdapter {
                                 lat=post1.getLatitude();
                                 longi=post1.getLongitude();
                                 String url=post1.getMapurl();
-                                if (status == 1) {
+                                //if (status == 1) {
                                     Picasso.with(context).load(url).fit().centerCrop().into(mapview);
 
                                     if(type1.equals("Created"))
@@ -383,10 +383,10 @@ public class timelineadapter extends BaseAdapter {
                                         type.setImageResource(R.drawable.ic_global);
                                     else
                                         type.setImageResource(R.drawable.ic_private);
-                                } else {
+                                /**} else {
                                     cardView.setVisibility(View.GONE);
                                     count++;
-                                }
+                                }**/
                             }
                         }
 

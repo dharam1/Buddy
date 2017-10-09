@@ -1,5 +1,6 @@
 package com.example.dharmendra.buddy1;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -140,34 +141,80 @@ public class manageuser extends AppCompatActivity  {
                     card.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (haveNetworkConnection()) {
-                                mDatabase = FirebaseDatabase.getInstance().getReference("activity");
-                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot snapshot) {
-                                        for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                                            Activity1 post1 = postSnapshot.getValue(Activity1.class);
-                                            int ccid = post1.getCcid();
-                                            if (ccid == cidd) {
-                                                postSnapshot.getRef().child("status").setValue(0);
-                                                Toast.makeText(getApplicationContext(), "Succesfully Deleted", Toast.LENGTH_SHORT).show();
-                                                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                                                startActivity(i);
-                                                break;
+                            AlertDialog alertDialog=new AlertDialog.Builder(manageuser.this).create();
+                            alertDialog.setMessage("Sure want to Delete?");
+                            alertDialog.setButton("Delete", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    if (haveNetworkConnection()) {
+                                        /**----------------------------------------------------------------------------------------**/
+                                        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+                                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey()).child("activity");
+                                                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
+                                                                for (DataSnapshot snapshot : snapshot1.getChildren()) {
+                                                                    user_activity use = snapshot.getValue(user_activity.class);
+                                                                    if (use.getAid() == cidd) {
+                                                                        snapshot.getRef().child("status").setValue(0);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+
+                                                }
                                             }
 
-                                        }
-                                    }
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
 
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        Toast.makeText(getApplicationContext(), "\"The read failed: \"" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                        /**-----------------------------------------------------------------------------------**/
+                                        mDatabase = FirebaseDatabase.getInstance().getReference("activity");
+                                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot snapshot) {
+                                                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                                    Activity1 post1 = postSnapshot.getValue(Activity1.class);
+                                                    int ccid = post1.getCcid();
+                                                    if (ccid == cidd) {
+                                                        postSnapshot.getRef().child("status").setValue(0);
+                                                        Toast.makeText(getApplicationContext(), "Succesfully Deleted", Toast.LENGTH_SHORT).show();
+                                                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                                        startActivity(i);
+                                                        break;
+                                                    }
+
+                                                }
+                                            }
+
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                Toast.makeText(getApplicationContext(), "\"The read failed: \"" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_SHORT).show();
                                     }
-                                });
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_SHORT).show();
-                            }
+                                }
+                            });
+                            alertDialog.show();
 
                         }
                     });

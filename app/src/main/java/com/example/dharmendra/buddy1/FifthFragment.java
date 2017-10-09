@@ -436,7 +436,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                         /**-----------------------------------------------------------------------------------**/
                                         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(user).child(String.valueOf(ccid));
                                         String type= "Created";
-                                        user_activity act=new user_activity(user,ccid,type,1,global_position);
+                                        user_activity act=new user_activity(user,ccid,type,1,global_position,1);
                                         mDatabase.setValue(act);
 
 
@@ -451,7 +451,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                                             String user_name = con.getUid().toString();
                                                             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(user).child(String.valueOf(ccid));
                                                             String type = "Created";
-                                                            user_activity act = new user_activity(user, ccid, type,1,global_position);
+                                                            user_activity act = new user_activity(user, ccid, type,1,global_position,1);
                                                             mDatabase.setValue(act);
                                                         }
                                                     }
@@ -474,13 +474,13 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                                            if(connectionlist.contains(u.getUid())) {
                                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(u.getUid()).child("activity").child(user).child(String.valueOf(ccid));
                                                                String type = "Created";
-                                                               user_activity act = new user_activity(user, ccid, type, 1,global_position);
+                                                               user_activity act = new user_activity(user, ccid, type, 1,global_position,1);
                                                                mDatabase.setValue(act);
                                                            }
                                                                else if(!u.getUid().equals(user)){
                                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(u.getUid()).child("activity").child(user).child(String.valueOf(ccid));
                                                                    String type = "Created";
-                                                                   user_activity act = new user_activity(user, ccid, type,0,global_position);
+                                                                   user_activity act = new user_activity(user, ccid, type,0,global_position,1);
                                                                    mDatabase.setValue(act);
                                                                }
                                                            }
