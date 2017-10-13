@@ -32,14 +32,13 @@
             android:layout_height="wrap_content"
             android:maxWidth="240dp"
             android:layout_centerVertical="true"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:layout_marginLeft="4dp"/>
 
         <TextView
             android:id="@+id/message_time"
             android:layout_width="wrap_content"
             android:text="11:08"
-            android:textColor="@color/white"
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:layout_toRightOf="@+id/message_text"
@@ -65,9 +64,7 @@
             android:padding="3dp"
             android:textSize="12sp"
             android:visibility="gone"
-            android:textColor="#203e6d"
             android:background="@drawable/round_date"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp" />
 
     </RelativeLayout>

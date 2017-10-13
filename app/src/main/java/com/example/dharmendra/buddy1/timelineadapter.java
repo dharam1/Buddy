@@ -11,7 +11,9 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -130,13 +132,11 @@ public class timelineadapter extends BaseAdapter {
         final TextView t2=(TextView)result.findViewById(R.id.textView1);
         final CircleImageView iv = (CircleImageView) result.findViewById(R.id.imageview);
         cardView=(CardView)result.findViewById(R.id.card_view);
-        TextView dot = (TextView) result.findViewById(R.id.tv_dot);
+        final TextView dot = (TextView) result.findViewById(R.id.tv_dot);
         final ImageView type = (ImageView) result.findViewById(R.id.type);
         final ImageView mapview=(ImageView)result.findViewById(R.id.map);
-        View line = (View) result.findViewById(R.id.vertical_bar);
-        dot.setVisibility(View.VISIBLE);
-        line.setVisibility(View.VISIBLE);
-        type.setVisibility(View.VISIBLE);
+        final View line = (View) result.findViewById(R.id.vertical_bar);
+
         final String user11=followeduser.get(position).toString();
         String[] split=user11.split("-");
         final String user1=split[1];
@@ -181,7 +181,7 @@ public class timelineadapter extends BaseAdapter {
         if(user2.equals("Anonymous")){
              aid = item.getValue();
             String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+            Picasso.with(context).load(R.drawable.ic_anonymous).fit().centerCrop().into(iv);
         /**---------------Load Anonymous Photo---------------------------------------------------**/
        /** mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user1).child("url");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -267,13 +267,13 @@ public class timelineadapter extends BaseAdapter {
                         lat=post1.getLatitude();
                         longi=post1.getLongitude();
                         String url=post1.getMapurl();
-                        //if (status == 1) {
-                            t.setText("Anonymous has Created activity " + post1.getName());
-                            Picasso.with(context).load(url).fit().centerCrop().into(mapview);
-                        /**} else {
-                            cardView.setVisibility(View.GONE);
-                            count++;
-                        }**/
+                        String address = post1.getAddress();
+                        String[] address_lines = address.split(",");
+                        int length = address_lines.length;
+
+                        t.setText(Html.fromHtml("A new group <b>" + post1.getName() + "</b> has been created at <b> " + address_lines[length - 4] + ", " + address_lines[length - 3]));
+                        Picasso.with(context).load(url).fit().centerCrop().into(mapview);
+
                     }
                 }
 
@@ -283,6 +283,10 @@ public class timelineadapter extends BaseAdapter {
                 }
             });
 
+            type.setImageResource(R.drawable.ic_global);
+            dot.setVisibility(View.VISIBLE);
+            line.setVisibility(View.VISIBLE);
+            type.setVisibility(View.VISIBLE);
 
         }
         else {
@@ -371,13 +375,25 @@ public class timelineadapter extends BaseAdapter {
                                 lat=post1.getLatitude();
                                 longi=post1.getLongitude();
                                 String url=post1.getMapurl();
-                                //if (status == 1) {
-                                    Picasso.with(context).load(url).fit().centerCrop().into(mapview);
+                                String address = post1.getAddress();
+                                String[] address_lines = address.split(",");
+                                int length = address_lines.length;
+                                //if (status == 1)
 
-                                    if(type1.equals("Created"))
-                                        t.setText(Html.fromHtml("<b>" + name + "</b> has created new activity <b>" + post1.getName() + "</b>"));
-                                    else
-                                        t.setText(Html.fromHtml("<b>" + name + "</b> has Started Following activity <b>" + post1.getName() + "</b>"));
+                                    if(type1.equals("Created")){
+                                        t.setText(Html.fromHtml("<b>" + name + "</b> created <b>" + post1.getName() + "</b> at " + address_lines[length - 4] + ", " + address_lines[length - 3]));
+                                        Picasso.with(context).load(url).fit().centerCrop().into(mapview);
+                                        dot.setVisibility(View.VISIBLE);
+                                        line.setVisibility(View.VISIBLE);
+                                        type.setVisibility(View.VISIBLE);
+                                    }
+                                    else{
+                                        t.setText(Html.fromHtml("<b>" + name + "</b> has started following <b>" + post1.getName() + "</b>"));
+                                        mapview.setVisibility(View.GONE);
+                                        dot.setVisibility(View.VISIBLE);
+                                        line.setVisibility(View.VISIBLE);
+                                        type.setVisibility(View.VISIBLE);
+                                    }
 
                                     if(post1.getType() == 0)
                                         type.setImageResource(R.drawable.ic_global);

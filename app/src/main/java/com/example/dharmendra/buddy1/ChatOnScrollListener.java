@@ -33,7 +33,7 @@ public class ChatOnScrollListener implements AbsListView.OnScrollListener {
         dateView.animate().translationY(dateView.getBottom()).alpha(1f).setDuration(100).setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-                dateView.setVisibility(View.VISIBLE);
+                //dateView.setVisibility(View.VISIBLE);
                 Log.v("anim", "starting scroll");
             }
 
@@ -44,14 +44,14 @@ public class ChatOnScrollListener implements AbsListView.OnScrollListener {
 
             @Override
             public void onAnimationCancel(Animator animator) {
-                dateView.setVisibility(View.VISIBLE);
+                //dateView.setVisibility(View.VISIBLE);
                 control = true;
                 Log.v("anim", "starting scroll");
             }
 
             @Override
             public void onAnimationRepeat(Animator animator) {
-                dateView.setVisibility(View.VISIBLE);
+                //dateView.setVisibility(View.VISIBLE);
 
             }
         }).start();
@@ -75,14 +75,14 @@ public class ChatOnScrollListener implements AbsListView.OnScrollListener {
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    dateView.setVisibility(View.INVISIBLE);
+                    //dateView.setVisibility(View.INVISIBLE);
                     control = false;
                 }
 
                 @Override
                 public void onAnimationCancel(Animator animator) {
                     control = false;
-                    dateView.setVisibility(View.VISIBLE);
+                    //dateView.setVisibility(View.VISIBLE);
                 }
 
                 @Override
