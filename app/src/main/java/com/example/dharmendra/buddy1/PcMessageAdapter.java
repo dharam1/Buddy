@@ -23,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
 public class PcMessageAdapter extends FirebaseListAdapter<ChatMessage> {
     ClipData myClip;
     ClipboardManager clipboard ;
@@ -53,7 +55,7 @@ public class PcMessageAdapter extends FirebaseListAdapter<ChatMessage> {
 
     @Override
     protected void populateView(View v, final ChatMessage model, final int position) {
-        TextView messageText = (TextView) v.findViewById(R.id.message_text);
+        EmojiconTextView messageText = (EmojiconTextView) v.findViewById(R.id.message_text);
         TextView messageUser = (TextView) v.findViewById(R.id.message_user);
         TextView messageTime = (TextView) v.findViewById(R.id.message_time);
         String user=FirebaseAuth.getInstance().getCurrentUser().getUid();

@@ -26,7 +26,7 @@
         app:layout_constraintTop_toBottomOf="@+id/message_user"
         android:padding="8dp"
         tools:layout_editor_absoluteX="0dp">
-        <TextView
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
             android:id="@+id/message_text"
             android:text="hi man, how are you?"
             android:textSize="14sp"

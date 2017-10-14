@@ -22,6 +22,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
 public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
     ClipData myClip;
     ClipboardManager clipboard ;
@@ -65,7 +68,7 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
 
     @Override
     protected void populateView(View v, final ChatMessage1 model, final int position) {
-        TextView messageText = (TextView) v.findViewById(R.id.message_text);
+        EmojiconTextView messageText = (EmojiconTextView) v.findViewById(R.id.message_text);
         TextView messageUser = (TextView) v.findViewById(R.id.message_user);
         TextView messageTime = (TextView) v.findViewById(R.id.message_time);
         String user=FirebaseAuth.getInstance().getCurrentUser().getUid();
