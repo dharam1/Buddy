@@ -415,7 +415,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                         mDatabase = FirebaseDatabase.getInstance().getReference("activity");
                                         status=1;
                                         String type1;
-                                        String mapurl="https://maps.googleapis.com/maps/api/staticmap?center="+latitude+","+longitude+"&zoom=19&size=400x400&markers=color:blue%7Clabel:Topic%7C"+latitude+","+longitude+"&key=AIzaSyBjPFbHd4ZKsJwf7GfEPRBwH27oIBO8iqY";
+                                        String mapurl="https://maps.googleapis.com/maps/api/staticmap?center="+latitude+","+longitude+"&zoom=15&size=400x400&markers=color:blue%7Clabel:Topic%7C"+latitude+","+longitude+"&key=AIzaSyBjPFbHd4ZKsJwf7GfEPRBwH27oIBO8iqY";
                                         act1 = new Activity1(user, content, latitude, longitude,ccid,status,address,global_position,mapurl);
                                         rand=new Random();
                                         String nickname=x.get(rand.nextInt(x.size()));

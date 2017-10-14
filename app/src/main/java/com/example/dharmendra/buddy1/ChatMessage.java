@@ -8,6 +8,7 @@ public class ChatMessage {
     private String messageUserId;
     private long messageTime;
     private int message_status;
+    boolean timeMessage;
 
     public ChatMessage(String messageText, String messageUserId,int message_status) {
         this.messageText = messageText;
@@ -18,6 +19,9 @@ public class ChatMessage {
 
     public ChatMessage(){
 
+    }
+    public void setTimeMessage(boolean timeMessage){
+        this.timeMessage = timeMessage;
     }
 
     public String getMessageUserId() {

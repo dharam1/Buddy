@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,6 +9,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.dharmendra.buddy1.manageuser"
     tools:showIn="@layout/activity_manageuser">
+
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -37,7 +39,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Created on"
+                        android:text="Creation Date"
                         android:textSize="16sp"
                         android:textColor="@color/black"
                         android:textAlignment="center"
@@ -55,9 +57,9 @@
                 </RelativeLayout>
 
                 <View
-                    android:layout_width="2dp"
+                    android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/gray"/>
+                    android:background="#ECEFF1"/>
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -85,19 +87,17 @@
                 </RelativeLayout>
 
                 <View
-                    android:layout_width="2dp"
+                    android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/gray"/>
+                    android:background="#ECEFF1"/>
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Private/Global"
                         android:textSize="16sp"
                         android:textAlignment="center"
                         android:textColor="@color/black"
@@ -113,15 +113,40 @@
                 </RelativeLayout>
 
             </LinearLayout>
+            <View
+                android:id="@+id/vv"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/ll"
+                android:layout_margin="5dp"
+                android:background="#ECEFF1"/>
 
+            <TextView
+                android:id="@+id/tv"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="Members"
+                android:layout_below="@id/vv"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/vv"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/ic_downarrow"
+                android:layout_toRightOf="@id/tv"/>
 
 
             <ListView
                 android:id="@+id/simpleListView"
                 android:layout_width="match_parent"
-                android:layout_below="@+id/ll"
+                android:layout_below="@+id/tv"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:scrollbars="vertical"
                 android:divider="@color/white" />
 
         </RelativeLayout>

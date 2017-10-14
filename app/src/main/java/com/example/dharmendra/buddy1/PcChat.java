@@ -53,6 +53,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+
 public class PcChat extends AppCompatActivity implements SecondFragment.OnFragmentInteractionListener{
     String user1;
     private ListView listView;
@@ -73,10 +76,10 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
     ArrayList<String> search_user_list=new ArrayList<>();
     ArrayList<String> search_list=new ArrayList<>();
     PcChatAdapterSearch searchadapter;
-    EditText input;
+    EmojiconEditText input;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     int flag=0;
-
+    EmojIconActions emojIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,16 +106,21 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
 
                 Log.d("POPKLJM",user1+"  "+name);
         }
+        View rootView = findViewById(R.id.root_view);
+        ImageView emojiButton = (ImageView) findViewById(R.id.emoji_btn);
+
+
+
 
 
         getWindow().setBackgroundDrawableResource(R.drawable.background) ;
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.item_out_message_pc, null);
+        View view = inflater.inflate(R.layout.item_out_message, null);
         messageText = (TextView) view.findViewById(R.id.message_text);
 
 
         ImageView fab = (ImageView) findViewById(R.id.fab);
-        input = (EditText) findViewById(R.id.input);
+        input = (EmojiconEditText) findViewById(R.id.input);
         listView = (ListView) findViewById(R.id.list);
         t=(TextView) findViewById(R.id.activity_name);
         imageView=(ImageView)findViewById(R.id.img);
@@ -129,8 +137,22 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
             }
         }
-
         t.setText(name);
+        emojIcon = new EmojIconActions(this, rootView,input, emojiButton);
+        emojIcon.setIconsIds(R.drawable.ic_keyboard, R.drawable.ic_emoji);
+        emojIcon.ShowEmojIcon();
+        emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
+            @Override
+            public void onKeyboardOpen() {
+                Log.e("Keyboard", "open");
+            }
+
+            @Override
+            public void onKeyboardClose() {
+                Log.e("Keyboard", "close");
+            }
+        });
+
         mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user1);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -61,9 +61,9 @@ public class PcChatAdapterSearch extends BaseAdapter {
         final View result;
         String user=userlist.get(position);
        if (user.equals(activity.getLoggedInUserName()))
-            result = activity.getLayoutInflater().inflate(R.layout.item_out_message_pc, parent, false);
+            result = activity.getLayoutInflater().inflate(R.layout.item_out_message, parent, false);
         else
-            result = activity.getLayoutInflater().inflate(R.layout.item_in_message_pc, parent, false);
+            result = activity.getLayoutInflater().inflate(R.layout.item_in_message, parent, false);
 
         String name=mData.get(position);
         Long messagetime=timelist.get(position);

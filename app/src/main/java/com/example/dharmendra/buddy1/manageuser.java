@@ -67,7 +67,7 @@ public class manageuser extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manageuser);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -87,7 +87,7 @@ public class manageuser extends AppCompatActivity  {
         final countingTextView count = (countingTextView) findViewById(R.id.c);
         ttt=(TextView)findViewById(R.id.date);
         tt=(TextView)findViewById(R.id.activity_name);
-
+        final TextView type=(TextView)findViewById(R.id.head3);
         b= getIntent().getExtras();
         if (b!= null){
             cidd=b.getInt("int_key");
@@ -102,14 +102,15 @@ public class manageuser extends AppCompatActivity  {
                 Activity1 post1 = dataSnapshot.getValue(Activity1.class);
                 long t =post1.getActdate();
                 activityName=post1.getName();
-
+                if(post1.getType()==0)
+                    type.setText("Global");
+                else
+                    type.setText("Private");
                 String imageURL = post1.getMapurl();
                 Picasso.with(getApplication()).load(imageURL).fit().centerCrop().noFade().into(mapImage);
-
+                tt.setText(activityName);
                 admin=post1.getUser();
                 Log.d("yuio",admin);
-                tt.setText(activityName);
-
                 String date= DateFormat.format("dd-MM-yyyy", t).toString();
                 long c_date=new Date().getTime();
                 String format=DateFormat.format("dd-MM-yyyy", c_date).toString();
@@ -122,17 +123,17 @@ public class manageuser extends AppCompatActivity  {
                     try{
                         Date d = f1.parse(nontime);
                         SimpleDateFormat f2 = new SimpleDateFormat("h:mm a");
-                        ttt.setText("Created Today at "+f2.format(d).toUpperCase());
+                        ttt.setText("Today at "+f2.format(d).toUpperCase());
                     }
                     catch (Exception e){
 
                     }
                 }
                 else if(date.equals(yest)){
-                    ttt.setText("Created Yesterday");
+                    ttt.setText("Yesterday");
                 }
                 else {
-                    ttt.setText("Created on "+DateFormat.format("dd-MM-yyyy", t));
+                    ttt.setText(DateFormat.format("dd-MM-yyyy", t));
                     Log.d("hjk", "outside");
                 }
                 if(user.equals(admin)) {
