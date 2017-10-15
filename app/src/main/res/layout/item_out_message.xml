@@ -37,12 +37,11 @@
             android:layout_centerVertical="true"
             android:textColor="@color/black"
             android:layout_marginRight="4dp"
-            emojicon:emojiconSize="18sp"/>
+            emojicon:emojiconSize="28sp"/>
 
         <TextView
             android:id="@+id/message_time"
             android:layout_width="wrap_content"
-            android:text="11:08"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/message_text"
             android:textSize="10sp"
@@ -53,10 +52,9 @@
 
     <!--Changing date here-->
     <RelativeLayout
-        android:layout_width="187dp"
+        android:layout_width="368dp"
         android:id="@+id/rr_date"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_height="wrap_content">
 
         <TextView
@@ -70,7 +68,8 @@
             android:textSize="12sp"
             android:visibility="gone"
             android:background="@drawable/round_date"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"/>
 
     </RelativeLayout>
 

@@ -242,11 +242,12 @@ public class Chat extends AppCompatActivity {
                                         mDatabase2 = FirebaseDatabase.getInstance().getReference("chats").child("nickname").child(String.valueOf(cidd));
                                         mDatabase2.child(user).setValue(nickname);
                                     }
+                                    String newInput = " " + input.getText();
                                     Log.d("lol",String.valueOf(cidd));
                                     FirebaseDatabase.getInstance()
                                             .getReference("chats").child(String.valueOf(cidd))
                                             .push()
-                                            .setValue(new ChatMessage1(input.getText().toString(),
+                                            .setValue(new ChatMessage1(newInput,
                                                     FirebaseAuth.getInstance().getCurrentUser().getUid(),nickname)
                                             );
                                     /**-----------------------------------------------------------------------------------------**/
