@@ -7,6 +7,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateFormat;
 import android.text.style.TextAppearanceSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +30,15 @@ public class PcChatAdapterSearch extends BaseAdapter {
     PcChat activity;
     ArrayList<Long> timelist;
     ArrayList<String> userlist;
+    String query;
 
-    public PcChatAdapterSearch(ArrayList<String> search_list,ArrayList<Long> timelist,ArrayList<String> userlist,PcChat activity,Class<ChatMessage> modelClass,int modelLayout) {
+    public PcChatAdapterSearch(String query,ArrayList<String> search_list,ArrayList<Long> timelist,ArrayList<String> userlist,PcChat activity,Class<ChatMessage> modelClass,int modelLayout) {
         mData = new ArrayList();
         this.userlist=userlist;
         this.timelist=timelist;
         this.mData=search_list;
         this.activity=activity;
-
+        this.query=query;
 
     }
 
@@ -68,7 +70,7 @@ public class PcChatAdapterSearch extends BaseAdapter {
         String name=mData.get(position);
         Long messagetime=timelist.get(position);
         TextView messageuser=(TextView)result.findViewById(R.id.message_user);
-        messageuser.setVisibility(View.INVISIBLE);
+        messageuser.setVisibility(View.GONE);
         TextView messageTime = (TextView) result.findViewById(R.id.message_time);
         TextView messageText = (TextView) result.findViewById(R.id.message_text);
         String nontime= DateFormat.format("HH:mm:ss", messagetime).toString();
@@ -83,12 +85,15 @@ public class PcChatAdapterSearch extends BaseAdapter {
         }
         //messageText.setText(name);
         Spannable spannable = new SpannableString(name);
-        ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] { Color.YELLOW });
+
+        ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] {Color.parseColor("#FF0000")});
         TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
-
-        spannable.setSpan(highlightSpan, 0,name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        messageText.setText(spannable);;
-
+        int index=name.indexOf(query);
+        Log.d("POPKLJMN",index+" -> "+name+" -> "+query);
+        if(index>=0) {
+            spannable.setSpan(highlightSpan, index, index+query.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            messageText.setText(spannable);
+        }
         return result;
     }
 }

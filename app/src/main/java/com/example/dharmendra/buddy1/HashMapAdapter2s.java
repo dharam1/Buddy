@@ -24,10 +24,9 @@ public class HashMapAdapter2s extends BaseAdapter {
     private final ArrayList mData;
     ArrayList url1;
     Context context;
-    ArrayList countlist;
-    ArrayList mData1;
+    ArrayList lastmessage;
 
-    public HashMapAdapter2s(LinkedHashMap<String, String> map, ArrayList<String> url, Context context) {
+    public HashMapAdapter2s(LinkedHashMap<String, String> map, ArrayList<String> url,ArrayList<String> lastmessage1 ,Context context) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
         Collections.reverse(mData);
@@ -35,11 +34,8 @@ public class HashMapAdapter2s extends BaseAdapter {
         url1.addAll(url);
         Collections.reverse(url1);
         this.context=context;
-       /** countlist = new ArrayList();
-        countlist.addAll(countlist1);
-        Collections.reverse(countlist);**/
-
-
+        lastmessage=new ArrayList<>();
+        this.lastmessage=lastmessage1;
     }
 
     @Override
@@ -63,7 +59,7 @@ public class HashMapAdapter2s extends BaseAdapter {
         final View result;
 
         if (convertView == null) {
-            result = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_list_views, parent, false);
+            result = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_list_view, parent, false);
         } else {
             result = convertView;
         }
@@ -74,9 +70,11 @@ public class HashMapAdapter2s extends BaseAdapter {
 
         // TODO replace findViewById by ViewHolder
         //((TextView) result.findViewById(R.id.textView)).setText(String.valueOf(item.getKey()));
+        ((TextView) result.findViewById(R.id.counter)).setVisibility(View.GONE);
+        ((TextView) result.findViewById(R.id.textView1)).setText(lastmessage.get(position).toString());
         ((TextView) result.findViewById(R.id.textView)).setText(item.getValue());
         ImageView imgv=(ImageView) result.findViewById(R.id.imageview);
-        Picasso.with(context).load(url11).fit().centerCrop().into(imgv);
+        Picasso.with(context).load(url11).fit().centerCrop().noFade().into(imgv);
         return result;
     }
 }

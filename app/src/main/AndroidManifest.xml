@@ -3,6 +3,7 @@
     package="com.example.dharmendra.buddy1">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -16,10 +17,12 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyARwT7PLLHKk_D_0oIcHJWU9jNlG3txD4Y" />
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".Facebook_login"
             android:label="@string/app_name" />

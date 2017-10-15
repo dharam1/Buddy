@@ -22,7 +22,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
-import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
@@ -124,9 +123,6 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
                 map.put(next, 1);
             }
         }
-
-
-
 
         messageText.setText(model.getMessageText());
         if(model.getMessageUserId().equals(user)){

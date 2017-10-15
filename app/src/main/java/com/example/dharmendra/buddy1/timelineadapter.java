@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.media.MediaMetadataCompat;
@@ -27,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -65,7 +67,7 @@ import static com.example.dharmendra.buddy1.R.id.place_autocomplete_powered_by_g
 public class timelineadapter extends BaseAdapter {
     private final ArrayList mData;
     ArrayList followedactivityname;
-    ArrayList followeduser;
+    ArrayList<TimeLineClass> followeduser;
     ArrayList followeddate;
     Context context;
     ArrayList timelist;
@@ -81,15 +83,13 @@ public class timelineadapter extends BaseAdapter {
     String type1;
     int count = 0;
 
-    public timelineadapter(LinkedHashMap<Integer,Integer> map, LinkedHashMap<Integer,String> map1,Context context/**, LinkedHashMap<String, String> map2, LinkedHashMap<String, Long> map3**/, Activity act, FragmentManager fragmentManager,Bundle b) {
+    public timelineadapter(LinkedHashMap<Integer,Integer> map, ArrayList<TimeLineClass> list,Context context/**, LinkedHashMap<String, String> map2, LinkedHashMap<String, Long> map3**/, Activity act, FragmentManager fragmentManager,Bundle b) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
-        Collections.reverse(mData);
+
+
         followeduser=new ArrayList();
-        for ( Map.Entry<Integer, String> entry : map1.entrySet()) {
-            followeduser.add(entry.getValue());
-        }
-        Collections.reverse(followeduser);
+        followeduser=list;
         this.act=act;
         this.context=context;
         this.fragmentManager=fragmentManager;
@@ -130,14 +130,13 @@ public class timelineadapter extends BaseAdapter {
         final LinkedHashMap.Entry<Integer, Integer> item = getItem(position);
         final TextView t=(TextView)result.findViewById(R.id.textView);
         final TextView t2=(TextView)result.findViewById(R.id.textView1);
-        final CircleImageView iv = (CircleImageView) result.findViewById(R.id.imageview);
+        final ImageView iv = (ImageView) result.findViewById(R.id.imageview);
         cardView=(CardView)result.findViewById(R.id.card_view);
         final TextView dot = (TextView) result.findViewById(R.id.tv_dot);
         final ImageView type = (ImageView) result.findViewById(R.id.type);
         final ImageView mapview=(ImageView)result.findViewById(R.id.map);
         final View line = (View) result.findViewById(R.id.vertical_bar);
-
-        final String user11=followeduser.get(position).toString();
+        final String user11=followeduser.get(position).getName().toString();
         String[] split=user11.split("-");
         final String user1=split[1];
         final String user2=split[0];
@@ -179,26 +178,14 @@ public class timelineadapter extends BaseAdapter {
         line.setLayoutParams(params);
 
         if(user2.equals("Anonymous")){
-             aid = item.getValue();
+             aid = followeduser.get(position).getAid();
             String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            Picasso.with(context).load(R.drawable.ic_anonymous).fit().centerCrop().into(iv);
-        /**---------------Load Anonymous Photo---------------------------------------------------**/
-       /** mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user1).child("url");
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String url = dataSnapshot.getValue().toString();
-                Log.d("IMAGE", url);
-                Picasso.with(context).load(url).fit().centerCrop().into(iv);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });**/
-
-
+            TextDrawable drawable = TextDrawable.builder()
+                    .beginConfig().width(60).height(60).endConfig()
+                    .buildRound("AN", Color.RED);
+            Log.d("POPIKM",drawable.toString());
+            iv.setImageDrawable(drawable);
+            //Picasso.with(context).load(drawable).fit().centerCrop().into(iv);
             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(user1).child(String.valueOf(aid)).child("time");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -303,10 +290,8 @@ public class timelineadapter extends BaseAdapter {
                     Log.d("IMAGE", url);
                     Picasso.with(context).load(url).fit().centerCrop().noFade().into(iv);
 
-                    aid = item.getValue();
+                    aid = followeduser.get(position).getAid();
                     String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-
                     mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(user1).child(String.valueOf(aid));
                     mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -428,7 +413,7 @@ public class timelineadapter extends BaseAdapter {
     cardView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            int aid=item.getValue();
+            int aid=followeduser.get(position).getAid();
             Intent i = new Intent(act, Chat.class);
             i.putExtra("int_key", aid);
             act.startActivity(i);

@@ -163,22 +163,7 @@ public class SixthFragment extends Fragment {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
 
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
@@ -196,7 +181,8 @@ public class SixthFragment extends Fragment {
             Toast.makeText(getContext(), "Implement Share", Toast.LENGTH_SHORT).show();
         }
         if (item.getItemId() == R.id.menu_clear) {
-            if(haveNetworkConnection()){
+            CheckInternetConnection c=new CheckInternetConnection();
+            if(c.haveNetworkConnection()){
                 mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("Noti");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -283,52 +269,7 @@ public class SixthFragment extends Fragment {
             }
 
         });
-       /**notilist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-           @Override
-           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               final String content1 =notilist.getItemAtPosition(position).toString();
-               String[] parts = content1.split("=");
-               final String content=(parts[0]);
-               AlertDialog alertDialog=new AlertDialog.Builder(getContext()).create();
-               alertDialog.setMessage("Clear from List");
-               alertDialog.setButton("Clear", new DialogInterface.OnClickListener() {
-                   @Override
-                   public void onClick(DialogInterface dialog, int which) {
-                       if(haveNetworkConnection()){
-                           mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("Noti");
-                           mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                               @Override
-                               public void onDataChange(DataSnapshot dataSnapshot) {
-                                   for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                       Model1 m = postSnapshot.getValue(Model1.class);
-                                       String user1=m.getUser();
-                                       if(user1.equals(content)){
-                                           postSnapshot.getRef().removeValue();
-                                           Toast.makeText(getContext(), "Successfully Removed", Toast.LENGTH_SHORT).show();
-                                           FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                                           fragmentTransaction.replace(R.id.sixth, new SixthFragment());
-                                           fragmentTransaction.commit();
-                                           break;
-                                       }
-                                   }
-                               }
 
-                               @Override
-                               public void onCancelled(DatabaseError databaseError) {
-
-                               }
-                           });
-                       }
-                       else{
-                           Toast.makeText(getContext(), "Network Error", Toast.LENGTH_SHORT).show();
-                       }
-
-                   }
-               });
-               alertDialog.show();
-           }
-
-       });**/
         notilist.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         notilist.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
@@ -386,7 +327,8 @@ public class SixthFragment extends Fragment {
                                         String[] parts = selecteditem.split("=");
                                         final String content = (parts[0]);
                                         Log.d("ghjk",String.valueOf(content));
-                                        if(haveNetworkConnection()){
+                                        CheckInternetConnection c=new CheckInternetConnection();
+                                        if(c.haveNetworkConnection()){
                                             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("Noti");
                                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override

@@ -173,7 +173,8 @@ public class HashMapAdapter1 extends BaseAdapter {
            @Override
            public void onClick(View v) {
                 final String content=item.getKey();
-               if(haveNetworkConnection()){
+               CheckInternetConnection c=new CheckInternetConnection();
+               if(c.haveNetworkConnection()){
                    c_count=0;
                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -265,7 +266,8 @@ public class HashMapAdapter1 extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 final String content=item.getKey();
-                if(haveNetworkConnection()){
+                CheckInternetConnection c=new CheckInternetConnection();
+                if(c.haveNetworkConnection()){
                     mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("receiveFrom");
                     mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -314,20 +316,5 @@ public class HashMapAdapter1 extends BaseAdapter {
         });
         return result;
     }
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
 
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
 }

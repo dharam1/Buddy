@@ -40,6 +40,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -88,7 +89,6 @@ public class Chat extends AppCompatActivity {
     View rootView;
     int global_buddies;
     TextView dateView;
-    ArrayList<ChatAdpaterModelClass> list=new ArrayList<>();
     int flag=0;
     //EditText input;
 
@@ -127,6 +127,7 @@ public class Chat extends AppCompatActivity {
         emojIcon = new EmojIconActions(this, rootView,input, emojiButton);
         emojIcon.setIconsIds(R.drawable.ic_keyboard, R.drawable.ic_emoji);
         emojIcon.ShowEmojIcon();
+        //emojIcon.setUseSystemEmoji(true);
         emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
             @Override
             public void onKeyboardOpen() {
@@ -201,7 +202,7 @@ public class Chat extends AppCompatActivity {
 
         showAllOldMessages(cidd);
         mDatabase=FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd));
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
@@ -231,7 +232,8 @@ public class Chat extends AppCompatActivity {
                             Toast.makeText(Chat.this, "You have been Blocked by Admin you can only View", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            if(haveNetworkConnection()){
+                            CheckInternetConnection c=new CheckInternetConnection();
+                            if(c.haveNetworkConnection()){
                                 if (input.getText().toString().trim().equals("")) {
                                     Toast.makeText(Chat.this, "Please enter some texts!", Toast.LENGTH_SHORT).show();
                                 }
@@ -334,23 +336,7 @@ public class Chat extends AppCompatActivity {
             }
         });
     }
-    private boolean haveNetworkConnection() {
 
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
 
     private void goLoginScreen() {
         Intent intent = new Intent(this, Facebook_login.class);
@@ -402,10 +388,9 @@ public class Chat extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item)
                     {
-                        //  Toast.makeText(Chat.this, "Collapse", Toast.LENGTH_SHORT).show();
-                        /**adapter = new MessageAdapter(Chat.this, ChatMessage1.class, R.layout.item_in_message,
-                         FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd,connectionlist);
-                         listView.setAdapter(adapter);**/
+                        adapter = new MessageAdapter(Chat.this, ChatMessage1.class, R.layout.item_in_message,
+                                FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd);
+                        listView.setAdapter(adapter);
                         return true; // Return true to collapse action view
                     }
 
@@ -428,7 +413,6 @@ public class Chat extends AppCompatActivity {
                             @Override
                             public boolean onQueryTextSubmit(String query)
                             {
-
                                 return true;
                             }
 
@@ -441,7 +425,7 @@ public class Chat extends AppCompatActivity {
                                     String element = message_list.get(i);
                                     if (query.length() <= element.length()) {
                                         //String sub = element.substring(0, query.length());
-                                        if (element.toLowerCase().contains(query.toLowerCase())) {
+                                        if (element.contains(query)) {
                                             search_list.add(element);
                                             Long time = message_time.get(i);
                                             search_time_list.add(time);
@@ -451,7 +435,7 @@ public class Chat extends AppCompatActivity {
                                             search_nick.add(nick);
                                         }
                                     }
-                                    searchadapter = new TopicChatAdapterSearch(search_list, search_time_list, search_user_list,search_nick, Chat.this, ChatMessage.class, R.layout.item_in_message);
+                                    searchadapter = new TopicChatAdapterSearch(query,search_list, search_time_list, search_user_list,search_nick, Chat.this, ChatMessage.class, R.layout.item_in_message);
                                     listView.setAdapter(searchadapter);
                                 }
                                 return true;

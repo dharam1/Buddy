@@ -141,6 +141,7 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
         emojIcon = new EmojIconActions(this, rootView,input, emojiButton);
         emojIcon.setIconsIds(R.drawable.ic_keyboard, R.drawable.ic_emoji);
         emojIcon.ShowEmojIcon();
+        //emojIcon.setUseSystemEmoji(true);
         emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
             @Override
             public void onKeyboardOpen() {
@@ -195,7 +196,8 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(haveNetworkConnection()){
+                CheckInternetConnection cc=new CheckInternetConnection();
+                if(cc.haveNetworkConnection()){
                     if (input.getText().toString().trim().equals("")) {
                         Toast.makeText(PcChat.this, "Please enter some texts!", Toast.LENGTH_SHORT).show();
                     } else {
@@ -272,36 +274,10 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
             }
         });
     }
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
 
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.main1, menu);
-      /**  MenuItem image=menu.findItem(R.id.image);
-        image.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_PICK);
-                startActivityForResult(Intent.createChooser(intent, "Select & Upload Image(200px*250px)"), PICK_IMAGE_REQUEST);
-                return false;
-            }
-        });**/
         MenuItem search =  menu.findItem(R.id.search);
         MenuItemCompat.setOnActionExpandListener(search,
                 new MenuItemCompat.OnActionExpandListener()
@@ -349,8 +325,7 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
                                 String element = message_list.get(i);
                                 if (query.length() <= element.length()) {
                                     //String sub = element.substring(0, query.length());
-                                    if (element.toLowerCase().contains(query.toLowerCase())) {
-
+                                    if (element.contains(query)) {
                                         search_list.add(element);
                                         Long time = message_time.get(i);
                                         search_time_list.add(time);
@@ -359,7 +334,7 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
 
                                 }
                             }
-                                searchadapter = new PcChatAdapterSearch(search_list, search_time_list, search_user_list, PcChat.this, ChatMessage.class, R.layout.item_in_message);
+                                searchadapter = new PcChatAdapterSearch(query,search_list, search_time_list, search_user_list, PcChat.this, ChatMessage.class, R.layout.item_in_message);
                                 listView.setAdapter(searchadapter);
                             }
                         return true;

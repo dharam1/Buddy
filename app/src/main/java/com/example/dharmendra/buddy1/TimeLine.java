@@ -44,6 +44,8 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -231,6 +233,7 @@ public class TimeLine extends Fragment {
             }
         });
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final ArrayList<TimeLineClass> timeLinelist=new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             int io = 0;
@@ -245,28 +248,33 @@ public class TimeLine extends Fragment {
                                 final int aid = Integer.parseInt(String.valueOf(use.getAid()));
                                 final String userid = use.getUser();
                                 final long time = use.getTime();
+                                Date d=new Date(time);
                                 if (use.getFromconnection() == 1&&use.getStatus()==1) {
                                     Log.d("POPIKLJ",aid+"");
                                     followeduser.put(io, "-" + userid);
+                                    String name="-"+userid;
                                     followedactivityid.put(io, aid);
+                                    TimeLineClass t=new TimeLineClass(aid,name,d);
+                                    timeLinelist.add(t);
                                 } else{
                                 if(use.getStatus()==1) {
                                     Log.d("POPIKLJ", aid + "");
-                                    //if (!aidlist.contains(Integer.parseInt(snapshot.getKey()))) {
                                     aidlist.add(Integer.parseInt(snapshot.getKey()));
                                     followeduser.put(io, "Anonymous-" + userid);
                                     followedactivityid.put(io, aid);
+                                    TimeLineClass t=new TimeLineClass(aid,"Anonymous-"+userid,d);
+                                    timeLinelist.add(t);
                                 }
                                 }
                                 io++;
-                            //}
                         }
                     }
                 }
 
                 Log.d("POPKLL", followeduser.size() + "");
-
-                adapter = new timelineadapter(followedactivityid, followeduser,/**,followedactivity,followeddate**/getApplicationContext(), getActivity(),getFragmentManager(),savedInstanceState);
+                    Collections.sort(timeLinelist);
+                    Collections.reverse(timeLinelist);
+                adapter = new timelineadapter(followedactivityid,timeLinelist,getApplicationContext(), getActivity(),getFragmentManager(),savedInstanceState);
                 timeline.setAdapter(adapter);
             }
         }

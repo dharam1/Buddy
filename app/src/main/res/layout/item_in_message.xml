@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,19 +29,18 @@
         tools:layout_editor_absoluteX="0dp">
         <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
             android:id="@+id/message_text"
-            android:text="hi man, how are you?"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="240dp"
             android:layout_centerVertical="true"
             android:textColor="@color/black"
-            android:layout_marginLeft="4dp"/>
+            android:layout_marginLeft="4dp"
+            emojicon:emojiconSize="18sp"/>
 
         <TextView
             android:id="@+id/message_time"
             android:layout_width="wrap_content"
-            android:text="11:08"
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:layout_toRightOf="@+id/message_text"

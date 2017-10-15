@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 repositories {
     maven { url 'https://jitpack.io' }
+    maven {
+        url 'http://dl.bintray.com/amulyakhare/maven'
+    }
+
 }
 android {
     compileSdkVersion 25
@@ -50,5 +54,6 @@ dependencies {
     compile 'com.github.ceryle:RadioRealButton:v2.1.1'
     compile 'com.github.uguratar:countingtextview:8f9bb426ac'
     testCompile 'junit:junit:4.12'
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -148,7 +148,8 @@ public class manageuser extends AppCompatActivity  {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
-                                    if (haveNetworkConnection()) {
+                                    CheckInternetConnection c=new CheckInternetConnection();
+                                    if(c.haveNetworkConnection()){
                                         /**----------------------------------------------------------------------------------------**/
                                         mDatabase = FirebaseDatabase.getInstance().getReference("users");
                                         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -349,21 +350,6 @@ public class manageuser extends AppCompatActivity  {
         return true;
 
     }
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
 
-        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
 
 }

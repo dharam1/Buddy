@@ -118,22 +118,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
         setHasOptionsMenu(true);
         getActivity().setTitle("Add a Topic");
     }
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
 
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
     private void goLoginScreen() {
         Intent intent = new Intent(getContext(), Facebook_login.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -287,7 +272,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onClickedButton(RadioRealButton button, int position) {
                     global_position=position;
-                    Toast.makeText(getActivity(), "Clicked! Position: " + position, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Clicked! Position: " + position, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -296,7 +281,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onPositionChanged(RadioRealButton button, int position, int lastPosition) {
                     global_position=position;
-                    Toast.makeText(getActivity(), "Position Changed! Position: " + position, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Position Changed! Position: " + position, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -307,7 +292,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public boolean onLongClickedButton(RadioRealButton button, int position) {
                     global_position=position;
-                    Toast.makeText(getActivity(), "Long Clicked! Position: " + position, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Long Clicked! Position: " + position, Toast.LENGTH_SHORT).show();
                     return false;
                 }
             });
@@ -363,7 +348,8 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
 
-            if(haveNetworkConnection()){
+                CheckInternetConnection c=new CheckInternetConnection();
+                if(c.haveNetworkConnection()){
             content = editText.getText().toString().trim();
             if (content.equals("")) {
             Toast.makeText(getContext(), "Please Enter some Text", Toast.LENGTH_SHORT).show();

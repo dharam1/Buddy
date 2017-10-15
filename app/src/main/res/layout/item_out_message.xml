@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,8 +17,7 @@
         android:textSize="15sp"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/rr_date"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="4dp" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -30,14 +30,14 @@
 
         <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
             android:id="@+id/message_text"
-            android:text="hi man, how are you?"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="240dp"
             android:layout_centerVertical="true"
             android:textColor="@color/black"
-            android:layout_marginRight="4dp"/>
+            android:layout_marginRight="4dp"
+            emojicon:emojiconSize="18sp"/>
 
         <TextView
             android:id="@+id/message_time"
@@ -53,7 +53,7 @@
 
     <!--Changing date here-->
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="187dp"
         android:id="@+id/rr_date"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"

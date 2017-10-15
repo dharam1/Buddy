@@ -1,6 +1,7 @@
 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="65dp"
@@ -79,7 +80,7 @@
                 android:layout_marginTop="1dp"
                 android:weightSum="8">
 
-                <TextView
+                <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
                     android:id="@+id/textView1"
                     android:layout_width="0dp"
                     android:layout_weight="7"
@@ -87,7 +88,8 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:textColor="@color/gray"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    emojicon:emojiconSize="23sp"/>
 
                 <TextView
                     android:id="@+id/counter"

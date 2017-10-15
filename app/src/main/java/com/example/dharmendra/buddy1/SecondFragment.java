@@ -73,7 +73,8 @@ public class SecondFragment extends Fragment {
     LinkedHashMap<String,String> map=new LinkedHashMap<String, String>();
     private static final long DRAWER_DELAY = 250;
     ArrayList<Integer> s_countlist = new ArrayList<Integer>();
-    ArrayList<Integer> ss_countlist = new ArrayList<Integer>();
+    ArrayList<String> last_message = new ArrayList<String>();
+    ArrayList<String> s_lastmessage = new ArrayList<String>();
     ArrayList<String> s_urllist = new ArrayList<String>();
     ArrayList<String> ss_urllist = new ArrayList<String>();
     LinkedHashMap<String,String> s_connection_list=new LinkedHashMap<>();
@@ -193,52 +194,68 @@ public class SecondFragment extends Fragment {
         });
 
 
-
-
-        SearchManager searchManager =
-                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setQueryHint(getString(R.string.search_hint));
-        //searchView.setIconifiedByDefault(false);
-        searchView.onActionViewExpanded();
-        searchView.setFocusable(false);
-        searchView.setIconified(false);
-        searchView.clearFocus();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String query) {
-                s_connection_list.clear();
-                ss_urllist.clear();
-                ss_countlist.clear();
-                int i=0;
-                for (Map.Entry<String, String> data : connection_list.entrySet()) {
-                    String name = data.getValue();
-                    String key = data.getKey();
-                    if (query.length() <= name.length()) {
-                        //String sub = name.substring(0, query.length());
-                        if (name.toLowerCase().contains(query.toLowerCase())) {
-                            s_connection_list.put(key, name);
-                            String url = s_urllist.get(i);
-                            ss_urllist.add(url);
-                        }
+        MenuItem search =  menu.findItem(R.id.menu_search);
+        MenuItemCompat.setOnActionExpandListener(search,
+                new MenuItemCompat.OnActionExpandListener()
+                {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item)
+                    {
+                        //Toast.makeText(getActivity(), "Collapse", Toast.LENGTH_SHORT).show();
+                        HashMapAdapter2 adapter = new HashMapAdapter2(map,con_list,getContext(),getActivity(),getFragmentManager());
+                        connectionlist.setAdapter(adapter);
+                        return true; // Return true to collapse action view
                     }
-                    HashMapAdapter2s adapter = new HashMapAdapter2s(s_connection_list, ss_urllist, getContext());
-                    connectionlist.setAdapter(adapter);
-                    i++;
-                }
-                return false;
-            }
-        });
+
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item)
+                    {
+                        SearchManager searchManager =
+                                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+                        SearchView searchView =
+                                (SearchView) menu.findItem(R.id.menu_search).getActionView();
+                        searchView.setSearchableInfo(
+                                searchManager.getSearchableInfo(getActivity().getComponentName()));
+                        searchView.setSubmitButtonEnabled(true);
+                        searchView.setQueryHint(getString(R.string.search_hint));
+                        searchView.onActionViewExpanded();
+                        searchView.onActionViewCollapsed();
+                        searchView.setFocusable(false);
+                        searchView.setIconified(false);
+                        searchView.clearFocus();
+                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                            @Override
+                            public boolean onQueryTextSubmit(String query) {
+                                return true;
+                            }
+
+                            @Override
+                            public boolean onQueryTextChange(String query) {
+                                s_connection_list.clear();
+                                ss_urllist.clear();
+                                int i=0;
+                                for (Map.Entry<String, String> data : connection_list.entrySet()) {
+                                    String name = data.getValue();
+                                    String key = data.getKey();
+                                    if (query.length() <= name.length()) {
+                                        //String sub = name.substring(0, query.length());
+                                        if (name.toLowerCase().contains(query.toLowerCase())) {
+                                            s_connection_list.put(key, name);
+                                            String url = s_urllist.get(i);
+                                            ss_urllist.add(url);
+                                            s_lastmessage.add(last_message.get(i));
+                                        }
+                                    }
+                                    HashMapAdapter2s adapter = new HashMapAdapter2s(s_connection_list, ss_urllist, s_lastmessage,getContext());
+                                    connectionlist.setAdapter(adapter);
+                                    i++;
+                                }
+                                return false;
+                            }
+                        });
+                        return true; // Return true to expand action view
+                    }
+                });
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -273,22 +290,6 @@ public class SecondFragment extends Fragment {
 
         return false;
     }
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
 
 
     @Override
@@ -322,6 +323,7 @@ public class SecondFragment extends Fragment {
                                 name = use.getName();
                                 map.put(user1,name);
                                 url = use.getUrl();
+                                connection_list.put(use.getUid(),name);
                                 s_urllist.add(url);
                                 Log.d("qwerty2",user1);
                                 c=0;
@@ -353,6 +355,7 @@ public class SecondFragment extends Fragment {
                                             check=true;
                                         }
                                     }
+                                    last_message.add(message);
                                     connection_class c=con_map.get(user1);
                                     if(c==null){
                                         Log.d("aswd","aswd");

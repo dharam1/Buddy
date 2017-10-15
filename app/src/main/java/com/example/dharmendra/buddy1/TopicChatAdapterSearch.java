@@ -8,6 +8,7 @@ import android.text.SpannableString;
 import android.text.format.DateFormat;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.TextAppearanceSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -28,15 +29,16 @@ public class TopicChatAdapterSearch extends BaseAdapter {
     ArrayList<Long> timelist;
     ArrayList<String> userlist;
     ArrayList<String> nicklist;
+    String query;
 
-    public TopicChatAdapterSearch(ArrayList<String> search_list, ArrayList<Long> timelist, ArrayList<String> userlist,ArrayList<String> nicklist, Chat activity, Class<ChatMessage> modelClass, int modelLayout) {
+    public TopicChatAdapterSearch(String query,ArrayList<String> search_list, ArrayList<Long> timelist, ArrayList<String> userlist,ArrayList<String> nicklist, Chat activity, Class<ChatMessage> modelClass, int modelLayout) {
         mData = new ArrayList();
         this.userlist=userlist;
         this.timelist=timelist;
         this.mData=search_list;
         this.activity=activity;
         this.nicklist=nicklist;
-
+        this.query=query;
 
     }
 
@@ -84,11 +86,16 @@ public class TopicChatAdapterSearch extends BaseAdapter {
 
         //messageText.setText(name);
         Spannable spannable = new SpannableString(name);
-        ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] { Color.YELLOW });
-        TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
 
-        spannable.setSpan(highlightSpan, 0,name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        messageText.setText(spannable);;
+        ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] {Color.parseColor("#FF0000")});
+        TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
+        int index=name.indexOf(query);
+        Log.d("POPKLJMN",index+" -> "+name+" -> "+query);
+        if(index>=0) {
+            spannable.setSpan(highlightSpan, index, index+query.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            messageText.setText(spannable);
+        }
+
         if(user.equals(activity.getLoggedInUserName())){
             messageuser.setText("You");
         }

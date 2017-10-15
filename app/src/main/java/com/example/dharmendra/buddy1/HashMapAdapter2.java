@@ -41,6 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 /**
  * Created by Dharmendra on 02-06-2017.
@@ -118,7 +119,7 @@ public class HashMapAdapter2 extends BaseAdapter {
         ImageView imgv = (ImageView) result.findViewById(R.id.imageview);
         Picasso.with(context).load(url11).fit().centerCrop().noFade().into(imgv);
         TextView counter = (TextView) result.findViewById(R.id.counter);
-        TextView lmv = (TextView) result.findViewById(R.id.textView1);
+        EmojiconTextView lmv = (EmojiconTextView) result.findViewById(R.id.textView1);
         TextView timev = (TextView) result.findViewById(R.id.textView2);
         LinearLayout ll = (LinearLayout) result.findViewById(R.id.ll);
         LinearLayout ll2 = (LinearLayout) result.findViewById(R.id.ll2);
@@ -200,7 +201,8 @@ public class HashMapAdapter2 extends BaseAdapter {
                 alertDialog.setButton("Remove", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(haveNetworkConnection()){
+                        CheckInternetConnection c=new CheckInternetConnection();
+                        if(c.haveNetworkConnection()){
                             final String user= FirebaseAuth.getInstance().getCurrentUser().getUid();
                             mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -414,20 +416,5 @@ public class HashMapAdapter2 extends BaseAdapter {
         });
         return result;
     }
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
 
-        ConnectivityManager cm = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
 }
