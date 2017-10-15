@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         app:layout_constraintTop_toBottomOf="@+id/rr_date"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="4dp"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -25,6 +26,7 @@
         android:background="@drawable/bubble_in"
         android:id="@+id/rr"
         app:layout_constraintTop_toBottomOf="@+id/message_user"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:padding="8dp"
         tools:layout_editor_absoluteX="0dp">
         <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView

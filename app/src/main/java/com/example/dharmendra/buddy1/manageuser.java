@@ -57,7 +57,7 @@ public class manageuser extends AppCompatActivity  {
     ArrayList<String> receive=new ArrayList<>();
     ArrayList<String> send=new ArrayList<>();
     ArrayList<String> connection=new ArrayList<>();
-    TextView tt,count,ttt;
+    TextView tt,count,ttt, address;
     String admin,activityName;
     ImageView mapImage;
     LatLng pos;
@@ -81,6 +81,7 @@ public class manageuser extends AppCompatActivity  {
         tt=(TextView)findViewById(R.id.activity_name);
         manageuser = (ListView) findViewById(R.id.simpleListView);
         mapImage = (ImageView) findViewById(R.id.map);
+        address = (TextView) findViewById(R.id.tv_address);
 
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         manageuser= (ListView)findViewById(R.id.simpleListView);
@@ -109,6 +110,7 @@ public class manageuser extends AppCompatActivity  {
                 String imageURL = post1.getMapurl();
                 Picasso.with(getApplication()).load(imageURL).fit().centerCrop().noFade().into(mapImage);
                 tt.setText(activityName);
+                address.setText(post1.getAddress());
                 admin=post1.getUser();
                 Log.d("yuio",admin);
                 String date= DateFormat.format("dd-MM-yyyy", t).toString();
@@ -133,7 +135,7 @@ public class manageuser extends AppCompatActivity  {
                     ttt.setText("Yesterday");
                 }
                 else {
-                    ttt.setText(DateFormat.format("dd-MM-yyyy", t));
+                    ttt.setText(DateFormat.format("dd MMM, yyyy", t));
                     Log.d("hjk", "outside");
                 }
                 if(user.equals(admin)) {
