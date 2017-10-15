@@ -166,7 +166,7 @@
                 android:layout_below="@id/vv1"
                 android:gravity="center_vertical"/>
 
-            <android.support.v7.widget.RecyclerView
+            <ListView
                 android:id="@+id/simpleListView"
                 android:layout_width="match_parent"
                 android:layout_below="@+id/tv"
