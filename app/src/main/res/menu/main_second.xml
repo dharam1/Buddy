@@ -22,10 +22,10 @@
         android:id="@+id/menu_sign_out"
         app:showAsAction="never"
         android:title="Sign out" />
-    <item
+    <!--<item
         android:id="@+id/menu_search"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.widget.SearchView"
         android:title="Search"
-        android:icon="@drawable/search" />
+        android:icon="@drawable/search" />-->
 </menu>

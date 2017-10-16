@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#E53935</color>
-    <color name="colorPrimaryDark">#B71C1C</color>
-    <color name="colorAccent">#EF5350</color>
+    <color name="colorPrimary">#7E57C2</color>
+    <color name="colorPrimaryDark">#512DA8</color>
+    <color name="colorAccent">#dcd3f0</color>
     <color name="icons">#FFE0B2</color>
     <color name="white">#fff</color>
     <color name="green">#63E722</color>
@@ -12,7 +12,7 @@
     <color name="gray">#607D8B</color>
     <color name="view">#c1c1c1</color>
     <color name="fb">#295396</color>
-    <color name="sent">#DCF8C6</color>
+    <color name="sent">#FFCC80</color>
 </resources>
 
 

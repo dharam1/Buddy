@@ -260,7 +260,7 @@ public class timelineadapter extends BaseAdapter {
                         /**if(address_lines.length>5)
                             t.setText(Html.fromHtml("A new group <b>" + post1.getName() + "</b> has been created at <b> "+ address_lines[length - 4] + ", " + address_lines[length - 3]+", " + address_lines[length - 2]+", " + address_lines[length - 1]));
                         else**/
-                            t.setText(Html.fromHtml("A new group <b>" + post1.getName() + "</b> has been created.<b> "));
+                            t.setText(Html.fromHtml("A new group <b>" + post1.getName() + "</b> has been created<b> "));
                         Picasso.with(context).load(url).fit().centerCrop().into(mapview);
 
                     }
@@ -371,7 +371,7 @@ public class timelineadapter extends BaseAdapter {
                                         /**if(address_lines.length>5)
                                             t.setText(Html.fromHtml("<b>" + name + "</b> created <b>" + post1.getName() + "</b> at " + address_lines[length - 4] + ", " + address_lines[length - 3]+", " + address_lines[length - 2]+", " + address_lines[length - 1]));
                                         else**/
-                                            t.setText(Html.fromHtml("<b>" + name + "</b> created <b>" + post1.getName()));
+                                            t.setText(Html.fromHtml("<b>" + name + "</b> created group <b>" + post1.getName()));
                                         Picasso.with(context).load(url).fit().centerCrop().into(mapview);
                                         dot.setVisibility(View.VISIBLE);
                                         line.setVisibility(View.VISIBLE);

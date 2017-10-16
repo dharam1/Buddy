@@ -16,11 +16,17 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
@@ -39,36 +45,23 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
     View prevItem = null;
     int prevPos = Integer.MAX_VALUE;
     int count = 0;
+    LinkedHashMap<String,String> connectionlist;
 
-    public MessageAdapter(Chat activity, Class<ChatMessage1> modelClass, int modelLayout, DatabaseReference ref,int cidd) {
+    public MessageAdapter(Chat activity, Class<ChatMessage1> modelClass, int modelLayout, DatabaseReference ref, int cidd, LinkedHashMap<String,String> connectionlist1) {
         super(activity, modelClass, modelLayout, ref);
         this.activity = activity;
         this.mDatabase1=ref;
         this.cidd=cidd;
         map = new SparseIntArray();
         user=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-    }
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
+        connectionlist=new LinkedHashMap<>();
+        connectionlist=connectionlist1;
     }
 
     @Override
     protected void populateView(View v, final ChatMessage1 model, final int position) {
         EmojiconTextView messageText = (EmojiconTextView) v.findViewById(R.id.message_text);
-        TextView messageUser = (TextView) v.findViewById(R.id.message_user);
+        final TextView messageUser = (TextView) v.findViewById(R.id.message_user);
         TextView messageTime = (TextView) v.findViewById(R.id.message_time);
         String user=FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -109,7 +102,6 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
 
         int next = position +1;
         if(next == getCount()) next = position;
-
         {
             ChatMessage1 chatMessage1 = getItem(next);
 
@@ -128,8 +120,13 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
         if(model.getMessageUserId().equals(user)){
             messageUser.setText("You");
         }
-        else
+        else {
+            if(connectionlist.containsKey(model.getMessageUserId())){
+                messageUser.setText(connectionlist.get(model.getMessageUserId()));
+            }
+            else
             messageUser.setText(model.getNickname());
+        }
         // Format the date before showing it
         //messageTime.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()).toString());
         final String date = DateFormat.format("dd/MM/yyyy", model.getMessageTime()).toString();

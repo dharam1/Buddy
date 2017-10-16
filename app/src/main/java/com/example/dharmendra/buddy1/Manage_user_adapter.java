@@ -57,10 +57,9 @@ public class Manage_user_adapter extends BaseAdapter {
     ArrayList<String> send=new ArrayList<>();
     ArrayList<String> connection=new ArrayList<>();
     String admin,actname;
+    LinkedHashMap<String,String> connectionlist;
 
-
-
-    public Manage_user_adapter(LinkedHashMap<String, String> map ,int aid,ArrayList list,String admin,ArrayList send,ArrayList receive,ArrayList connection,String actname,Context context) {
+    public Manage_user_adapter(LinkedHashMap<String, String> map ,int aid,ArrayList list,String admin,ArrayList send,ArrayList receive,ArrayList connection,String actname,LinkedHashMap<String,String> connectionlist1,Context context) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
        //Collections.reverse(mData);
@@ -72,6 +71,8 @@ public class Manage_user_adapter extends BaseAdapter {
         this.connection=connection;
         this.actname=actname;
         this.context=context;
+        connectionlist=new LinkedHashMap<>();
+        connectionlist=connectionlist1;
     }
 
     @Override
@@ -121,7 +122,14 @@ public class Manage_user_adapter extends BaseAdapter {
             });
 
         }else{**/
-            ((TextView) result.findViewById(R.id.textView)).setText(item.getValue());
+            if(connectionlist.containsKey(item.getKey())){
+                ((TextView) result.findViewById(R.id.textView)).setText(connectionlist.get(item.getKey()));
+                Log.d("LOLPP",connectionlist.get(item.getKey()));
+            }
+            else {
+                ((TextView) result.findViewById(R.id.textView)).setText(item.getValue());
+                Log.d("LOLPP",item.getKey());
+            }
         //}
 
         Log.d("grp info", user + " " + admin + " " + item.getKey());
@@ -234,7 +242,7 @@ public class Manage_user_adapter extends BaseAdapter {
                     public void onClick(View v) {
                         ImageButton b = (ImageButton) v.findViewById(R.id.button);
                         kick.setImageResource(R.drawable.ic_ban);
-                        Toast.makeText(context, "User " + item.getValue() + " has been banned", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "User has been banned", Toast.LENGTH_SHORT).show();
                         Log.d("qwerty", "22");
                         final String user = item.getKey().toString();
                         final String nickname = item.getValue().toString();

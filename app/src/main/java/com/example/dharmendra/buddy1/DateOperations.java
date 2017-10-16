@@ -45,15 +45,15 @@ public class DateOperations {
         yesterday.setTime(today.getTime() - ((long)864E5));
 
         DateFormat df = SimpleDateFormat.getDateTimeInstance();
-        if(df.format(new Date()).equals(df.format(date)))
+        /**if(df.format(new Date()).equals(df.format(date)))
         dateString = "Today";
         else if(df.format(yesterday).equals(df.format(date)))
             dateString ="Yesterday";
-        else {
+        else {**/
             dateString=new SimpleDateFormat("d MMMM").format(date);
             if(!(today.getYear()==date.getYear()))
                 dateString+=" "+date.getYear()+" ";
-        }
+        //}
         return dateString;
     }
 }

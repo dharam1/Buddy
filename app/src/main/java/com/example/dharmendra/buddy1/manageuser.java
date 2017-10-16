@@ -1,6 +1,8 @@
 package com.example.dharmendra.buddy1;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -62,6 +64,7 @@ public class manageuser extends AppCompatActivity  {
     String admin,activityName;
     ImageView mapImage;
     LatLng pos;
+    LinkedHashMap<String,String> connectionlist=new LinkedHashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +82,7 @@ public class manageuser extends AppCompatActivity  {
 
         final CardView card = (CardView) findViewById(R.id.card_view);
         card.setVisibility(View.GONE);
-
+        final ImageView imv=(ImageView)findViewById(R.id.type);
         ttt=(TextView)findViewById(R.id.date);
         tt=(TextView)findViewById(R.id.activity_name);
         manageuser = (ListView) findViewById(R.id.simpleListView);
@@ -90,7 +93,7 @@ public class manageuser extends AppCompatActivity  {
         manageuser= (ListView)findViewById(R.id.simpleListView);
         final countingTextView count = (countingTextView) findViewById(R.id.c);
         ttt=(TextView)findViewById(R.id.date);
-        tt=(TextView)findViewById(R.id.activity_name);
+        //tt=(TextView)findViewById(R.id.activity_name);
         final TextView type=(TextView)findViewById(R.id.head3);
         b= getIntent().getExtras();
         if (b!= null){
@@ -106,14 +109,30 @@ public class manageuser extends AppCompatActivity  {
                 Activity1 post1 = dataSnapshot.getValue(Activity1.class);
                 long t =post1.getActdate();
                 activityName=post1.getName();
-                if(post1.getType()==0)
+                if(post1.getType()==0) {
                     type.setText("Global");
-                else
+                    imv.setImageResource(R.drawable.ic_global);
+                }
+                else {
                     type.setText("Private");
+                    imv.setImageResource(R.drawable.ic_private);
+                }
                 String imageURL = post1.getMapurl();
                 Picasso.with(getApplication()).load(imageURL).fit().centerCrop().noFade().into(mapImage);
-                tt.setText(activityName);
+                //tt.setText(activityName);
                 address.setText(post1.getAddress());
+                final ClipboardManager clipboard=(ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                address.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        String content =address.getText().toString();
+                        final ClipData myClip = ClipData.newPlainText("text",content);
+                        clipboard.setPrimaryClip(myClip);
+                        Toast.makeText(manageuser.this, "Address Copied", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+
                 admin=post1.getUser();
                 Log.d("yuio",admin);
                 String date= DateFormat.format("dd-MM-yyyy", t).toString();
@@ -234,6 +253,35 @@ public class manageuser extends AppCompatActivity  {
             }
         });
 
+        mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    mDatabase=FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey()).child("name");
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            connectionlist.put(postSnapshot.getKey(),dataSnapshot.getValue().toString());
+                            Log.d("LOLPP",postSnapshot.getKey()+"   "+dataSnapshot.getValue());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
         mDatabase = FirebaseDatabase.getInstance().getReference("chats").child("kick").child(String .valueOf(cidd));
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -292,6 +340,7 @@ public class manageuser extends AppCompatActivity  {
                     //Model m = postSnapshot.getValue(Model.class);
                     connection_type con=postSnapshot.getValue(connection_type.class);
                     connection.add(con.getUid());
+
                 }
             }
 
@@ -318,7 +367,7 @@ public class manageuser extends AppCompatActivity  {
 
                 }
                 count.animateText(0, map.size());
-                adapter = new Manage_user_adapter(map,cidd,list,admin,send,receive,connection,activityName,getApplicationContext());
+                adapter = new Manage_user_adapter(map,cidd,list,admin,send,receive,connection,activityName,connectionlist,getApplicationContext());
                 manageuser.setAdapter(adapter);
                 setListViewHeightBasedOnChildren(manageuser, adapter);
             }
@@ -350,7 +399,7 @@ public class manageuser extends AppCompatActivity  {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(tt.getText());
+                    collapsingToolbar.setTitle(activityName);
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbar.setTitle(" ");

@@ -76,7 +76,7 @@ public class Chat extends AppCompatActivity {
     ArrayList<String> search_user_list=new ArrayList<>();
     ArrayList<String> search_list=new ArrayList<>();
     ArrayList<String> search_nick=new ArrayList<>();
-    ArrayList<String> connectionlist=new ArrayList<>();
+    LinkedHashMap<String,String> connectionlist=new LinkedHashMap<>();
     TopicChatAdapterSearch searchadapter;
     FirebaseAuth firebaseAuth;
     ArrayList<String> x=new ArrayList<>(Arrays.asList("Barney","Ted","Marchel","Lily","Tyrion","Sersi","Rachel","Phoebe","Heisenberg","Joey","chandler","Jon Snow","Sansa"
@@ -189,8 +189,19 @@ public class Chat extends AppCompatActivity {
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    connectionlist.add(postSnapshot.getKey());
+                for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    mDatabase=FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey()).child("name");
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            connectionlist.put(postSnapshot.getKey(),dataSnapshot.getValue().toString());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
 
@@ -390,7 +401,7 @@ public class Chat extends AppCompatActivity {
                     public boolean onMenuItemActionCollapse(MenuItem item)
                     {
                         adapter = new MessageAdapter(Chat.this, ChatMessage1.class, R.layout.item_in_message,
-                                FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd);
+                                FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd,connectionlist);
                         listView.setAdapter(adapter);
                         return true; // Return true to collapse action view
                     }
@@ -452,41 +463,16 @@ public class Chat extends AppCompatActivity {
     private void showAllOldMessages(int cidd) {
         loggedInUserName = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d("lol",String.valueOf(cidd));
-
         adapter = new MessageAdapter(Chat.this, ChatMessage1.class, R.layout.item_in_message,
-                FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd);
+                FirebaseDatabase.getInstance().getReference("chats").child(String.valueOf(cidd)),cidd,connectionlist);
         listView.setAdapter(adapter);
-        /**clipboard=(ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        String content =listView.getItemAtPosition(position).toString();
-        Log.d("ronaldo",content);
-        myClip = ClipData.newPlainText("text",content);
-        clipboard.setPrimaryClip(myClip);
-        return false;
-        }
-        });**/
+
         TextView view = (TextView)findViewById(R.id.tv_date);
 
         listView.setOnScrollListener(new ChatOnScrollListener(view, adapter));
     }
 
-    public String activityname(){
-        mDatabase=FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(cidd));
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Activity1 post1 = dataSnapshot.getValue(Activity1.class);
-                activityName=post1.getName();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-        return activityName;
-    }
 
     public String getLoggedInUserName() {
         return loggedInUserName;

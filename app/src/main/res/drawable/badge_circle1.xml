@@ -6,10 +6,10 @@
     >
 
     <solid
-        android:color="#263238"
+        android:color="#5E35B1"
         />
     <stroke
-        android:color="#607D8B" />
+        android:color="#5E35B1" />
 
     <padding
         android:top="2dp"

@@ -9,7 +9,7 @@
         android:color="#263238"
         />
     <stroke
-        android:color="#607D8B" />
+        android:color="#263238" />
 
     <padding
         android:top="1dp"

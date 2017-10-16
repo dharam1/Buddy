@@ -77,6 +77,8 @@ public class SecondFragment extends Fragment {
     ArrayList<String> s_lastmessage = new ArrayList<String>();
     ArrayList<String> s_urllist = new ArrayList<String>();
     ArrayList<String> ss_urllist = new ArrayList<String>();
+    ArrayList<Long> message_time=new ArrayList<>();
+    ArrayList<Long> s_messagetime=new ArrayList<>();
     LinkedHashMap<String,String> s_connection_list=new LinkedHashMap<>();
     TextView datashow;
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -194,7 +196,7 @@ public class SecondFragment extends Fragment {
         });
 
 
-        MenuItem search =  menu.findItem(R.id.menu_search);
+        /**MenuItem search =  menu.findItem(R.id.menu_search);
         MenuItemCompat.setOnActionExpandListener(search,
                 new MenuItemCompat.OnActionExpandListener()
                 {
@@ -233,6 +235,8 @@ public class SecondFragment extends Fragment {
                             public boolean onQueryTextChange(String query) {
                                 s_connection_list.clear();
                                 ss_urllist.clear();
+                                s_lastmessage.clear();
+                                s_messagetime.clear();
                                 int i=0;
                                 for (Map.Entry<String, String> data : connection_list.entrySet()) {
                                     String name = data.getValue();
@@ -244,9 +248,10 @@ public class SecondFragment extends Fragment {
                                             String url = s_urllist.get(i);
                                             ss_urllist.add(url);
                                             s_lastmessage.add(last_message.get(i));
+                                            s_messagetime.add(message_time.get(i));
                                         }
                                     }
-                                    HashMapAdapter2s adapter = new HashMapAdapter2s(s_connection_list, ss_urllist, s_lastmessage,getContext());
+                                    HashMapAdapter2s adapter = new HashMapAdapter2s(s_connection_list, ss_urllist, s_lastmessage,s_messagetime,getContext());
                                     connectionlist.setAdapter(adapter);
                                     i++;
                                 }
@@ -255,7 +260,7 @@ public class SecondFragment extends Fragment {
                         });
                         return true; // Return true to expand action view
                     }
-                });
+                });**/
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -356,6 +361,7 @@ public class SecondFragment extends Fragment {
                                         }
                                     }
                                     last_message.add(message);
+                                    message_time.add(time);
                                     connection_class c=con_map.get(user1);
                                     if(c==null){
                                         Log.d("aswd","aswd");

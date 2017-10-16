@@ -86,7 +86,7 @@ public class PcChatAdapterSearch extends BaseAdapter {
         //messageText.setText(name);
         Spannable spannable = new SpannableString(name);
 
-        ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] {Color.parseColor("#FF0000")});
+        ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] {Color.parseColor("#FFEB3B")});
         TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
         int index=name.indexOf(query);
         Log.d("POPKLJMN",index+" -> "+name+" -> "+query);

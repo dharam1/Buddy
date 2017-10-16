@@ -271,19 +271,21 @@ public class HashMapAdapter2 extends BaseAdapter {
                                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    final String user =FirebaseAuth.getInstance().getCurrentUser().getUid();
                                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                                         for (DataSnapshot snapshot : postSnapshot.getChildren()) {
-                                                            user_activity use = snapshot.getValue(user_activity.class);
-                                                            String n = use.getUser();
-                                                            int x = use.getGlobal_buddies();
-                                                            if (n.equals(content) && x == 1) {
-                                                                snapshot.getRef().removeValue();
-                                                            } else if (n.equals(content) && x == 0&&use.getType().equals("Created")) {
-                                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(content).child(String.valueOf(use.getAid())).child("fromconnection");
-                                                                mDatabase.setValue(0);
-                                                            }
-                                                            else if (n.equals(content) && x == 0&&use.getType().equals("not created")) {
-                                                                snapshot.getRef().removeValue();
+                                                            if(snapshot.exists()) {
+                                                                user_activity use = snapshot.getValue(user_activity.class);
+                                                                String n = use.getUser();
+                                                                int x = use.getGlobal_buddies();
+                                                                if (n.equals(content) && x == 1) {
+                                                                    snapshot.getRef().removeValue();
+                                                                } else if (n.equals(content) && x == 0 && use.getType().equals("Created")) {
+                                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(content).child(String.valueOf(use.getAid())).child("fromconnection");
+                                                                    mDatabase.setValue(0);
+                                                                } else if (n.equals(content) && x == 0 && use.getType().equals("not created")) {
+                                                                    snapshot.getRef().removeValue();
+                                                                }
                                                             }
                                                         }
                                                     }
