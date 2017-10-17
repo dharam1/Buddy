@@ -12,6 +12,10 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +31,7 @@ import com.facebook.Profile;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -40,6 +45,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,6 +73,7 @@ public class Facebook_login extends AppCompatActivity{
     TextView textView,textView1;
     ArrayList<String> friends = new ArrayList<>();
     ArrayList<String> fbblockeduser = new ArrayList<>();
+    TextView textView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +87,17 @@ public class Facebook_login extends AppCompatActivity{
         textView =(TextView)findViewById(R.id.term);
         textView.setClickable(true);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
+        ImageView imageView =(ImageView)findViewById(R.id.logo);
         String text = "<a href='https://budddy-f974a.firebaseapp.com/'> terms and conditions </a>";
         textView.setText(Html.fromHtml(text));
 
+        Animation translateAnim= AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.top_to_bottom);
+        Picasso.with(getApplicationContext()).load(R.drawable.logo).fit().centerCrop().noFade().into(imageView);
+        translateAnim.setAnimationListener(FadeInAnimationListener);
+        imageView.startAnimation(translateAnim);
+        textView2=(TextView)findViewById(R.id.apptitle);
+        textView2.setVisibility(View.INVISIBLE);
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
         loginButton.setReadPermissions(Arrays.asList("public_profile","email","user_friends"));
@@ -142,6 +157,25 @@ public class Facebook_login extends AppCompatActivity{
 
 
     }
+    Animation.AnimationListener FadeInAnimationListener = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            textView2.setVisibility(View.VISIBLE);
+            Animation translateAnim1= AnimationUtils.loadAnimation(getApplicationContext(),
+                    R.anim.left_to_right);
+            textView2.startAnimation(translateAnim1);
+        }
+    };
+
 
     private void handleFacebookAccessToken(final AccessToken accessToken) {
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());

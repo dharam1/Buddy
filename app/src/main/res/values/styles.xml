@@ -20,6 +20,7 @@
     <style name="title" parent="@style/Base.TextAppearance.AppCompat.Title">
         <item name="android:textSize">18sp</item>
     </style>
+
     <style name="subtitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
         <item name="android:textSize">14dp</item>
     </style>

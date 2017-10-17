@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -179,7 +180,16 @@ public class SixthFragment extends Fragment {
             goLoginScreen();
         }
         if (item.getItemId() == R.id.menu_share) {
-            Toast.makeText(getContext(), "Implement Share", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey there, I am using Buddy App! Download the app now :D");
+                    sendIntent.setType("text/plain");
+                    startActivity(Intent.createChooser(sendIntent, "Buddy"));
+                }
+            }, 250);
         }
         if (item.getItemId() == R.id.menu_clear) {
             CheckInternetConnection c=new CheckInternetConnection();

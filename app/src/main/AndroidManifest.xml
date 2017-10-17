@@ -17,12 +17,13 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyARwT7PLLHKk_D_0oIcHJWU9jNlG3txD4Y" />
+
         <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Facebook_login"
             android:label="@string/app_name" />
@@ -38,13 +39,7 @@
         <activity
             android:name=".Launcher"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoDisplay">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@android:style/Theme.NoDisplay"></activity>
         <activity
             android:name=".Chat"
             android:label="@string/title_activity_chat"
@@ -52,10 +47,10 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="Chat" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".PcChat"
             android:label="@string/title_activity_pc_chat"
@@ -64,8 +59,10 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+
             <intent-filter>
                 <action android:name="PcChat" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -80,6 +77,20 @@
             android:name=".manageuser"
             android:label="@string/title_activity_manageuser"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".WelcomeActivity">
+
+        </activity>
+        <activity
+            android:name=".prelaunchcheck"
+            android:label="@string/title_activity_prelaunchcheck"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
