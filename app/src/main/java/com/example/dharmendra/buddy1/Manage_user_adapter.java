@@ -34,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -57,9 +58,9 @@ public class Manage_user_adapter extends BaseAdapter {
     ArrayList<String> send=new ArrayList<>();
     ArrayList<String> connection=new ArrayList<>();
     String admin,actname;
-    LinkedHashMap<String,String> connectionlist;
+    HashMap<String,String> connectionlist;
 
-    public Manage_user_adapter(LinkedHashMap<String, String> map ,int aid,ArrayList list,String admin,ArrayList send,ArrayList receive,ArrayList connection,String actname,LinkedHashMap<String,String> connectionlist1,Context context) {
+    public Manage_user_adapter(LinkedHashMap<String, String> map , int aid, ArrayList list, String admin, ArrayList send, ArrayList receive, ArrayList connection, String actname, HashMap<String,String> connectionlist1, Context context) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
        //Collections.reverse(mData);
@@ -71,7 +72,7 @@ public class Manage_user_adapter extends BaseAdapter {
         this.connection=connection;
         this.actname=actname;
         this.context=context;
-        connectionlist=new LinkedHashMap<>();
+        connectionlist=new HashMap<>();
         connectionlist=connectionlist1;
     }
 
@@ -121,15 +122,17 @@ public class Manage_user_adapter extends BaseAdapter {
                 }
             });
 
-        }else{**/
-            if(connectionlist.containsKey(item.getKey())){
+        }else{**/if(connectionlist!=null) {
+            if (connectionlist.containsKey(item.getKey())) {
                 ((TextView) result.findViewById(R.id.textView)).setText(connectionlist.get(item.getKey()));
-                Log.d("LOLPP",connectionlist.get(item.getKey()));
-            }
-            else {
+                Log.d("LOLPP", connectionlist.get(item.getKey()));
+            } else {
                 ((TextView) result.findViewById(R.id.textView)).setText(item.getValue());
-                Log.d("LOLPP",item.getKey());
+                Log.d("LOLPP", item.getKey());
             }
+        }
+        else
+            ((TextView) result.findViewById(R.id.textView)).setText(item.getValue());
         //}
 
         Log.d("grp info", user + " " + admin + " " + item.getKey());

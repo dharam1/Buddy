@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -418,7 +419,7 @@ public class SecondFragment extends Fragment {
 
                 }
                 else{
-                    datashow.setText("No Connection");
+                    datashow.setText(Html.fromHtml("<b>Friend List Empty</b> "));
                 }
             }
 

@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -226,7 +227,7 @@ public class FourthFragment extends Fragment {
                 adapter = new HashMapAdapter(content_list,address_list,getActivity(),getContext(),simpleList,getFragmentManager());
                 simpleList.setAdapter(adapter);
                 if(dis.equals(false)){
-                    datashow.setText("No Topic Exist");
+                    datashow.setText(Html.fromHtml("<b>No Topic Exist(s)</b> "));
                 }
         }
             @Override
@@ -235,132 +236,6 @@ public class FourthFragment extends Fragment {
             }
         });
 
-       /** simpleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
-                String content =simpleList.getItemAtPosition(position).toString();
-                String[] parts = content.split("=");
-                final int aid = Integer.parseInt(parts[0]);
-                Log.d("pelle",String.valueOf(aid));
-                Intent i = new Intent(getActivity(), Chat.class);
-                i.putExtra("int_key", aid);
-                startActivity(i);
-                getActivity().overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
-            }
-        });**/
-       /** simpleList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        simpleList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                final int checkedCount  = simpleList.getCheckedItemCount();
-                mode.setTitle(checkedCount  + "  Selected");
-                adapter.toggleSelection(position,simpleList);
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.multiple_delete, menu);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
-                switch  (item.getItemId()) {
-                    case R.id.selectAll:
-                        final int checkedCount  = content_list.size();
-                        adapter.removeSelection();
-                        for (int i = 0; i <  checkedCount; i++) {
-                            simpleList.setItemChecked(i,true);
-                        }
-                        mode.setTitle(checkedCount  + "  Selected");
-                        return true;
-                    case R.id.delete:
-                        AlertDialog.Builder  builder = new AlertDialog.Builder(
-                                getContext());
-                        builder.setMessage("Do you  want to delete selected topic(s)?");
-
-                        builder.setNegativeButton("No", new  DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void  onClick(DialogInterface dialog, int which) {
-                                // TODO  Auto-generated method stub
-
-                            }
-                        });
-                        builder.setPositiveButton("Yes", new  DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void  onClick(DialogInterface dialog, int which) {
-                                // TODO  Auto-generated method stub
-                                SparseBooleanArray  selected = adapter
-                                        .getSelectedIds();
-                                for (int i =  (selected.size() - 1); i >= 0; i--) {
-                                    if  (selected.valueAt(i)) {
-                                        String  selecteditem = adapter.getItem(selected.keyAt(i)).toString();
-                                        String[] parts = selecteditem.split("=");
-                                        final int aid = Integer.parseInt(parts[0]);
-                                        Log.d("ghjk",String.valueOf(aid));
-                                        if(haveNetworkConnection()){
-                                            mDatabase = FirebaseDatabase.getInstance().getReference("activity");
-                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot snapshot) {
-                                                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                                                        Activity1 post1 = postSnapshot.getValue(Activity1.class);
-                                                        int ccid=post1.getCcid();
-                                                        if(ccid==aid){
-                                                            postSnapshot.getRef().child("status").setValue(0);
-                                                            Toast.makeText(getContext(), "Succesfully Deleted", Toast.LENGTH_SHORT).show();
-                                                            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                                                            fragmentTransaction.replace(R.id.fourth, new FourthFragment());
-                                                            fragmentTransaction.commit();
-                                                            break;
-                                                        }
-
-                                                    }
-                                                }
-
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-                                                    Toast.makeText(getContext(), "\"The read failed: \"" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                        }
-                                        else{
-                                            Toast.makeText(getContext(), "Network Error", Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    }
-                                }
-                                mode.finish();
-                                selected.clear();
-
-                            }
-                        });
-                        AlertDialog alert =  builder.create();
-                        alert.setIcon(R.drawable.delete);// dialog  Icon
-                        alert.setTitle("Confirmation"); // dialog  Title
-                        alert.show();
-                        return true;
-                    default:
-                        return false;
-                }
-
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fourth, new FourthFragment());
-                fragmentTransaction.commit();
-            }
-        });**/
                 return rootview;
     }
 

@@ -64,7 +64,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -101,6 +103,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
     ImageButton imageButton;
     int global_position;
     Random rand;
+    long xxx;
     ArrayList<String> connectionlist=new ArrayList<>();
     ArrayList<String> x=new ArrayList<>(Arrays.asList("Barney","Ted","Marchel","Lily","Tyrion","Sersi","Rachel","Phoebe","Heisenberg","Joey","chandler","Jon Snow","Sansa"
             ,"Little Finger","Daenerys","Arya ","Joffery","Dwight","Jim","Angela","Kevin","Michael","Walter White","Jesse Pinkman","Skyler White"
@@ -363,147 +366,114 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                 if(!latitude.equals(0.0)&&!longitude.equals(0.0)){
                     //latitude = gps.getLatitude();
                     //longitude = gps.getLongitude();
+
                     user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    mDatabase = FirebaseDatabase.getInstance().getReference("activity");
-                    //flag=true;
-                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase=FirebaseDatabase.getInstance().getReference("activity");
+                    mDatabase.runTransaction(new Transaction.Handler() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            /**for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                             Activity1 post1 = postSnapshot.getValue(Activity1.class);
-                             int status=post1.getStatus();
-                             Double lat=post1.getLatitude();
-                             if (lat.equals(latitude)&&status==1){
-                             //flag = false;
-                             Log.d("flag", "fs");
-                             break;
-                             }
-                             }**/
-                            /**if (flag == false) {
-                             Log.d("flag", "f");
-                             Toast.makeText(getContext(), "Please go to another location", Toast.LENGTH_SHORT).show();
-                             editText.setText("");
-                             }**/
-                            // else{
-                            mDatabase = FirebaseDatabase.getInstance().getReference("activity");
-                            Query lastQuery = mDatabase.orderByKey().limitToLast(1);
-                            lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
-                                        Activity1 post1 = postSnapshot.getValue(Activity1.class);
-                                        ccid = post1.getCcid();
-                                        Log.d("flag",String.valueOf(ccid));
-                                    }
-                                    ccid=ccid+1;
-                                    if(ccid!=0){
-                                        Log.d("flag", "t");
-                                        mDatabase = FirebaseDatabase.getInstance().getReference("activity");
-                                        status=1;
-                                        String type1;
-                                        String mapurl="https://maps.googleapis.com/maps/api/staticmap?center="+latitude+","+longitude+"&zoom=15&size=400x400&markers=color:red%7Clabel:Topic%7C"+latitude+","+longitude+"&key=AIzaSyBjPFbHd4ZKsJwf7GfEPRBwH27oIBO8iqY";
-                                        act1 = new Activity1(user, content, latitude, longitude,ccid,status,address,global_position,mapurl);
-                                        rand=new Random();
-                                        String nickname=x.get(rand.nextInt(x.size()));
-                                        final String userId = mDatabase.push().getKey();
-                                        mDatabase.child(String.valueOf(ccid)).setValue(act1);
-                                        FirebaseDatabase.getInstance()
-                                                .getReference("chats").child(String.valueOf(ccid))
-                                                .push()
-                                                .setValue(new ChatMessage1("Welcome to "+content+" admin here",user,nickname)
-                                                );
-                                        final DatabaseReference mDatabase2 = FirebaseDatabase.getInstance().getReference("chats").child("nickname").child(String.valueOf(ccid));
-                                        mDatabase2.child(user).setValue(nickname);
-
-
-
-
-                                        Toast.makeText(getContext(), "Succesfully Added", Toast.LENGTH_SHORT).show();
-                                        /**-----------------------------------------------------------------------------------**/
-                                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(user).child(String.valueOf(ccid));
-                                        String type= "Created";
-                                        user_activity act=new user_activity(user,ccid,type,1,global_position,1);
-                                        mDatabase.setValue(act);
-
-
-                                        if(global_position==1) {
-                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
-                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    if (dataSnapshot.exists()) {
-                                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                            connection_type con = postSnapshot.getValue(connection_type.class);
-                                                            String user_name = con.getUid().toString();
-                                                            mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(user).child(String.valueOf(ccid));
-                                                            String type = "Created";
-                                                            user_activity act = new user_activity(user, ccid, type,1,global_position,1);
-                                                            mDatabase.setValue(act);
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                }
-                                            });
-                                        }
-                                        else{
-                                            Log.d("POPKLL","POPKLL_1");
-                                            mDatabase = FirebaseDatabase.getInstance().getReference("users");
-                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                                        user u=postSnapshot.getValue(user.class);
-                                                           if(connectionlist.contains(u.getUid())) {
-                                                               mDatabase = FirebaseDatabase.getInstance().getReference("users").child(u.getUid()).child("activity").child(user).child(String.valueOf(ccid));
-                                                               String type = "Created";
-                                                               user_activity act = new user_activity(user, ccid, type, 1,global_position,1);
-                                                               mDatabase.setValue(act);
-                                                           }
-                                                               else if(!u.getUid().equals(user)){
-                                                                   mDatabase = FirebaseDatabase.getInstance().getReference("users").child(u.getUid()).child("activity").child(user).child(String.valueOf(ccid));
-                                                                   String type = "Created";
-                                                                   user_activity act = new user_activity(user, ccid, type,0,global_position,1);
-                                                                   mDatabase.setValue(act);
-                                                               }
-                                                           }
-                                                        }
-
-
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                }
-                                            });
-                                        }
-
-
-
-
-                                        /**------------------------------------------------------------------------------------**/
-                                        pwindodd.dismiss();
-                                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                                        startActivity(intent);
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                            // }
+                        public Transaction.Result doTransaction(MutableData mutableData) {
+                            xxx=mutableData.getChildrenCount();
+                            return Transaction.success(mutableData);
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                        public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                            Log.d("POPIUY",xxx+" ");
+                            ccid=(int)xxx+1;
+                            if(ccid!=0){
+                                Log.d("flag", "t");
+                                mDatabase = FirebaseDatabase.getInstance().getReference("activity");
+                                status=1;
+                                String type1;
+                                String mapurl="https://maps.googleapis.com/maps/api/staticmap?center="+latitude+","+longitude+"&zoom=15&size=400x400&markers=color:red%7Clabel:Topic%7C"+latitude+","+longitude+"&key=AIzaSyBjPFbHd4ZKsJwf7GfEPRBwH27oIBO8iqY";
+                                act1 = new Activity1(user, content, latitude, longitude,ccid,status,address,global_position,mapurl);
+                                rand=new Random();
+                                String nickname=x.get(rand.nextInt(x.size()));
+                                final String userId = mDatabase.push().getKey();
+                                mDatabase.child(String.valueOf(ccid)).setValue(act1);
+                                FirebaseDatabase.getInstance()
+                                        .getReference("chats").child(String.valueOf(ccid))
+                                        .push()
+                                        .setValue(new ChatMessage1("Welcome to "+content+" admin here",user,nickname)
+                                        );
+                                final DatabaseReference mDatabase2 = FirebaseDatabase.getInstance().getReference("chats").child("nickname").child(String.valueOf(ccid));
+                                mDatabase2.child(user).setValue(nickname);
 
+
+
+
+                                Toast.makeText(getContext(), "Succesfully Added", Toast.LENGTH_SHORT).show();
+                                /**-----------------------------------------------------------------------------------**/
+                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity").child(user).child(String.valueOf(ccid));
+                                String type= "Created";
+                                user_activity act=new user_activity(user,ccid,type,1,global_position,1);
+                                mDatabase.setValue(act);
+
+
+                                if(global_position==1) {
+                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+                                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                    connection_type con = postSnapshot.getValue(connection_type.class);
+                                                    String user_name = con.getUid().toString();
+                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_name).child("activity").child(user).child(String.valueOf(ccid));
+                                                    String type = "Created";
+                                                    user_activity act = new user_activity(user, ccid, type,1,global_position,1);
+                                                    mDatabase.setValue(act);
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+                                else{
+                                    Log.d("POPKLL","POPKLL_1");
+                                    mDatabase = FirebaseDatabase.getInstance().getReference("users");
+                                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                                user u=postSnapshot.getValue(user.class);
+                                                if(connectionlist.contains(u.getUid())) {
+                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(u.getUid()).child("activity").child(user).child(String.valueOf(ccid));
+                                                    String type = "Created";
+                                                    user_activity act = new user_activity(user, ccid, type, 1,global_position,1);
+                                                    mDatabase.setValue(act);
+                                                }
+                                                else if(!u.getUid().equals(user)){
+                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(u.getUid()).child("activity").child(user).child(String.valueOf(ccid));
+                                                    String type = "Created";
+                                                    user_activity act = new user_activity(user, ccid, type,0,global_position,1);
+                                                    mDatabase.setValue(act);
+                                                }
+                                            }
+                                        }
+
+
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+
+                                /**------------------------------------------------------------------------------------**/
+                                pwindodd.dismiss();
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                startActivity(intent);
+                            }
                         }
                     });
+
+
 
                 }
                 else{

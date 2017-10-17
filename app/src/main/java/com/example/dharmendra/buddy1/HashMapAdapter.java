@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -124,12 +125,48 @@ public class HashMapAdapter extends BaseAdapter {
 
             }
         });
+
+        final LinkedHashMap<String ,String> connectionlist =new LinkedHashMap<>();
+        final String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey()).child("name");
+                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    connectionlist.put(postSnapshot.getKey(), dataSnapshot.getValue().toString());
+                                    Log.d("LOLPP", postSnapshot.getKey() + "   " + dataSnapshot.getValue());
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int aid=item.getKey();
                 Intent i = new Intent(act, Chat.class);
                 i.putExtra("int_key", aid);
+                i.putExtra("con_list",connectionlist);
                 act.startActivity(i);
                 act.overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }

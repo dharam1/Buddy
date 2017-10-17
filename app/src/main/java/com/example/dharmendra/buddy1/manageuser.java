@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 
@@ -64,7 +65,7 @@ public class manageuser extends AppCompatActivity  {
     String admin,activityName;
     ImageView mapImage;
     LatLng pos;
-    LinkedHashMap<String,String> connectionlist=new LinkedHashMap<>();
+    HashMap<String,String> connectionlist=new LinkedHashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,7 @@ public class manageuser extends AppCompatActivity  {
         b= getIntent().getExtras();
         if (b!= null){
             cidd=b.getInt("int_key");
+            connectionlist= (HashMap<String, String>)getIntent().getSerializableExtra("con_list");
         }
 
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -253,32 +255,6 @@ public class manageuser extends AppCompatActivity  {
             }
         });
 
-        mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    mDatabase=FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey()).child("name");
-                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            connectionlist.put(postSnapshot.getKey(),dataSnapshot.getValue().toString());
-                            Log.d("LOLPP",postSnapshot.getKey()+"   "+dataSnapshot.getValue());
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
 
 

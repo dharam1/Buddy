@@ -43,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
@@ -76,7 +77,8 @@ public class Chat extends AppCompatActivity {
     ArrayList<String> search_user_list=new ArrayList<>();
     ArrayList<String> search_list=new ArrayList<>();
     ArrayList<String> search_nick=new ArrayList<>();
-    LinkedHashMap<String,String> connectionlist=new LinkedHashMap<>();
+    HashMap<String,String> connection_list=new HashMap<>();
+    HashMap<String,String> connectionlist=new HashMap<>();
     TopicChatAdapterSearch searchadapter;
     FirebaseAuth firebaseAuth;
     ArrayList<String> x=new ArrayList<>(Arrays.asList("Barney","Ted","Marchel","Lily","Tyrion","Sersi","Rachel","Phoebe","Heisenberg","Joey","chandler","Jon Snow","Sansa"
@@ -149,6 +151,7 @@ public class Chat extends AppCompatActivity {
             b = getIntent().getExtras();
             if (b != null) {
                 cidd = b.getInt("int_key");
+                connectionlist=(HashMap<String, String>)getIntent().getSerializableExtra("con_list");
             }
         }
 
@@ -158,6 +161,7 @@ public class Chat extends AppCompatActivity {
 
                 Intent i = new Intent(Chat.this, manageuser.class);
                 i.putExtra("int_key", cidd);
+                i.putExtra("con_list",connection_list);
                 startActivity(i);
                 overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
@@ -189,19 +193,23 @@ public class Chat extends AppCompatActivity {
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
                 for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    mDatabase=FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey()).child("name");
-                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            connectionlist.put(postSnapshot.getKey(),dataSnapshot.getValue().toString());
-                        }
+                        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey()).child("name");
+                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    connection_list.put(postSnapshot.getKey(), dataSnapshot.getValue().toString());
+                                }
+                            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
             }
 

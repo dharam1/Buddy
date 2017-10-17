@@ -17,9 +17,13 @@
 
         tools:context="com.example.dharmendra.buddy1.ThirdFragment">
         <TextView
-        android:id="@+id/datashow"
-        android:layout_width="match_parent"
-        android:layout_height="99dp" />
+            android:id="@+id/datashow"
+            android:layout_gravity="center_vertical"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:textColor="@color/linkColor"
+            android:layout_width="match_parent"
+            android:layout_height="99dp" />
 
 
         <android.support.v4.widget.SwipeRefreshLayout

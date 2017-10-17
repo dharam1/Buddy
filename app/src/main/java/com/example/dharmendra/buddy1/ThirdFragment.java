@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -240,7 +241,7 @@ public class ThirdFragment extends Fragment {
                 Log.d("pelle", String.valueOf(request_list));
             }
             else{
-                    datashow.setText("No Request");
+                    datashow.setText(Html.fromHtml("<b>You have no new Request</b> "));
                 }
             }
 

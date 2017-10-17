@@ -15,6 +15,7 @@ import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -259,7 +260,7 @@ public class SixthFragment extends Fragment {
 
                 }
                 else{
-                    datashow.setText("No Notification");
+                    datashow.setText(Html.fromHtml("<b>No Notification(s)</b> "));
                 }
             }
 

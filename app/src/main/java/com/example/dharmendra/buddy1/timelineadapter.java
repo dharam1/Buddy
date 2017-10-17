@@ -83,6 +83,7 @@ public class timelineadapter extends BaseAdapter {
     String type1;
     int count = 0;
 
+
     public timelineadapter(LinkedHashMap<Integer,Integer> map, ArrayList<TimeLineClass> list,Context context/**, LinkedHashMap<String, String> map2, LinkedHashMap<String, Long> map3**/, Activity act, FragmentManager fragmentManager,Bundle b) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
@@ -116,8 +117,6 @@ public class timelineadapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final View result;
-        MapView mapView;
-
 
 
         if (convertView == null) {
@@ -410,12 +409,46 @@ public class timelineadapter extends BaseAdapter {
                 }
             });
         }
-    cardView.setOnClickListener(new View.OnClickListener() {
+        final LinkedHashMap<String ,String> connectionlist =new LinkedHashMap<>();
+        final String user =FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if (dataSnapshot.exists()) {
+        for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey()).child("name");
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            connectionlist.put(postSnapshot.getKey(), dataSnapshot.getValue().toString());
+                            Log.d("LOLPP", postSnapshot.getKey() + "   " + dataSnapshot.getValue());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+        });
+
+        cardView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             int aid=followeduser.get(position).getAid();
             Intent i = new Intent(act, Chat.class);
             i.putExtra("int_key", aid);
+            i.putExtra("con_list",connectionlist);
             act.startActivity(i);
             act.overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
 

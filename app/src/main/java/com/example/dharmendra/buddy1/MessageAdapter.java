@@ -45,16 +45,16 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
     View prevItem = null;
     int prevPos = Integer.MAX_VALUE;
     int count = 0;
-    LinkedHashMap<String,String> connectionlist;
+    HashMap<String,String> connectionlist;
 
-    public MessageAdapter(Chat activity, Class<ChatMessage1> modelClass, int modelLayout, DatabaseReference ref, int cidd, LinkedHashMap<String,String> connectionlist1) {
+    public MessageAdapter(Chat activity, Class<ChatMessage1> modelClass, int modelLayout, DatabaseReference ref, int cidd, HashMap<String,String> connectionlist1) {
         super(activity, modelClass, modelLayout, ref);
         this.activity = activity;
         this.mDatabase1=ref;
         this.cidd=cidd;
         map = new SparseIntArray();
         user=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        connectionlist=new LinkedHashMap<>();
+        connectionlist=new HashMap<>();
         connectionlist=connectionlist1;
     }
 
@@ -121,11 +121,14 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage1> {
             messageUser.setText("You");
         }
         else {
-            if(connectionlist.containsKey(model.getMessageUserId())){
-                messageUser.setText(connectionlist.get(model.getMessageUserId()));
+            if(connectionlist!=null) {
+                if (connectionlist.containsKey(model.getMessageUserId())) {
+                    messageUser.setText(connectionlist.get(model.getMessageUserId()));
+                } else
+                    messageUser.setText(model.getNickname());
             }
             else
-            messageUser.setText(model.getNickname());
+                messageUser.setText(model.getNickname());
         }
         // Format the date before showing it
         //messageTime.setText(DateFormat.format("dd/MM/yyyy", model.getMessageTime()).toString());

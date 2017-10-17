@@ -302,7 +302,7 @@ public class Facebook_login extends AppCompatActivity{
                                             Activity1 act=postSnapshot.getValue(Activity1.class);
                                             if(act.getType()==0){
                                                 mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user_id).child("activity").child(act.getUser()).child(String.valueOf(act.getCcid()));
-                                                user_activity a=new user_activity(act.getUser(),act.getCcid(),"Created",0,0,1);
+                                                initial_user_activity a=new initial_user_activity(act.getUser(),act.getCcid(),"Created",0,0,1,act.getActdate());
                                                 mDatabase.setValue(a);
                                             }
                                         }

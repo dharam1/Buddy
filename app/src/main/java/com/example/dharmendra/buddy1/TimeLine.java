@@ -69,7 +69,6 @@ public class TimeLine extends Fragment {
     ListView timeline;
     LinkedHashMap<String ,String> followedactivity =new LinkedHashMap<>();
     LinkedHashMap<Integer ,Integer> followedactivityid =new LinkedHashMap<>();
-    LinkedHashMap<String ,Long> followeddate =new LinkedHashMap<>();
     LinkedHashMap<Integer ,String> followeduser =new LinkedHashMap<>();
     timelineadapter adapter;
     String name,n;
@@ -236,11 +235,12 @@ public class TimeLine extends Fragment {
         final ArrayList<TimeLineClass> timeLinelist=new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            int io = 0;
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
+                    followedactivityid.clear();
+                    timeLinelist.clear();
+                    int io = 0;
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     if (!postSnapshot.getKey().equals(user)) {
                         for (DataSnapshot snapshot : postSnapshot.getChildren()) {
