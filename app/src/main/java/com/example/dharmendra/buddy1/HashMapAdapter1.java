@@ -169,99 +169,96 @@ public class HashMapAdapter1 extends BaseAdapter {
         }
         //timev.setText(DateFormat.format("dd-MM-yyyy (HH:mm)", t));
 
-       accept.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 final String content=item.getKey();
-               CheckInternetConnection c=new CheckInternetConnection();
-               if(c.haveNetworkConnection()){
-                   c_count=0;
-                   mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
-                   mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                       @Override
-                       public void onDataChange(DataSnapshot dataSnapshot) {
-                           for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                               c_count = c_count + 1;
-                               Log.d("kumree",String.valueOf(c_count));
-                           }
-                           if(c_count>2000){
-                               Toast.makeText(context, "Delete non recent connection (max allow 2000)", Toast.LENGTH_SHORT).show();
-                           }else{
-                               mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("receiveFrom");
-                               mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                   @Override
-                                   public void onDataChange(DataSnapshot dataSnapshot) {
-                                       for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                           Model m = postSnapshot.getValue(Model.class);
-                                           String user=FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                           String user1=m.getUser();
-                                           if(user1.equals(content)){
-                                               postSnapshot.getRef().removeValue();
-                                               mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
-                                               final String userId = mDatabase.push().getKey();
-                                               connection_type con=new connection_type(user1,"Buddy");
-                                               mDatabase.child(user1).setValue(con);
-                                               Toast.makeText(context, "Accepted ", Toast.LENGTH_SHORT).show();
-                                               //FragmentTransaction fragmentTransaction = act.getFragmentManager().beginTransaction();
-                                              //Fragment fragment=new ThirdFragment();
-                                               fragmentManager .beginTransaction().replace(R.id.third, new ThirdFragment()).commit();
-                                               break;
-                                           }
-                                       }
-                                   }
+                CheckInternetConnection c=new CheckInternetConnection();
+                if(c.haveNetworkConnection()){
+                    c_count=0;
+                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            c_count=(int)dataSnapshot.getChildrenCount();
+                            if(c_count>2000){
+                                Toast.makeText(context, "Delete non recent connection (max allow 2000)", Toast.LENGTH_SHORT).show();
+                            }else{
+                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("receiveFrom");
+                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                            Model m = postSnapshot.getValue(Model.class);
+                                            String user=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                            String user1=m.getUser();
+                                            if(user1.equals(content)){
+                                                postSnapshot.getRef().removeValue();
+                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+                                                final String userId = mDatabase.push().getKey();
+                                                connection_type con=new connection_type(user1,"Buddy");
+                                                mDatabase.child(user1).setValue(con);
+                                                Toast.makeText(context, "Accepted ", Toast.LENGTH_SHORT).show();
+                                                //FragmentTransaction fragmentTransaction = act.getFragmentManager().beginTransaction();
+                                                //Fragment fragment=new ThirdFragment();
+                                                fragmentManager .beginTransaction().replace(R.id.third, new ThirdFragment()).commit();
+                                                break;
+                                            }
+                                        }
+                                    }
 
-                                   @Override
-                                   public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                   }
-                               });
-                               mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("sendTo");
-                               mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                   @Override
-                                   public void onDataChange(DataSnapshot dataSnapshot) {
-                                       for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                           Model m = postSnapshot.getValue(Model.class);
-                                           String user1=m.getUser();
-                                           String user_login=FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                           String activityname=m.getActivityname();
-                                           if(user1.equals(user_login)){
-                                               postSnapshot.getRef().removeValue();
-                                               mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("Noti");
-                                               int seen=0;
-                                               final String userId = mDatabase.push().getKey();
-                                               long time = new Date().getTime();
-                                               Model3 m1=new Model3(user_login,activityname,seen,time);
-                                               mDatabase.child(userId).setValue(m1);
-                                               mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("connection");
-                                               final String user_Id = mDatabase.push().getKey();
-                                               connection_type con=new connection_type(user_login,"Buddy");
-                                               mDatabase.child(user_login).setValue(con);
-                                               break;
-                                           }
-                                       }
-                                   }
+                                    }
+                                });
+                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("sendTo");
+                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                            Model m = postSnapshot.getValue(Model.class);
+                                            String user1=m.getUser();
+                                            String user_login=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                            String activityname=m.getActivityname();
+                                            if(user1.equals(user_login)){
+                                                postSnapshot.getRef().removeValue();
+                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("Noti");
+                                                int seen=0;
+                                                final String userId = mDatabase.push().getKey();
+                                                long time = new Date().getTime();
+                                                Model3 m1=new Model3(user_login,activityname,seen,time);
+                                                mDatabase.child(userId).setValue(m1);
+                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("connection");
+                                                final String user_Id = mDatabase.push().getKey();
+                                                connection_type con=new connection_type(user_login,"Buddy");
+                                                mDatabase.child(user_login).setValue(con);
+                                                break;
+                                            }
+                                        }
+                                    }
 
-                                   @Override
-                                   public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                   }
-                               });
-                           }
-                       }
+                                    }
+                                });
+                            }
+                        }
 
-                       @Override
-                       public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                       }
-                   });
+                        }
+                    });
 
-               }
-               else{
-                   Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
-               }
+                }
+                else{
+                    Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
+                }
 
-           }
-       });
+            }
+        });
         reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

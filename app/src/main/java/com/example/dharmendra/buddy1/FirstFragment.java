@@ -6,6 +6,7 @@ package com.example.dharmendra.buddy1;
 
 import android.*;
 import android.app.Dialog;
+import android.app.IntentService;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +34,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -50,6 +57,10 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+
 import static com.example.dharmendra.buddy1.R.id.map;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -65,6 +76,7 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
     GPSTracker gps;
     Double latitude=0.0,longitude=0.0;
     LatLng pos;
+    PlaceAutocompleteFragment autocompleteFragment;
     int count;
 
 
@@ -78,7 +90,7 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        getActivity().setTitle("Map");
+
         gps=new GPSTracker(getContext());
         if (gps.canGetLocation()) {
             latitude = gps.getLatitude();
@@ -87,156 +99,37 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
                 //Toast.makeText(getContext(), "Please Refresh to get Location", Toast.LENGTH_SHORT).show();
             }
         } else {
+            //Toast.makeText(getActivity(), "False", Toast.LENGTH_SHORT).show();
             gps.showSettingsAlert();
         }
-        pos = new LatLng(latitude,longitude);
+        pos = new LatLng(21.753109, -10.696095);
 
         }
-    private void goLoginScreen() {
-        Intent intent = new Intent(getContext(), Facebook_login.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.main_first, menu);
-        RelativeLayout noti = (RelativeLayout) menu.findItem(R.id.noti).getActionView();
-        final TextView notimCounter = (TextView) noti.findViewById(R.id.counter);
-        ImageButton notiimgb=(ImageButton)noti.findViewById(R.id.imgbutton);
-        notiimgb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = SixthFragment.newInstance();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.content, fragment);
-                fragmentTransaction.commit();
-            }
-        });
-
-        /**-----------------------------------------------Notification-------------------------------------------**/
-        user_login=  FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabase1= FirebaseDatabase.getInstance().getReference("users").child(user_login).child("Noti");
-        mDatabase1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                count=0;
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Model1 m = postSnapshot.getValue(Model1.class);
-                    int seen=m.getSeen();
-                    if(seen==0){
-                        count=count+1;
-                    }
-                }
-                Log.d("pele",String.valueOf(count));
-
-                notimCounter.setText(String.valueOf(count));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        /**---------------------------------------------------------------------------------------------------------**/
-
-
-
-
-        RelativeLayout badgeLayout = (RelativeLayout) menu.findItem(R.id.navigation_request).getActionView();
-        final TextView mCounter = (TextView) badgeLayout.findViewById(R.id.counter);
-        ImageButton imgb=(ImageButton)badgeLayout.findViewById(R.id.imgbutton);
-        imgb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = ThirdFragment.newInstance();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.content, fragment);
-                fragmentTransaction.commit();
-            }
-        });
-
-/**-----------------------------------------------Notification_Request-------------------------------------------**/
-        user_login=  FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabase1= FirebaseDatabase.getInstance().getReference("users").child(user_login).child("receiveFrom");
-        mDatabase1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                count=0;
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Model1 m = postSnapshot.getValue(Model1.class);
-                    int seen=m.getSeen();
-                    if(seen==0){
-                        count=count+1;
-
-                    }
-                }
-                Log.d("pele",String.valueOf(count));
-
-                mCounter.setText(String.valueOf(count));
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        /**---------------------------------------------------------------------------------------------------------**/
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.menu_sign_out) {
-           /** user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("token");
-            mDatabase.removeValue();**/
-            FirebaseAuth firebaseAuth= FirebaseAuth.getInstance();
-            firebaseAuth.signOut();
-            LoginManager.getInstance().logOut();
-            Toast.makeText(getContext(), "Logged Out", Toast.LENGTH_SHORT).show();
-            goLoginScreen();
-        }
-        if (item.getItemId() == R.id.menu_share) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey there, I am using Buddy App! Download the app now :D");
-                    sendIntent.setType("text/plain");
-                    startActivity(Intent.createChooser(sendIntent, "Buddy"));
-                }
-            }, DRAWER_DELAY);
-        }
-        /**if (item.getItemId() == R.id.refresh) {
-            Fragment fragment = FirstFragment.newInstance();
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.first, fragment);
-            fragmentTransaction.commit();
-        }**/
-
-
-        return false;
-    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
           View rootview= inflater.inflate(R.layout.fragment_first, container, false);
-
         mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(map);
+        autocompleteFragment = (PlaceAutocompleteFragment)getActivity().
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                //Toast.makeText(getActivity(), "Place: "+place.getLatLng(), Toast.LENGTH_SHORT).show();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),13));
+            }
+
+            @Override
+            public void onError(Status status) {
+
+            }
+        });
         mapFragment.getMapAsync(this);
-
-
-
 
         return rootview;
         }
-
-
-
 
     @Override
     public void onAttach(Context context) {
@@ -263,53 +156,85 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
         gps = new GPSTracker(getContext());
-        /**final ProgressDialog Dialog = new ProgressDialog(getContext());
-        Dialog.setMessage("Loading...");
-        Dialog.setCanceledOnTouchOutside(false);
-        Dialog.show();**/
         /**------------------------------------------------------------------------------------------**/
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    user_activity use=postSnapshot.getValue(user_activity.class);
-                    final int aid=Integer.parseInt(String.valueOf(use.getAid()));
-                    Log.d("popkl",String.valueOf(aid));
-                   mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(aid));
-                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Log.d("popkl","execute");
-                            Activity1 post1 = dataSnapshot.getValue(Activity1.class);
-                            int status=post1.getStatus();
-                            String f_id = post1.getUser();
-                            String n = post1.getName();
-                            Double l = post1.getLatitude();
-                            Double lo = post1.getLongitude();
-                            int ccid=post1.getCcid();
-                            ig = new IconGenerator(getApplicationContext());
-                            Bitmap bmp = ig.makeIcon(n);
-                            if(status==1) {
-                                Boolean check = false;
-                                if (f_id.equals(user)) {
-                                    check = true;
-                                    addItems(l, lo, n, ccid, check);
-                                } else {
-                                    addItems(l, lo, n, ccid, check);
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        if (!postSnapshot.getKey().equals(user)) {
+                            for (DataSnapshot snapshot : postSnapshot.getChildren()) {
+                                user_activity use = snapshot.getValue(user_activity.class);
+                                final int aid = Integer.parseInt(String.valueOf(use.getAid()));
+                                final String userid = use.getUser();
+                                final long time = use.getTime();
+                                Date d=new Date(time);
+                                if (use.getFromconnection() == 1&&use.getStatus()==1&&use.getType().equals("Created")) {
+                                    Log.d("POPIKLJ",aid+"");
+                                    mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(aid));
+                                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            Log.d("popkl","execute");
+                                            Activity1 post1 = dataSnapshot.getValue(Activity1.class);
+                                            String f_id = post1.getUser();
+                                            String n = post1.getName();
+                                            Double l = post1.getLatitude();
+                                            Double lo = post1.getLongitude();
+                                            int ccid=post1.getCcid();
+                                            ig = new IconGenerator(getApplicationContext());
+                                            Bitmap bmp = ig.makeIcon(n);
+                                                Boolean check = true;
+                                                    addItems(l, lo, n, ccid, check);
+                                            //aidlist.add(aid);
+                                            //customRenderer = new CustomRenderer(getApplicationContext(), mMap, mClusterManager);
+                                            //mClusterManager.setRenderer(customRenderer);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+                                } else{
+                                    if(use.getStatus()==1&&use.getType().equals("Created")) {
+                                        mDatabase = FirebaseDatabase.getInstance().getReference("activity").child(String.valueOf(aid));
+                                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                Log.d("popkl","execute");
+                                                Activity1 post1 = dataSnapshot.getValue(Activity1.class);
+                                                int status=post1.getStatus();
+                                                String f_id = post1.getUser();
+                                                String n = post1.getName();
+                                                Double l = post1.getLatitude();
+                                                Double lo = post1.getLongitude();
+                                                int ccid=post1.getCcid();
+                                                ig = new IconGenerator(getApplicationContext());
+                                                Bitmap bmp = ig.makeIcon(n);
+                                                        boolean check=false;
+                                                        addItems(l, lo, n, ccid, check);
+                                                //aidlist.add(aid);
+                                                //customRenderer = new CustomRenderer(getApplicationContext(), mMap, mClusterManager);
+                                                //mClusterManager.setRenderer(customRenderer);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
                                 }
                             }
-                            customRenderer = new CustomRenderer(getApplicationContext(), mMap, mClusterManager);
-                            mClusterManager.setRenderer(customRenderer);
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
+                    }
+                    customRenderer = new CustomRenderer(getApplicationContext(), mMap, mClusterManager);
+                    mClusterManager.setRenderer(customRenderer);
                 }
             }
 
@@ -319,96 +244,7 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
             }
         });
 
-
-
-
-
-        /**------------------------------------------------------------------------------------------**/
-        /**user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabase = FirebaseDatabase.getInstance().getReference("activity");
-        mDatabase.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                Activity1 post1 = dataSnapshot.getValue(Activity1.class);
-                int status=post1.getStatus();
-                String f_id = post1.getUser();
-                String n = post1.getName();
-                Double l = post1.getLatitude();
-                Double lo = post1.getLongitude();
-                int ccid=post1.getCcid();
-                ig = new IconGenerator(getApplicationContext());
-                Bitmap bmp = ig.makeIcon(n);
-                if(status==1) {
-                    Boolean check = false;
-                    if (f_id.equals(user)) {
-                        check = true;
-                        addItems(l, lo, n, ccid, check);
-                    } else {
-                        addItems(l, lo, n, ccid, check);
-                    }
-                }
-                customRenderer = new CustomRenderer(getApplicationContext(), mMap, mClusterManager);
-                mClusterManager.setRenderer(customRenderer);
-               // Dialog.hide();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                mMap.clear();
-                mClusterManager.clearItems();
-                Log.d("ronaldo","messi");
-                mDatabase = FirebaseDatabase.getInstance().getReference("activity");
-                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        Log.d("ronaldo","messi1");
-                        for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                            Activity1 post1 = postSnapshot.getValue(Activity1.class);
-                            int status=post1.getStatus();
-                            String f_id = post1.getUser();
-                            String n = post1.getName();
-                            Double l = post1.getLatitude();
-                            Double lo = post1.getLongitude();
-                            int ccid=post1.getCcid();
-                            ig = new IconGenerator(getApplicationContext());
-                            Bitmap bmp = ig.makeIcon(n);
-                            if(status==1) {
-                                Boolean check = false;
-                                if (f_id.equals(user)) {
-                                    check = true;
-                                    addItems(l, lo, n, ccid, check);
-                                } else {
-                                    addItems(l, lo, n, ccid, check);
-                                }
-                            }
-                            customRenderer = new CustomRenderer(getApplicationContext(), mMap, mClusterManager);
-                            mClusterManager.setRenderer(customRenderer);
-                        }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        }
-                });
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });**/
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 4));
         mClusterManager = new ClusterManager<>(getContext(), mMap);
         mMap.setOnMarkerClickListener(mClusterManager);
         mMap.setOnCameraIdleListener(mClusterManager);
@@ -445,6 +281,16 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Clust
         startActivity(i);
         getActivity().overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
         return false;
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
 
     }

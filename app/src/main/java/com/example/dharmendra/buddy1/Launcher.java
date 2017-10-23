@@ -58,11 +58,7 @@ public class Launcher extends AppCompatActivity {
         GenTime(getApplicationContext());
 
         Log.d("POPKLJMN","called1");
-        if (!calledAlready)
-        {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            calledAlready = true;
-        }
+
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if(user != null){
@@ -75,6 +71,7 @@ public class Launcher extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             finish();
             startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
 
 

@@ -163,6 +163,7 @@ public class HashMapAdapter2 extends BaseAdapter {
             lmv.setLayoutParams(params);
             Log.d("hjk", "inside");
         } else {
+            counter.setVisibility(View.VISIBLE);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) lmv.getLayoutParams();
             params.weight = 7.0f;
             lmv.setLayoutParams(params);
@@ -174,7 +175,7 @@ public class HashMapAdapter2 extends BaseAdapter {
             Log.d("hjk", "inside");
         } else {
             int size = lm.length();
-
+            lmv.setVisibility(View.VISIBLE);
             lmv.setText(lm);
         }
 
@@ -249,9 +250,6 @@ public class HashMapAdapter2 extends BaseAdapter {
 
                                                             }
                                                         });
-
-
-
 
                                                     }
                                                 }
@@ -345,17 +343,18 @@ public class HashMapAdapter2 extends BaseAdapter {
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                                         for (DataSnapshot Snapshot : postSnapshot.getChildren()) {
-                                                            user_activity use = Snapshot.getValue(user_activity.class);
-                                                            String n = use.getUser();
-                                                            int x = use.getGlobal_buddies();
-                                                            if (n.equals(user) && x == 1) {
-                                                                Snapshot.getRef().removeValue();
-                                                            } else if (n.equals(user) && x == 0&&use.getType().equals("Created")) {
-                                                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity").child(user).child(String.valueOf(use.getAid())).child("fromconnection");
-                                                                mDatabase.setValue(0);
-                                                            }
-                                                            else if (n.equals(user) && x == 0&&use.getType().equals("not created")) {
-                                                                Snapshot.getRef().removeValue();
+                                                            if (Snapshot.exists()) {
+                                                                user_activity use = Snapshot.getValue(user_activity.class);
+                                                                String n = use.getUser();
+                                                                int x = use.getGlobal_buddies();
+                                                                if (n.equals(user) && x == 1) {
+                                                                    Snapshot.getRef().removeValue();
+                                                                } else if (n.equals(user) && x == 0 && use.getType().equals("Created")) {
+                                                                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(content).child("activity").child(user).child(String.valueOf(use.getAid())).child("fromconnection");
+                                                                    mDatabase.setValue(0);
+                                                                } else if (n.equals(user) && x == 0 && use.getType().equals("not created")) {
+                                                                    Snapshot.getRef().removeValue();
+                                                                }
                                                             }
                                                         }
                                                     }

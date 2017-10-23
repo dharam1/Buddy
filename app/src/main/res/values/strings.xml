@@ -11,7 +11,7 @@
     <string name="image">Image</string>
     <string name="title_activity_facebook_login">Facebook_login</string>
     <string name="firebase_error_login">Firebase Login Error</string>
-    <string name="facebook_app_id">146530042560049</string>
+    <string name="facebook_app_id">127094784619228</string>
     <string name="title_activity_chat"></string>
     <string name="title_activity_pc_chat"></string>
     <string name="tagline">Xplore</string>
@@ -32,11 +32,12 @@
     <string name="slide_1_title">Planning something?</string>
     <string name="slide_1_desc">Post it and share it with your buddies!</string>
 
-    <string name="slide_2_title">Want to discuss a plan?</string>
-    <string name="slide_2_desc">Chat and discuss it with your buddies!</string>
+    <string name="slide_2_title">Want to go out but dont have company?</string>
+    <string name="slide_2_desc">Come on board and meet new people!</string>
 
     <string name="slide_3_title">Hello Buddy!</string>
     <string name="slide_3_desc">Buddy makes it easier to connect with your buddies!</string>
     <string name="title_activity_prelaunchcheck">Buddy</string>
+    <string name="title_activity_maps_topic">maps_topic</string>
 
 </resources>

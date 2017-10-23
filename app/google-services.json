@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "366001471730",
-    "firebase_url": "https://budddy-f974a.firebaseio.com",
-    "project_id": "budddy-f974a",
-    "storage_bucket": "budddy-f974a.appspot.com"
+    "project_number": "804817924221",
+    "firebase_url": "https://buddy-cf40e.firebaseio.com",
+    "project_id": "buddy-cf40e",
+    "storage_bucket": "buddy-cf40e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:366001471730:android:7575cc6f39784237",
+        "mobilesdk_app_id": "1:804817924221:android:7575cc6f39784237",
         "android_client_info": {
-          "package_name": "com.example.dharmendra.buddy1"
+          "package_name": "com.developers.buddy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "366001471730-8qoukf4b89rv7nubdqmm8i15safooueq.apps.googleusercontent.com",
+          "client_id": "804817924221-3kd88qq4i0ju1is18g0l9megqmo1ahk8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAotnpJafLt3HCZAaB0RG_i9DKHk-uz2FI"
+          "current_key": "AIzaSyB7uzdmLBNAqqr9rsww-oDPQxZRwoqh8SE"
         }
       ],
       "services": {

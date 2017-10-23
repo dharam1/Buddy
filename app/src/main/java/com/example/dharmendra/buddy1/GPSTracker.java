@@ -63,8 +63,7 @@ public class GPSTracker extends Service implements android.location.LocationList
     public Location getLocation() {
         locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //Toast.makeText(mContext, "Please Go to Settings and grant the Permission", Toast.LENGTH_SHORT).show()
-
+            //Toast.makeText(mContext, "Please Go to Settings and grant the Permission", Toast.LENGTH_SHORT).show();
         } else {
             try {
 

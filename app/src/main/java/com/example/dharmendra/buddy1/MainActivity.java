@@ -182,7 +182,7 @@ FifthFragment.OnFragmentInteractionListener,SixthFragment.OnFragmentInteractionL
                 .build();
         if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestLocationPermission();
-            Toast.makeText(this, "Allow Permission", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Allow Permission", Toast.LENGTH_SHORT).show();
         }
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -190,53 +190,6 @@ FifthFragment.OnFragmentInteractionListener,SixthFragment.OnFragmentInteractionL
         fragmentTransaction.commit();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
 
-
-      /**  AHBottomNavigation navigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
-
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.title_maps, R.drawable.maps,R.color.icons);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.title_connection, R.drawable.connection, R.color.icons);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.title_request, R.drawable.request,R.color.icons);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.title_delete, R.drawable.delete, R.color.icons);
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.title_add, R.drawable.add, R.color.icons);
-
-        navigation.addItem(item1);
-       navigation.addItem(item2);
-       navigation.addItem(item3);
-        navigation.addItem(item4);
-        navigation.addItem(item5);
-        navigation.setNotification("1", 2);
-
-        navigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-                Fragment fragment = null;
-                switch (position) {
-                    case 0:
-                        fragment = FirstFragment.newInstance();
-                        break;
-                    case 1:
-                        fragment = SecondFragment.newInstance();
-                        break;
-
-                    case 2:
-                        fragment = ThirdFragment.newInstance();
-                        break;
-
-                    case 3:
-                        fragment = FourthFragment.newInstance();
-                        break;
-                    case 4:
-                        fragment = FifthFragment.newInstance();
-                        break;
-                }
-                if (fragment != null) {
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.content, fragment);
-                    fragmentTransaction.commit();
-                }
-                return true;
-            }
-        });**/
 
         BottomNavigationViewHelper.removeShiftMode(navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -248,6 +201,7 @@ FifthFragment.OnFragmentInteractionListener,SixthFragment.OnFragmentInteractionL
                     case R.id.navigation_maps:
                         fragment = TimeLine/**FirstFragment**/.newInstance();
                         break;
+
                     case R.id.navigation_connection:
                         fragment = SecondFragment.newInstance();
                         break;

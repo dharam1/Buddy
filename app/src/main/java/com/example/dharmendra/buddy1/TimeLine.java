@@ -9,9 +9,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -74,6 +77,7 @@ public class TimeLine extends Fragment {
     String name,n;
     int status;
     ArrayList<Integer> aidlist=new ArrayList<>();
+    FloatingActionButton gotomaps;
 
 
     private OnFragmentInteractionListener listener;
@@ -200,7 +204,7 @@ public class TimeLine extends Fragment {
                 public void run() {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey there, I am using Buddy App! Download the app now :D");
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.developers.buddy");
                     sendIntent.setType("text/plain");
                     startActivity(Intent.createChooser(sendIntent, "Buddy"));
                 }
@@ -223,6 +227,23 @@ public class TimeLine extends Fragment {
           View rootview= inflater.inflate(R.layout.fragment_timeline, container, false);
         SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout)rootview.findViewById(R.id.activity_main_swipe_refresh_layout);
         timeline= (ListView)rootview.findViewById(R.id.simpleListView);
+        gotomaps=(FloatingActionButton)rootview.findViewById(R.id.gotomaps);
+        //gotomaps.setVisibility(View.VISIBLE);
+        gotomaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /**Fragment fragment = new FirstFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.timeline, fragment);
+                fragmentTransaction.addToBackStack(null);
+                gotomaps.setVisibility(View.INVISIBLE);
+                fragmentTransaction.commitAllowingStateLoss();**/
+                Intent i = new Intent(getActivity(), maps_topic.class);
+                startActivity(i);
+                getActivity().overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
+            }
+        });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -234,7 +255,7 @@ public class TimeLine extends Fragment {
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final ArrayList<TimeLineClass> timeLinelist=new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user).child("activity");
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
@@ -285,11 +306,6 @@ public class TimeLine extends Fragment {
             }
         });
 
-
-
-
-
-
         return rootview;
         }
 
@@ -301,6 +317,7 @@ public class TimeLine extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             listener = (OnFragmentInteractionListener) context;
+            //gotomaps.show();
         } else {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
@@ -313,6 +330,11 @@ public class TimeLine extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
 
     }

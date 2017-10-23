@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -184,7 +185,7 @@ public class ThirdFragment extends Fragment {
                 public void run() {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey there, I am using Buddy App! Download the app now :D");
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.developers.buddy");
                     sendIntent.setType("text/plain");
                     startActivity(Intent.createChooser(sendIntent, "Buddy"));
                 }
@@ -282,7 +283,11 @@ public class ThirdFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+    }
 }
 
 

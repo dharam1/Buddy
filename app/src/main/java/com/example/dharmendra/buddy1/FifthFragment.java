@@ -21,6 +21,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -77,6 +78,7 @@ import java.util.Random;
 import co.ceryle.radiorealbutton.RadioRealButton;
 import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 
+import static com.example.dharmendra.buddy1.R.id.add;
 import static com.example.dharmendra.buddy1.R.id.map;
 
 
@@ -424,7 +426,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                 public void run() {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey there, I am using Buddy App! Download the app now :D");
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.developers.buddy");
                     sendIntent.setType("text/plain");
                     startActivity(Intent.createChooser(sendIntent, "Buddy"));
                 }
@@ -529,7 +531,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             shimmer1.setRepeatDelay(2000);
             shimmer1.startShimmerAnimation();
 
-            Button add_activity = (Button) layout.findViewById(R.id.add_activity);
+            final Button add_activity = (Button) layout.findViewById(R.id.add_activity);
             final TextView countv=(TextView)layout.findViewById(R.id.count);
             final TextWatcher mTextEditorWatcher = new TextWatcher() {
              public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -550,7 +552,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
             add_activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                add_activity.setClickable(false);
                 CheckInternetConnection c=new CheckInternetConnection();
                 if(c.haveNetworkConnection()){
             content = editText.getText().toString().trim();
@@ -594,7 +596,7 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
                                 FirebaseDatabase.getInstance()
                                         .getReference("chats").child(String.valueOf(ccid))
                                         .push()
-                                        .setValue(new ChatMessage1("Welcome to "+content+" admin here",user,nickname)
+                                        .setValue(new ChatMessage1("Welcome to "+content,user,nickname)
                                         );
                                 final DatabaseReference mDatabase2 = FirebaseDatabase.getInstance().getReference("chats").child("nickname").child(String.valueOf(ccid));
                                 mDatabase2.child(user).setValue(nickname);
@@ -747,6 +749,11 @@ public class FifthFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public interface OnFragmentInteractionListener {
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
 }
 

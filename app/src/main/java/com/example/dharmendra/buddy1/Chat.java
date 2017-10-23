@@ -297,6 +297,36 @@ public class Chat extends AppCompatActivity {
                 cidd = Integer.parseInt(startingIntent.getStringExtra("chatid"));
                 Log.d("MJKL",String.valueOf(cidd));
                 flag=1;
+                String user=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                mDatabase=FirebaseDatabase.getInstance().getReference("users").child(user).child("connection");
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey()).child("name");
+                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            connectionlist.put(postSnapshot.getKey(), dataSnapshot.getValue().toString());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }catch (NumberFormatException e){
                 System.out.println("not a number");
             }
@@ -413,6 +443,10 @@ public class Chat extends AppCompatActivity {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                message_list.clear();
+                message_time.clear();
+                message_user.clear();
+                message_nick.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     ChatMessage1 m = postSnapshot.getValue(ChatMessage1.class);
                     message_list.add(m.getMessageText());
@@ -590,7 +624,7 @@ public class Chat extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.main1, menu);
-        MenuItem search =  menu.findItem(R.id.search);
+        final MenuItem search =  menu.findItem(R.id.search);
         MenuItemCompat.setOnActionExpandListener(search,
                 new MenuItemCompat.OnActionExpandListener()
                 {
@@ -630,6 +664,7 @@ public class Chat extends AppCompatActivity {
                                 search_list.clear();
                                 search_time_list.clear();
                                 search_user_list.clear();
+                                search_nick.clear();
                                 for (int i = 0; i < message_list.size(); i++) {
                                     String element = message_list.get(i);
                                     if (query.length() <= element.length()) {
@@ -644,7 +679,7 @@ public class Chat extends AppCompatActivity {
                                             search_nick.add(nick);
                                         }
                                     }
-                                    searchadapter = new TopicChatAdapterSearch(query,search_list, search_time_list, search_user_list,search_nick, Chat.this, ChatMessage.class, R.layout.item_in_message);
+                                    searchadapter = new TopicChatAdapterSearch(query,search_list, search_time_list, search_user_list,search_nick, Chat.this, ChatMessage.class, R.layout.item_in_message,connectionlist);
                                     listView.setAdapter(searchadapter);
                                 }
                                 return true;

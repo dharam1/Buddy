@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by Dharmendra on 02-06-2017.
@@ -30,8 +31,9 @@ public class TopicChatAdapterSearch extends BaseAdapter {
     ArrayList<String> userlist;
     ArrayList<String> nicklist;
     String query;
+    HashMap<String,String> connectionlist=new HashMap<>();
 
-    public TopicChatAdapterSearch(String query,ArrayList<String> search_list, ArrayList<Long> timelist, ArrayList<String> userlist,ArrayList<String> nicklist, Chat activity, Class<ChatMessage> modelClass, int modelLayout) {
+    public TopicChatAdapterSearch(String query,ArrayList<String> search_list, ArrayList<Long> timelist, ArrayList<String> userlist,ArrayList<String> nicklist, Chat activity, Class<ChatMessage> modelClass, int modelLayout,HashMap<String,String> connectionlist) {
         mData = new ArrayList();
         this.userlist=userlist;
         this.timelist=timelist;
@@ -39,6 +41,7 @@ public class TopicChatAdapterSearch extends BaseAdapter {
         this.activity=activity;
         this.nicklist=nicklist;
         this.query=query;
+        this.connectionlist=connectionlist;
 
     }
 
@@ -99,8 +102,16 @@ public class TopicChatAdapterSearch extends BaseAdapter {
         if(user.equals(activity.getLoggedInUserName())){
             messageuser.setText("You");
         }
-        else
-            messageuser.setText(nickname);
+        else{
+            if(connectionlist!=null) {
+                if (connectionlist.containsKey(userlist.get(position))){
+                    messageuser.setText(connectionlist.get(userlist.get(position)));
+                } else
+                    messageuser.setText(nicklist.get(position));
+            }
+            else
+                messageuser.setText(nicklist.get(position));
+        }
         return result;
     }
 }

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -13,13 +14,23 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:id="@+id/timeline"
-
         tools:context="com.example.dharmendra.buddy1.ThirdFragment">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/gotomaps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            app:fabSize="normal"
+            app:backgroundTint="@color/linkColor"
+            android:src="@drawable/maps"
+            android:layout_gravity="bottom|right"/>
+
         <TextView
         android:id="@+id/datashow"
         android:layout_width="match_parent"
         android:layout_height="99dp" />
-
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/activity_main_swipe_refresh_layout"
@@ -34,6 +45,8 @@
                 android:divider="@color/white"
                 android:dividerHeight="0dp" />
         </android.support.v4.widget.SwipeRefreshLayout>
+
+
 
     </FrameLayout>
 </LinearLayout>

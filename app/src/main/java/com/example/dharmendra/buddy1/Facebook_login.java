@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -74,13 +75,14 @@ public class Facebook_login extends AppCompatActivity{
     ArrayList<String> friends = new ArrayList<>();
     ArrayList<String> fbblockeduser = new ArrayList<>();
     TextView textView2;
+    DisplayMetrics metrics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_facebook_login);
-
+        getSupportActionBar().hide();
         callbackManager = CallbackManager.Factory.create();
         textView1 =(TextView)findViewById(R.id.terms);
         textView1.setText("By Continuing you agree with ");
@@ -88,11 +90,20 @@ public class Facebook_login extends AppCompatActivity{
         textView.setClickable(true);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         ImageView imageView =(ImageView)findViewById(R.id.logo);
-        String text = "<a href='https://budddy-f974a.firebaseapp.com/'> terms and conditions </a>";
+        String text = "<a href='https://buddy-cf40e.firebaseapp.com/'> terms and conditions </a>";
         textView.setText(Html.fromHtml(text));
+        metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        float xfrom = metrics.widthPixels * 0.42f;
+        float xto = metrics.widthPixels * 0.42f;
+        float yfrom = metrics.heightPixels * 0.3f;
+        float yto = metrics.heightPixels* 0.23f;
+        //Animation translateAnim= AnimationUtils.loadAnimation(getApplicationContext(),
+                //R.anim.top_to_bottom);
+        Animation translateAnim = new TranslateAnimation(xfrom,xto, yfrom, yto);
+        translateAnim.setDuration(1000);
+        translateAnim.setFillAfter(true);
 
-        Animation translateAnim= AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.top_to_bottom);
         Picasso.with(getApplicationContext()).load(R.drawable.logo).fit().centerCrop().noFade().into(imageView);
         translateAnim.setAnimationListener(FadeInAnimationListener);
         imageView.startAnimation(translateAnim);
@@ -170,20 +181,30 @@ public class Facebook_login extends AppCompatActivity{
         @Override
         public void onAnimationEnd(Animation animation) {
             textView2.setVisibility(View.VISIBLE);
-            Animation translateAnim1= AnimationUtils.loadAnimation(getApplicationContext(),
-                    R.anim.left_to_right);
-            textView2.startAnimation(translateAnim1);
+            //DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            float xfrom = metrics.widthPixels * 0.8f;
+            float xto = metrics.widthPixels * 0.02f;
+            float yfrom = metrics.heightPixels * 0.34f;
+            float yto = metrics.heightPixels* 0.34f;
+            //Animation translateAnim= AnimationUtils.loadAnimation(getApplicationContext(),
+            //R.anim.top_to_bottom);
+            Animation translateAnim = new TranslateAnimation(xfrom,xto, yfrom, yto);
+            translateAnim.setDuration(500);
+            translateAnim.setFillAfter(true);
+            textView2.startAnimation(translateAnim);
         }
     };
 
 
     private void handleFacebookAccessToken(final AccessToken accessToken) {
-        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+        final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
 
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()){
+                    Log.d("POPKLLL",credential.toString());
                     Toast.makeText(getApplicationContext(),R.string.firebase_error_login, Toast.LENGTH_LONG).show();
                 }
                 else{

@@ -175,6 +175,9 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                message_list.clear();
+                message_time.clear();
+                message_user.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Log.d("dharam","called");
                     ChatMessage m = postSnapshot.getValue(ChatMessage.class);
@@ -208,20 +211,20 @@ public class PcChat extends AppCompatActivity implements SecondFragment.OnFragme
                         FirebaseDatabase.getInstance()
                                 .getReference("pcchats").child(user).child(user1)
                                 .push()
-                                .setValue(new ChatMessage(input.getText().toString(),
+                                .setValue(new ChatMessage(" "+input.getText().toString(),
                                         FirebaseAuth.getInstance().getCurrentUser().getUid(),message_status)
                                 );
                         message_status=0;
                         FirebaseDatabase.getInstance()
                                 .getReference("pcchats").child(user1).child(user)
                                 .push()
-                                .setValue(new ChatMessage(input.getText().toString(),
+                                .setValue(new ChatMessage(" "+input.getText().toString(),
                                         FirebaseAuth.getInstance().getCurrentUser().getUid(),message_status)
                                 );
 
                         DatabaseReference mDatabase1 =FirebaseDatabase.getInstance().getReference().child("pcnoti");
                                 final String id = mDatabase1.push().getKey();
-                               ChatMessage2 c=new ChatMessage2(input.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid(),user1);
+                               ChatMessage2 c=new ChatMessage2(" "+input.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid(),user1);
                                 mDatabase1.child(id).setValue(c);
                         final DatabaseReference mDatabase12 =FirebaseDatabase.getInstance().getReference("users").child(user1).child("connection");
                         mDatabase12.addListenerForSingleValueEvent(new ValueEventListener() {
